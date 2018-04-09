@@ -59,7 +59,9 @@ article div ol li p { padding: 0;
             }
 
 a.navitemlink { text-decoration: none;
-                font-variant: small-caps; }
+                font-variant: small-caps; 
+                background: none;
+            }
 
 
 
