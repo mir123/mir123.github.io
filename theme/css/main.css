@@ -86,3 +86,39 @@ p > figure > figcaption { float: right;
              vertical-align: baseline;
              position: relative;
              max-width: 40%; }
+
+
+textarea { 
+    width: 55%;
+    border:1px solid #dedede;
+    background-color: #fffff8;
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    font-size: 1.4rem;
+    margin-top:5px;
+}
+
+.error {display:none;}
+
+input {
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    font-size: 1.4rem;
+    border:0;
+    padding-top:5px;
+    height:;
+    background: -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#dedede, #dedede);
+         background: linear-gradient(#fffff8, #fffff8), linear-gradient(#fffff8, #fffff8), linear-gradient(#dedede, #dedede);
+         -webkit-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
+         -moz-background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
+         background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
+         background-repeat: no-repeat, no-repeat, repeat-x;
+         text-shadow: 0.03em 0 #fffff8, -0.03em 0 #fffff8, 0 0.03em #fffff8, 0 -0.03em #fffff8, 0.06em 0 #fffff8, -0.06em 0 #fffff8, 0.09em 0 #fffff8, -0.09em 0 #fffff8, 0.12em 0 #fffff8, -0.12em 0 #fffff8, 0.15em 0 #fffff8, -0.15em 0 #fffff8;
+         background-position: 0% 93%, 100% 93%, 0% 93%;
+color: #111;
+}
+
+button {
+    border:1px solid #dedede; 
+    background:none;   
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    font-size: 1.2rem;
+}

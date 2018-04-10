@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Contacto</title>
+  <meta name="author" content="Mir Rodriguez Lombardo" />
+  <base href="">
+  <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/theme/css/main.css" /> 
+  <!--
+  Original link to favicon
+  <link rel="shortcut icon" type="text/css" href="/favicon.ico" />
+  -->
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="mask-icon" href="/favicon.svg" color="black" />
+
+
+  <!-- OpenGraph Info -->
+  <meta property="og:title" content="Mir Rodriguez Lombardo"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:description" content=""/>
+  <meta property="og:url" content=""/>
+</head>
+
+<body>
+
+ <header>
+  <h1 class="websitetitle"><a href="">Mir Rodriguez Lombardo</a></h1>
+  <nav class="navmenu" id="navmenu">
+   <!--  <li><a class="navitemlink" href="/archives.html">Archive</a></li> -->
+          <li><a class="navitemlink" href="/pages/1bio.html">Hoja de vida </a></li>
+          <li><a class="navitemlink" href="/pages/2cartografia.html">Cartografía </a></li>
+          <li><a class="navitemlink" href="/pages/3almanaque.html">Almanaque Azul </a></li>
+          <li><a class="navitemlink" href="/pages/4greenpeace.html">Greenpeace </a></li>
+          <li><a class="navitemlink" href="/pages/5contacto.html">Contacto </a></li>
+   </nav>
+ </header>
+
+<article>
+	<section>
+	<h1>Contacto</h1>
+<script type="text/javascript">
+function checkForm() {
+name = document.getElementById("name").value;
+email = document.getElementById("email").value;
+comment = document.getElementById("comment").value;
+
+if (name == "")
+{
+hideAllErrors();
+document.getElementById("nameError").style.display = "inline";
+document.getElementById("name").select();
+document.getElementById("name").focus();
+return false;
+}
+else if (email == "")
+{
+hideAllErrors();
+document.getElementById("emailError").style.display = "inline";
+document.getElementById("email").select();
+document.getElementById("email").focus();
+return false;
+}
+else if (comment == "")
+{
+hideAllErrors();
+document.getElementById("commentError").style.display = "inline";
+document.getElementById("comment").select();
+document.getElementById("comment").focus();
+return false;
+}
+if (!checkEmail(email))
+{
+alert('Email address is invalid');
+return false;
+}
+return true;
+}
+
+function hideAllErrors() {
+document.getElementById("nameError").style.display = "none";
+document.getElementById("emailError").style.display = "none";
+document.getElementById("commentError").style.display = "none";
+}
+
+function checkEmail(inputvalue) {
+var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+return pattern.test(inputvalue);
+}
+</script>
+
+<p>¿Tienes preguntas, me quieres contratar o tienes algo que contarme? Gracias por ponerte en contacto. A menos que esté sin señal en medio del bosque (en medio del océano me encargo yo que tengamos internet), te contestaré inmediatamente.</p>
+<script language="JavaScript">
+var username = "mir.rodriguez";
+var hostname = "guineo.org";
+var linktext = username + "@" + hostname ;
+document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
+</script>
+
+<div class="nombre">
+<input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
+<div class="error" id="nameError">Debes poner tu nombre<br /></div>
+</div>
+
+<div class="contact_email">
+<input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
+<div class="error" id="emailError">Necesito tu dirección de email para poder contestarte<br /></div>
+</div>
+
+<div class="contact_comment">
+<textarea name="body" id="comment" placeholder="MENSAJE" aria-label="Mensaje" rows="5"></textarea><br/>
+<div class="error" id="commentError">Por favor escribe un mensaje<br /></div>
+</div>
+
+<p><button type="submit" value="ENVIAR">ENVIAR</button>
+</form> </p>
+<p>Me puedes encontrar generalmente en la Ciudad de México. También estoy en <a href="https://twitter.com/mir_lentejas">Twitter</a> y en <a href="https://www.instagram.com/mir.cero/">Instagram</a>. Aquí está mi <a href="https://www.facebook.com/mir.rodriguez">Facebook</a>, que últimamente uso sólo para mensajes.</p>
+	</section>
+</article>
+<footer>
+   <header>
+  <nav class="navmenu" id="navmenu">
+
+          <li><a class="navitemlink" href="/pages/1bio.html">Hoja de vida</a></li>
+          <li><a class="navitemlink" href="/pages/2cartografia.html">Cartografía</a></li>
+          <li><a class="navitemlink" href="/pages/3almanaque.html">Almanaque Azul</a></li>
+          <li><a class="navitemlink" href="/pages/4greenpeace.html">Greenpeace</a></li>
+          <li><a class="navitemlink" href="/pages/5contacto.html">Contacto</a></li>
+   </nav>
+
+ </header>
+  <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> --> 
+</footer>
+</body>
+</html>
