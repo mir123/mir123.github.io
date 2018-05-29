@@ -123,5 +123,9 @@ button {
     font-size: 1.2rem;
 }
 
+p.subtitle a:link {
+    background: none;
+}
+
 @media (max-width: 760px) { textarea { 
     width: 100%; }}
