@@ -92,7 +92,7 @@ p, ol, ul { font-size: 1.4rem;
 p { /*margin-top: 1.4rem;
     margin-bottom: 1.4rem; */
     margin:0em;
-    text-indent: 1em;
+    text-indent: 1.5em;
     padding-right: 0;
     vertical-align: baseline; }
 
@@ -102,8 +102,25 @@ p.newsection { text-indent: 0em;
 
 p img { margin-top: 1.4rem;
     margin-bottom: 1.4rem;
-    margin-left: -1em;
+    margin-left: -1.5em;
 }
+
+p a:visited img, p a:link > img, p a:active img 
+ {
+text-decoration: none;
+background: none, none, none!important;
+background-size: 0, 0, 0!important;
+background-repeat: no-repeat, no-repeat, no-repeat!important;
+text-shadow: none;
+}
+
+p a img 
+ {
+text-decoration: none;
+background: none;
+text-shadow: none;
+}
+
 
 /* Chapter Epigraphs */
 div.epigraph { margin: 5em 0; }
