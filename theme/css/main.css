@@ -22,19 +22,7 @@ header nav li { display: inline;
 
 h1 a:link {background: none;}
 
-h2 { font-style: italic;
-     font-weight: 400;
-     margin-top: 1.866666666666667rem;
-     margin-bottom: 0;
-     font-size: 2.1rem;
-     line-height: 0.933333333333333; }
 
-h3 { font-style: italic;
-     font-weight: 400;
-     font-size: 1.8rem;
-     margin-top: 2.1777777777777778rem;
-     margin-bottom: 0;
-     line-height: 1.08888888888889; }
 
 /*article { position: relative;
           padding: 1rem 0rem 2.5rem 0rem; } // reduced top and bottom padding by 50%*/
