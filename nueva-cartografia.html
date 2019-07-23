@@ -49,7 +49,57 @@
 </h1>
 <p class="subtitle"><time datetime="2019-07-22T11:39:00-05:00">22 jul 2019</time><label for="nueva-cartografia" class="margin-toggle"> ⊕</label><input type="checkbox" id="nueva-cartografia" class="margin-toggle" /> <span class="marginnote">Categoría: <a href="/category/cartografia.html">Cartografía</a><br />
 </span></p>
-</header><p class="newsection"><i>En resumen:</i> La publicación por parte del Instituto Geográfico Nacional “Tommy Guardia” de la nueva cartografía de Panamá es un evento histórico, los mapas son un trabajo excepcional. Pero tienen varios problemas que deben ser resueltos y los datos deben ser publicados de manera abierta cuanto antes.</p>
+</header><script type="text/javascript">
+function checkForm() {
+name = document.getElementById("name").value;
+email = document.getElementById("email").value;
+comment = document.getElementById("comment").value;
+
+if (name == "")
+{
+hideAllErrors();
+document.getElementById("nameError").style.display = "inline";
+document.getElementById("name").select();
+document.getElementById("name").focus();
+return false;
+}
+else if (email == "")
+{
+hideAllErrors();
+document.getElementById("emailError").style.display = "inline";
+document.getElementById("email").select();
+document.getElementById("email").focus();
+return false;
+}
+else if (comment == "")
+{
+hideAllErrors();
+document.getElementById("commentError").style.display = "inline";
+document.getElementById("comment").select();
+document.getElementById("comment").focus();
+return false;
+}
+if (!checkEmail(email))
+{
+alert('Email address is invalid');
+return false;
+}
+return true;
+}
+
+function hideAllErrors() {
+document.getElementById("nameError").style.display = "none";
+document.getElementById("emailError").style.display = "none";
+document.getElementById("commentError").style.display = "none";
+}
+
+function checkEmail(inputvalue) {
+var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+return pattern.test(inputvalue);
+}
+</script>
+
+<p class="newsection"><i>En resumen:</i> La publicación por parte del Instituto Geográfico Nacional “Tommy Guardia” de la nueva cartografía de Panamá es un evento histórico, los mapas son un trabajo excepcional. Pero tienen varios problemas que deben ser resueltos y los datos deben ser publicados de manera abierta cuanto antes.</p>
 
 <p class="newsection"><span class="newthought">Por primera vez en muchos años</span>, el gobierno de Panamá ha publicado nueva cartografía oficial. Me enteré a mediados de junio, unos días antes de salir de gira a Darién, en un mensaje de mi amigo Rick. “Buenas noticias de Finmeccanica”, y me mandó un <a href="https://sigigntg.anati.gob.pa/portal/apps/webappviewer/index.html?id=96c46429e3c349b9b4a987096e1e1a5c">enlace</a>. Al entrar, me encuentro con una página de un mapa de Panamá cubierto de cuadritos que dice arriba “descarga el mapa PDF”.</p>
 
@@ -117,14 +167,37 @@
 <p>Aquí hay una oportunidad para que el Tommy Guardia (o en realidad, cualquiera) produzca una línea de mapas más bonita, dirigidos al turismo y al hiking, un poco al estilo de los mapas <a href="https://www.ordnancesurvey.co.uk/shop/maps.html?cat%5B0%5D=20&amp;cat%5B1%5D=21">Explorer del Ordnance Survey</a> (Reino Unido) y, por qué no, apuntar al máximo logro de la cartografía estatal, los mapas de la Oficina Federal de Topografía (<a href="https://shop.swisstopo.admin.ch/en/products/maps">Swisstopo</a>) de Suiza.</p>
 <p class="newsection"><strong><i>Espera la segunda parte de este artículo en los próximos días</i></strong></p>
 
-<h3>Comentarios</h3>
-<p class="newsection"><span class="newthought">Envía tus comentarios</span> <a href="pages/contacto.html">por aquí</a> o manda un email a <script language="JavaScript">
+<h2>Comentarios</h2>
+<script language="JavaScript">
 var username = "mir.rodriguez";
 var hostname = "guineo.org";
 var linktext = username + "@" + hostname ;
-document.write("<a href='" + "mai" + "lto" + ":" + username + "@" + hostname + "'>" + linktext + "</a>");
-</script>. También puedes <a href="https://twitter.com/mir_lentejas/status/1153386856962240512">comentar vía Twitter</a></p>
+document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
+</script>
 
+<div class="nombre">
+<input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
+<div class="error" id="nameError">Debes poner tu nombre<br /></div>
+</div>
+
+<div class="contact_email">
+<input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
+<div class="error" id="emailError">Necesito tu dirección de email para poder contestarte<br /></div>
+</div>
+
+<div class="contact_comment">
+<textarea name="body" id="comment" placeholder="COMENTARIO" aria-label="Mensaje" rows="5"></textarea><br/>
+<div class="error" id="commentError">Por favor escribe un comentario<br /></div>
+<input type="hidden" name="_next" value="/pages/gracias.html" />
+<input type="hidden" name="_format" value="plain" />
+<input type="hidden" name="_language" value="es" />
+</div>
+
+<p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">ENVIAR</button>
+</form> </p>
+<p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1153386856962240512">comentar vía Twitter</a></p>
+
+<hr>
 <blockquote>
 <p>EXCELENTE ARTICULO. La verdad es clara y evidente siempre pensé que estos mapas ya estaban hechos y terminados hace ya dos años. Sin embargo veo con lo leído de este artículo que aunque hemos avanzado nos hace falta mucho. Se ha invertido mucho tiempo y dinero en esto. Recuerdo muy bien que estos mapas eran utilizados por la Arap en la persecución de la pesca ilegal por medio de estos satelites de igual forma por Senafront ya que estos satelites podían ver gente caminando en el manglar y la desembocadura de ríos. Es decir se podían georeferenciar los puntos de ubicación. Yo siempre pensé que estos programas ayudaría a mapear el pais, perseguir el narcotrafico y la pesca ilegal. Ahora bien el Miambiente coloco un sistema de ubicación para el tráfico de madera que no sólo se da por tierra, también se da por los ríos. Gracias por excelente información. </p>
 <p><em>--Libia Herrera (22/7/2019)</em></p>
