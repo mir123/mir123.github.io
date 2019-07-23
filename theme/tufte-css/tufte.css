@@ -275,6 +275,17 @@ background: none;
 
 dd { font-size: 1.2em;}
 
+p > .comentario {
+width: 20%;
+padding: 2em;
+
+}
+
+.autorcomentario {
+text-align: right;
+margin-bottom: 1em;
+}
+
 .iframe-wrapper { position: relative;
                   padding-bottom: 56.25%; /* 16:9 */
                   padding-top: 25px;
