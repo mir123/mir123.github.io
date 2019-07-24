@@ -19,6 +19,21 @@
 
 
   <!-- OpenGraph Info -->
+  <meta property="og:title" content="Dónde estamos parados: la nueva cartografía de Panamá (II)" />
+  <meta property="og:type" content="article" />
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:title" content="Dónde estamos parados: la nueva cartografía de Panamá (II)" />
+  <meta property="og:image" content="/images/lugar_poblado_inec.jpg" />
+  <meta property="twitter:image" content="/images/lugar_poblado_inec.jpg" />
+  <meta property="og:url" content="nueva-cartografia-2.html" />
+  <meta property="og:description" content="El Instituto Geográfico Nacional “Tommy Guardia” y los nuevos mapas sufren de problemas que provienen de la ANATI, su paraguas institucional, y de la falta de interés del estado panameño en la geografía." />
+  <meta property="twitter:description" content="El Instituto Geográfico Nacional “Tommy Guardia” y los nuevos mapas sufren de problemas que provienen de la ANATI, su paraguas institucional, y de la falta de interés del estado panameño en la geografía." />
+  <meta property="og:locale" content="utf8" />
+  <meta property="og:site_name" content="Mir Rodriguez Lombardo" />
+  <meta property="article:published_time" content="2019-07-24" />
+  <meta property="twitter:site:id" content="@mir_lentejas" />
+  <meta property="article:section" content="Cartografía" />
+
 </head>
 
 <body>
@@ -37,6 +52,57 @@
    </header>
 
 
+
+<script type="text/javascript">
+function checkForm() {
+name = document.getElementById("name").value;
+email = document.getElementById("email").value;
+comment = document.getElementById("comment").value;
+
+if (name == "")
+{
+hideAllErrors();
+document.getElementById("nameError").style.display = "inline";
+document.getElementById("name").select();
+document.getElementById("name").focus();
+return false;
+}
+else if (email == "")
+{
+hideAllErrors();
+document.getElementById("emailError").style.display = "inline";
+document.getElementById("email").select();
+document.getElementById("email").focus();
+return false;
+}
+else if (comment == "")
+{
+hideAllErrors();
+document.getElementById("commentError").style.display = "inline";
+document.getElementById("comment").select();
+document.getElementById("comment").focus();
+return false;
+}
+if (!checkEmail(email))
+{
+alert('Email address is invalid');
+return false;
+}
+return true;
+}
+ 
+function hideAllErrors() {
+document.getElementById("nameError").style.display = "none";
+document.getElementById("emailError").style.display = "none";
+document.getElementById("commentError").style.display = "none";
+}
+ 
+function checkEmail(inputvalue) {
+var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+return pattern.test(inputvalue);
+}
+</script>
+
 <article>
 	<section>
 
@@ -50,44 +116,84 @@
 <p class="subtitle"><time datetime="2019-07-24T08:39:00-05:00">24 jul 2019</time><label for="nueva-cartografia-2" class="margin-toggle"> ⊕</label><input type="checkbox" id="nueva-cartografia-2" class="margin-toggle" /> <span class="marginnote">Categoría: <a href="/category/cartografia.html">Cartografía</a><br />
 </span></p>
 </header><h4><em><strong>Esta es la segunda de dos partes de este artículo. Lee la primera <a href="/nueva-cartografia.html">aquí</a></strong></em></h4>
-<p class="newsection"><span class="newthought">El Instituto Geográfico Nacional</span> “Tommy Guardia”, que acaba de celebrar 73 años de existencia es, por ley, la autoridad final de los temas geográficos en Panamá. Son, en pocas palabras, los que nos deberían decir dónde estamos parados. Es difícil explicar por qué esto es importante, porque parece tan obvio. La información sobre el territorio es fundamental para el funcionamiento del estado, la investigación científica, las estadísticas, la producción de comida, las escuelas, la salud, la gestión de nuestros bosques y mares y para mucho más.</p>
+<p class="newsection"><i>En resumen:</i> El Instituto Geográfico Nacional “Tommy Guardia” acaba de publicar una histórica cartografía de Panamá, pero es el momento de considerar los problemas que provienen se estar bajo el paraguas de la ANATI y de la falta de interés del estado panameño en la geografía.</p>
+
+<p class="newsection"><span class="newthought">El Instituto Geográfico Nacional</span> “Tommy Guardia”, que acaba de celebrar 73 años de existencia es la autoridad final de los temas geográficos en Panamá. Son, en pocas palabras, los que nos deberían decir dónde estamos parados. Es difícil explicar por qué esto es importante, ya que parece tan obvio. La información sobre el territorio es fundamental para el funcionamiento del estado, la investigación científica, las estadísticas, la producción de comida, las escuelas, la salud, la gestión y protección   de nuestros bosques y mares y para mucho más.</p>
 
 <!--##La autoridad del Tommy Guardia-->
 
-<p>Hasta que salieron publicados estos nuevos mapas el Tommy Guardia llevaba mucho tiempo sin actualizar la cartografía nacional. La revolución de los sistemas de información geográfica, que ha permitido que muchos puedan hacer mapas y que millones de personas lleven mapas en sus bolsillos dentro de sus celulares, llegó y el Tommy Guardia no se enteró. Nunca hemos tenido capas geográficas digitales del Tommy Guardia, disponibles al público. Nunca hemos podido poner en una computadora datos oficiales de las fronteras nacionales ni de los límites administrativos. Esto es absolutamente inaceptable. Los que hacemos mapas en Panamá hemos tenido que buscar otras fuentes de información. Durante los últimos años el principal productor de datos geográficos de Panamá ha sido el Instituto Nacional de Estadística y Censo (INEC) de la Contraloría, que ha tenido la necesidad de mapear cada pueblito de Panamá para poder enviar a su gente a hacer el censo y para almacenar y ofrecer al público esos datos de manera ordenada. Es posible ir a la Contraloría y comprar los mapas de los pueblos, que incluyen edificios, calles y ríos. También se pueden conseguir <a href="http://datos-geored.opendata.arcgis.com/">capas del INEC</a> de corregimientos, distritos y provincias. </p>
+<p>Hasta que salieron publicados estos nuevos mapas el Tommy Guardia llevaba mucho tiempo sin actualizar la cartografía nacional. La revolución de los sistemas de información geográfica, que ha permitido que muchos puedan hacer mapas y que millones de personas lleven mapas en sus bolsillos dentro de sus celulares, llegó y el Tommy Guardia no se enteró. Nunca hemos tenido capas geográficas digitales del Tommy Guardia, disponibles al público. Nunca hemos podido poner en una computadora datos oficiales de las fronteras nacionales ni de los límites administrativos. Esto es absolutamente inaceptable. Los que hacemos mapas en Panamá hemos tenido que buscar otras fuentes de información. Durante los últimos años el principal productor de datos geográficos de Panamá ha sido el Instituto Nacional de Estadística y Censo (INEC) de la Contraloría, que ha tenido la necesidad de mapear cada pueblito de Panamá para poder enviar a su gente a hacer el censo y para almacenar y ofrecer al público esos datos de manera ordenada. Es posible ir a la Contraloría y comprar los mapas de los pueblos, que incluyen edificios, calles y ríos. También se pueden conseguir <a href="http://datos-geored.opendata.arcgis.com/">capas del INEC</a> de corregimientos, distritos y provincias. Esta es la muy querida capa de lugares poblados del INEC, cada puntito representa a un pueblo:</p>
+<p><label for="sn-lugarpob" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-lugarpob" class="margin-toggle"/><span class="marginnote">Instituto Nacional de Estadística y Censo, Contraloría General de la República, 2010, lugares poblados</span></p>
+<p><img alt="La capa de lugares poblados del INEC" src="/images/lugar_poblado_inec.jpg"></p>
 <p>De hecho, no he podido encontrar ningún pueblo de Darién que esté en los nuevos mapas (2018) y que no esté en la capa de lugares poblados del INEC (2010). Seguramente en esos ocho años han habido cambios en la distribución de población en el país, con comunidades nuevas que surgen y otras que desaparecen. Ya hemos visto en el artículo anterior que la evidencia apunta a que los técnicos del Tommy Guardia no recorrieron Darién para verificar los mapas. ¿Utilizó el Tommy Guardia los datos del INEC como base para su nueva cartografía? Si es así, ¿por qué no aparece el crédito al INEC en los mapas? En todo caso, el INEC está actualizando su cartografía en preparación para el censo de 2020, por lo que pronto tendremos datos frescos sobre población en Panamá.</p>
-<p>Otra fuente de información es el Ministerio de Ambiente, que ha hecho mapas de las áreas protegidas y de la cobertura boscosa de Panamá. Ha sido muy difícil conseguir información de Miambiente, pero con mucha insistencia lo hemos logrado. Otras entidades con datos geográficos incluyen al Ministerio de Educación, que tiene capas de las escuelas (aunque desconozco si existen datos actualizados) y al Ministerio de Obras Públicas, que tiene capas de la red vial (secretas).</p>
-<p>Por supuesto, también está la información producida por los contribuyentes de OpenStreetMap, un proyecto que surgió precisamente por lo opaco de los gobiernos con los datos geográficos. Existe una comunidad de cartógrafos voluntarios que, armados de GPS, aplicaciones de celular e imágenes satelitales gratuitas han ido poco a poco mapeando el país (y el mundo). Los datos de OpenStreetMap están disponibles para cualquier aplicación, con o sin fines de lucro, llenando el vacío que dejan las entidades del estado al no permitir el uso libre de datos geoespaciales recogidos con fondos públicos. OpenStreetMap es muy cuidadoso con las fuentes de datos, por lo que con sus actuales licencias de uso ("se prohibe la reproducción total o parcial"), la nueva cartografía del Tommy Guardia no podrá ser usada para enriquecer el mapa de Panamá de OpenStreetMap.</p>
-<p>Cada una de estas fuentes, oficiales o no, muestra fronteras con Colombia y Costa Rica que son ligeramente diferentes unas de las otras. Asimismo, otros límites administrativos del país tienen inconsistencias. Nosotros también trabajamos en Puerto Indio, la puerta de entrada de la Comarca Emberá-Wounaan. Ahí habíamos ya notado que teníamos varias posibles versiones de los límites de la Comarca. Ahora con los nuevos mapas, tenemos otra versión más, diferente de la que teníamos en el viejo mapa 1:250,000 del Tommy Guardia. ¿No es evidente que esto es un problema extremadamente delicado?</p>
-<p>Con los nuevos mapas (y aún más cuando se publiquen las capas digitales), debemos suponer que finalmente, el Tommy Guardia será nuestra fuente oficial de datos y punto de referencia para la era digital. Pero, ¿ha cambiado realmente el Tommy Guardia? ¿Ha servido el proyecto de la nueva cartografía para dinamizar y traer al presente a esta institución? ¿Se ha puesto al fin las pilas el estado panameño para tomarse en serio el tema de la información geográfica?</p>
+<p>Otras entidades con datos geográficos incluyen a la Autoridad del Canal de Panamá, al Ministerio de Educación, que tiene capas de las escuelas, al Ministerio de Obras Públicas con los datos de las calles y al Ministerio de Ambiente, cada una con sus datos en distintos estándares y con discrepancias entre ellos. Lo que sí tienen en común es que esta información vital es difícil o imposible de conseguir por el público.</p>
+<p>En cambio, los datos de <a href="https://www.openstreetmap.org/#map=8/8.391/-80.118">OpenStreetMap</a>, un proyecto que surgió precisamente por lo opaco de los gobiernos con la información geográfica, están disponibles de manera abierta y libre. Existe una comunidad de cartógrafos voluntarios que, armados de GPS, aplicaciones de celular e imágenes satelitales gratuitas han ido poco a poco mapeando el país (y el mundo). Los datos de OpenStreetMap se pueden usar para cualquier aplicación, con o sin fines de lucro, llenando el vacío que dejan las entidades del estado al no permitir el uso libre de datos geoespaciales recogidos con fondos públicos. OpenStreetMap es muy cuidadoso con las fuentes de datos, por lo que con las actual licencia de uso (“se prohibe la reproducción total o parcial”), la nueva cartografía del Tommy Guardia no podrá ser usada para enriquecer el mapa de Panamá de OpenStreetMap.</p>
+<p>Cada una de estas fuentes, oficiales o no, muestra fronteras con Colombia y Costa Rica que son ligeramente diferentes unas de las otras. Asimismo, otros límites administrativos del país tienen inconsistencias. En Puerto Indio, la puerta de entrada de la Comarca Emberá-Wounaan, habíamos notado que teníamos varias posibles versiones de los límites de la Comarca. Ahora con los nuevos mapas, tenemos otra versión más, diferente de la que teníamos en el viejo mapa 1:250,000 del Tommy Guardia (1997). Veamos aquí como ejemplo los límites en una parte del noroeste de la Comarca (región Sambú), según aquel mapa, el de INEC 2010 y los nuevos mapas: </p>
+<p><img alt="Diferentes versiones de los límites de la Comarca Emberá-Wounaan" src="/images/comarca_diff.jpeg"></p>
+<p>Claramente este es un problema extremadamente delicado, heredado de décadas de no contar con datos fiables y definitivos, que se reproduce en múltiples puntos de la geografía nacional. A medida que la información sea descubierta, se generarán conflictos que tendrán que ser negociados y resueltos.</p>
+<p>Con los nuevos mapas (y aún más cuando se publiquen las capas digitales) y el resto del proyecto con Telespazio, debemos confiar que finalmente, el Tommy Guardia será nuestra fuente oficial de datos y punto de referencia en la era digital. Pero, ¿ha cambiado realmente el Tommy Guardia? ¿Ha servido el proyecto de la nueva cartografía para dinamizar y traer al presente a esta institución? ¿Se ha puesto al fin las pilas el estado panameño para tomarse en serio el tema de la información geográfica?</p>
 <!-- ##Ciencia neoliberal -->
 
-<p class="newsection"><span class="newthought">Durante sus primeros 50 años</span> de vida republicana, Panamá no elaboraba su cartografía. Los mapas de este país eran las cartas militares que hacían los gringos. Cuando se creó el Instituto Geográfico Nacional “Tommy Guardia” después de la segunda guerra mundial, los mapas siguieron siendo preparados por el US Army Map Service y venían en inglés y español (en ese órden).</p>
+<p class="newsection"><span class="newthought">Durante sus primeros 50 años</span> de vida republicana, Panamá no elaboraba su cartografía. Los mapas de este país eran las cartas militares que hacían los gringos. Cuando se creó el Instituto Geográfico Nacional “Tommy Guardia” después de la segunda guerra mundial, los mapas siguieron siendo preparados por el US Army Map Service y venían en inglés y español (en ese órden). En los años 1990 salieron los últimos mapas hechos por el Tommy Guardia, hasta ahora.</p>
 
-<p>El Tommy Guardia es, exactamente, nuestro instituto geográfico nacional, algo que suena a entidad científica, encargada de las ciencias de la tierra. Sin embargo, originalmente estaba bajo el Ministerio de Obras Públicas, donde vivió por mucho tiempo, los mapas llevaban el logo del MOP en la parte superior. Pero hace unos años lo mandaron a la Autoridad Nacional de Administración de Tierras.</p>
-<p>La ANATI, creada durante la administración de Ricardo Martineli, viene de un proyecto anterior, el Programa Nacional de Tierras (Pronat), una institución fundada en 1996 en medio de la ola de reformas de libre mercado de aquellos años. Con dinero de varios préstamos millonarios del Banco Mundial y el BID; Pronat y luego ANATI se encargaron de materializar el sueño neoliberal de privatizar las tierras nacionales de manera ordenada para crear un mercado de tierras dinámico y seguro. En estas dos décadas este ha sido con toda seguridad el programa de privatización de bienes públicos más ambicioso y cuantioso en Panamá. Al mismo tiempo, Pronat y ANATI han sido usados por funcionarios corruptos, sus allegados y sus clientes para hacerse de tierras valiosísimas en costas, áreas boscosas y hasta en la misma ciudad de Panamá. En Darién hemos visto cómo personas a las que les titularon sus tierras las vendieron poco después o fueron sujeto de préstamos depredadores y las perdieron al quedárselas los bancos, pasando entonces los terrenos al mercado especulativo de bienes raíces. Los antiguos propietarios, empobrecidos, emigran a la periferia de la ciudad capital o tumban bosques montaña arriba en busca de tierras para sobrevivir. La combinación de ideología neoliberal, corrupción, pobreza y mercado depredador invocada por ANATI ha sido letal.</p>
-<p class="newsection"><span class="newthought">¿Qué tiene que ver</span> un instituto científico nacional con todo esto? En realidad, nada. El Tommy Guardia está hoy bajo el paraguas de una institución que no tiene ningún interés en asuntos geográficos o de ciencias de la tierra más allá de su misión de medir y privatizar fincas y administrar el catastro de Panamá. Es más, cuando se firmó el acuerdo con Finmeccanica, el gobierno de aquel entonces justificó la necesidad del “mapa digital” como un instrumento para la vigilancia de los mares contra el narcotráfico (y quién sabe, probablemente también por la oportunidad de otro contrato inflado). Está claro que las autoridades panameñas de los últimos años no han tenido ni interés, ni imaginación para entender la importancia y el valor de un instituto geográfico fuerte e independiente, más allá de los temas usuales de comercio y policía. Si bien los funcionarios del Tommy Guardia son técnicos y científicos de gran capacidad y buena fe, su labor se ve limitada por el espacio institucional en donde se encuentra.</p>
+<p>El Tommy Guardia es, precisamente, nuestro instituto geográfico nacional, una entidad científica encargada de las ciencias de la tierra. Sin embargo, originalmente estaba bajo el Ministerio de Obras Públicas, donde vivió por mucho tiempo. Recientemente, sin embargo, al nacer la poderosa Autoridad Nacional de Administración de Tierras, el Tommy Guardia quedó bajo un nuevo paraguas institucional.</p>
+<p>La ANATI, creada durante la administración de Ricardo Martineli y hoy dirigida por el consultor inmobiliario y docente José Gabriel Montenegro<label for="sn-montenegro" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-montenegro" class="margin-toggle"/><span class="marginnote"><img alt="El nuevo director de ANATI, José Gabriel Montenegro, recorriendo sus dominios" src="/images/montenegro.jpeg">El nuevo director de ANATI, José Gabriel Montenegro, recorriendo sus dominios. Imagen: <a href="https://twitter.com/ANATI_PANAMA/status/1152307588761042945">Twitter</a></span>, viene de un proyecto anterior, el Programa Nacional de Tierras (Pronat), una institución fundada en 1996 en medio de la ola de reformas de libre mercado de aquellos años. Con dinero de varios préstamos millonarios del Banco Mundial y el BID; Pronat y luego ANATI se encargaron de materializar el sueño neoliberal de privatizar las tierras nacionales de manera ordenada para crear un mercado de tierras dinámico y seguro. En estas dos décadas este ha sido con toda seguridad el programa de privatización de bienes públicos más ambicioso y cuantioso en Panamá. Al mismo tiempo, Pronat y ANATI, a juzgar por diversos reportajes periodísticos, han sido usados por funcionarios corruptos, sus allegados y sus clientes para hacerse de tierras valiosísimas en costas, áreas boscosas y hasta en la misma ciudad de Panamá. En Darién hemos visto cómo personas a las que les titularon sus tierras las vendieron poco después o fueron sujeto de préstamos depredadores y las perdieron al quedárselas los bancos, pasando entonces los terrenos al mercado especulativo de bienes raíces. Los antiguos propietarios, empobrecidos, emigran a la periferia de la ciudad capital o tumban bosques montaña arriba en busca de tierras para sobrevivir. La combinación de ideología neoliberal, corrupción, pobreza y mercado depredador invocada por ANATI ha sido letal.</p>
+<p class="newsection"><span class="newthought">¿Qué tiene que ver</span> un instituto científico nacional con todo esto? En realidad, nada. El Tommy Guardia está hoy bajo el control de una institución que no tiene ningún interés en asuntos geográficos o de ciencias de la tierra más allá de su misión<label for="sn-mision" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-mision" class="margin-toggle"/><span class="sidenote">“Dirigir, regular y asegurar el cumplimiento y aplicación de la política nacional de tierras, respetando los derechos de propiedad y la posesión de buena fe, mediante la regularización del catastro nacional, logrando la modernización de la administración y los servicios de tierra garantizando así, la seguridad jurídica y el mejoramiento de la calidad de vida de los poseedores en el Panamá urbano y rural.” <br/>Y la geografía, ¿dónde entra ahí?</span> de medir y privatizar fincas y administrar el catastro de Panamá. Pareciera que el Tommy Guardia fue entregado a la ANATI como un simple departamento para el levantamiento de terrenos. Por otro lado, cuando se firmó el acuerdo con Finmeccanica, el gobierno de aquel entonces justificó la necesidad del “mapa digital” como un instrumento para la vigilancia de los mares contra el narcotráfico, otro asunto que representa millones de dólares en gastos del estado, pero que se aleja de la misión central del Tommy Guardia.</p>
 
-<p>Y esto se nota en el producto final. Los mapas tienen marcado en verde claro lo que en la leyenda llaman “bosque”. Pero, ¿qué es bosque? Para nosotros los ecologistas, para el Ministerio de Ambiente y para la gente en Darién esta es una pregunta muy delicada. Existe el bosque primario o “virgen” y el bosque secundario. Aquí no hay duda. Pero, ¿qué hay del rastrojo, o el bosque en recuperación? ¿Califica esto como bosque? ¿Y las plantaciones forestales, como los cultivos de teca y pino? En el mapa del Tommy Guardia, todo esto es “bosque”. Aunque a veces no. El Ministerio de Ambiente produjo en 2012, a gran costo y con mucho trabajo, un mapa de cobertura boscosa y uso del suelo de Panamá (publicada finalmente seis años más tarde, la de 2008 nunca fue publicada). Pero los “bosques” del Tommy Guardia no tienen nada que ver con esta información: lo hicieron ellos mismos de nuevo. Uno tiene que preguntarse, ¿le interesa en algo el bosque a la ANATI?</p>
-<p>Quizá más grave aún, los mapas no incluyen los límites de las áreas protegidas. En Panamá una gran parte de su territorio está bajo protección y este es uno de los tesoros de la nación, pero aquí solo salen los nombres de los parques nacionales y otras áreas protegidas, sin sus límites. El mismo manual de especificaciones técnicas dice en su página 55 que deben aparecer. ¿Por qué no salen?</p>
-<p>Aunque los políticos no lo entiendan, Panamá necesita un instituto geográfico por muchas más razones que el mercado de bienes raíces y la guerra contra las drogas. La debilidad del Tommy Guardia ha obligado a otras instituciones del estado panameño, como el INEC, a tratar de llenar el vacío por sí mismos. Hoy en día la situación es un tanto desordenada. Para tratar de atender el problema, se creó en 2013 la <a href="http://www.ipde.gob.pa/">Infraestructura Panameña de Datos Espaciales</a> (IPDE), con un comité técnico conformado por 20 instituciones del estado incluyendo al Tommy Guardia (que la coordina), al Ministerio de Gobierno, el Ministerio de Vivienda y Ordenamiento Territorial, la ACP, Miambiente y SINAPROC. Hasta la fecha, la IPDE no parece haber arrojado ningún resultado práctico y seguimos sin datos geográficos oficiales completos y abiertos. </p>
+<p>Está claro que las autoridades panameñas de los últimos años no han tenido ni interés, ni imaginación para entender la importancia y el valor de un instituto geográfico fuerte e independiente, más allá de los temas usuales de comercio y policía. Si bien los funcionarios del Tommy Guardia son técnicos y científicos de gran capacidad y buena fe, su labor se ve limitada por el espacio institucional en donde se encuentra.</p>
+<p>Y esto se nota en el producto final. Los mapas tienen marcado en verde claro lo que en la leyenda llaman “bosque”. Pero, ¿qué es bosque? Para nosotros los ecologistas, para el Ministerio de Ambiente y para la gente en Darién esta es una pregunta muy delicada. Existe el bosque primario o “virgen” y el bosque secundario. Aquí no hay duda. Pero, ¿qué hay del rastrojo, o el bosque en recuperación? ¿Califica esto como bosque? ¿Y las plantaciones forestales, como los cultivos de teca y pino? En el mapa del Tommy Guardia, todo esto es “bosque”. Aunque a veces no. El Ministerio de Ambiente produjo en 2012, a gran costo y con mucho trabajo, un mapa de cobertura boscosa y uso del suelo de Panamá, pero los “bosques” del Tommy Guardia no tienen nada que ver con esto y esta capa es, básicamente, incorrecta e irrelevante. Veamos nuevamente la zona alrededor de Quebrada Félix, al oeste de Filo del Tallo, comparando los “bosques” de los nuevos mapas con los de Miambiente, en verde claro:</p>
+<p><img alt="Inconsistencias en cobertura forestal" src="/images/bosques_diff.gif"></p>
+<p>Al final uno tiene que preguntarse si al fin y al cabo ¿le interesa en algo el bosque a la ANATI?</p>
+<p>Más grave aún, los mapas no incluyen los límites de las áreas protegidas. Las áreas protegidas de Panamá, que cubren una gran parte del territorio, son uno de los tesoros de la nación, pero aquí solo salen los nombres, sin sus límites. En esta imagen he marcado el límite entre el Parque Nacional Darién y el Bosque Protector Alto Darién, donde debería aparecer:</p>
+<p><label for="sn-pirre" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-pirre" class="margin-toggle"/><span class="marginnote">Detalle de la hoja 4639 I NW, “Cerro Pirre”</span></p>
+<p><img alt="Áreas protegidas invisibles" src="/images/sinap_invisible.jpg"></p>
+<p>El mismo manual de especificaciones técnicas dice que deben aparecer. Creo que ANATI no tiene intención de medir, titular y vender los parques nacionales de Panamá, a pesar que los vean como un desperdicio de espacio. Entonces, ¿por qué no salen? </p>
+<p class="newsection"><span class="newthought">Aunque los políticos no lo entiendan,</span> Panamá necesita un instituto geográfico por muchas más razones que el mercado de bienes raíces y la guerra contra las drogas. La debilidad del Tommy Guardia ha obligado a otras instituciones del estado panameño a tratar de llenar el vacío por sí mismos. Como resultado, hoy la situación es un tanto desordenada. Para intentar atender el problema, se creó en 2013 la <a href="http://www.ipde.gob.pa/">Infraestructura Panameña de Datos Espaciales</a> (IPDE), con un comité técnico conformado por 20 instituciones, un sancocho inmanejable que incluye al Tommy Guardia (que la coordina), al Ministerio de Gobierno, el Ministerio de Vivienda, la Autoridad del Canal, la Contraloría, Miambiente, Meduca, el Tribunal Electoral y SINAPROC. Hasta la fecha, es difícil ver qué resultados prácticos ha arrojado la IPDE y seguimos sin datos geográficos oficiales completos, actualizados y abiertos.</p>
+
 <!-- ##Conclusiones finales -->
 
-<p class="newsection"><span class="newthought">La nueva cartografía</span> de Panamá a escala 1:25,000 para la totalidad del territorio nacional que acaba de hacerse disponible es un trabajo importantísimo e histórico, de un valor incalculable para Panamá. Los datos de topografía y el mapeo de ríos y quebradas de todo el país, a pesar de los problemas, es un gran logro y súmamente útil para muchas disciplinas.  Hay que felicitar a los técnicos del Tommy Guardia y de Telespazio por el trabajo realizado.</p>
-
+<p>La nueva cartografía de Panamá a escala 1:25,000 para la totalidad del territorio nacional que acaba de hacerse disponible es un trabajo importantísimo e histórico, de un valor incalculable para Panamá. Los datos de topografía y el mapeo de ríos y quebradas de todo el país, a pesar de los problemas, es un gran logro y súmamente útil para muchas disciplinas.  Hay que felicitar a los técnicos del Tommy Guardia y de Telespazio por el trabajo realizado.</p>
 <p class="newsection"><i>Esperamos que los mapas sigan disponibles de manera gratuita</i> y que se actualicen y corrijan de manera regular. Precisamente, hace falta mucha de esa actualización y corrección, en Darién pudimos comprobar de primera mano que los ríos y quebradas por allá tienen muchos errores, los cuales deben ser corregidos con visitas de campo y consultas a los lugareños. El censo de 2020, así como la actualización cartográfica que está haciendo el INEC, aportará mucha información nueva sobre los lugares poblados del país, que deberá ser integrada lo más rápido posible a la nueva cartografía.</p>
 
-<p class="newsection"><i>Las capas que conforman estos mapas</i><label for="sn-capas" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-capas" class="margin-toggle"/><span class="sidenote">Incluyendo ríos y quebradas, curvas de nivel y  modelo de elevación digital, red vial, lugares poblados y sus edificios, cotas de altura, nombres de los accidentes geográficos, uso del suelo, estaciones de geodesia, división administrativa y fronteras nacionales.</span> deben ser publicadas cuanto antes, de manera abierta y gratuita y mantenerse actualizadas, para que las distintas organizaciones e instituciones públicas y privadas de Panamá podamos contar con estos datos y producir otros mapas y estudios.
+<p class="newsection"><i>Las capas que conforman estos mapas</i><label for="sn-capas" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-capas" class="margin-toggle"/><span class="sidenote">Incluyendo ríos y quebradas, curvas de nivel y  modelo de elevación digital, red vial, lugares poblados y sus edificios, cotas de altura, nombres de los accidentes geográficos, uso del suelo, estaciones de geodesia, división administrativa y fronteras nacionales.</span> deben ser publicadas cuanto antes, de manera gratuita y mantenerse actualizadas.</p>
 
-<p class="newsection"><i>La licencia de uso</i> de los mapas y de las capas debe ser cambiada a dominio público o a una licencia que permita su reutilización, por lo menos, con fines educativos y científicos, tanto por el público como por todas las instituciones del estado. Preferiblemente, debería ser una licencia libre que permita también su uso comercial.
+<p class="newsection"><i>La licencia de uso</i> de los mapas y de las capas debe ser cambiada a dominio público o a una licencia que permita su reutilización, por lo menos, con fines educativos y científicos, de manera que las distintas organizaciones e instituciones públicas y privadas de Panamá, e iniciativas comunitarias como OpenStreetMap podamos contar con estos datos y producir otros mapas y estudios.</p>
 
-<p class="newsection"><i>Los límites administrativos</i> (y las fronteras nacionales) actualizados y corregidos en los nuevos mapas y las (futuras) capas digitales oficiales traerán sorpresas y probablemente conflictos a medida que los municipios, las autoridades indígenas y las comunidades vayan evaluando la nueva realidad. 
+<p class="newsection"><i>Los límites administrativos</i> (y las fronteras nacionales) actualizados y corregidos en los nuevos mapas y las (futuras) capas digitales oficiales traerán sorpresas y probablemente conflictos a medida que los municipios, las autoridades indígenas y las comunidades vayan evaluando las nuevas referencias oficiales. </p>
 
-<p class="newsection"><i>La toponimia en comarcas indígenas</i> debe actualizarse a los idiomas locales, como es el caso de Gunayala, en coordinación con las autoridades comarcales.
+<p class="newsection"><i>La toponimia en comarcas indígenas</i> debe actualizarse a los idiomas locales, como es el caso de Gunayala, en coordinación con las autoridades comarcales.</p>
 
-<p class="newsection"><i>El diseño</i> de los mapas debe seguir las propias especificaciones del Tommy Guardia. Hace falta restringir la información sobre lugares de culto a los “grandes”. El mapa debe mostrar los límites de las áreas protegidas. Los mapas deben indicar claramente que no han sido verificados en el campo o el año en que fueron verificados.
+<p class="newsection"><i>El diseño</i> de los mapas debe seguir las propias especificaciones del Tommy Guardia. Hace falta restringir la información sobre lugares de culto a los “grandes”. El mapa debe mostrar los límites de las áreas protegidas. Los mapas deben indicar claramente que no han sido verificados en el campo o el año en que fueron verificados.</p>
 
-<p class="newsection">Pero debo reconocer que estoy pesimista. Mientras el Instituto Geográfico Nacional “Tommy Guardia” siga siendo una dependencia de ANATI no tendrá posibilidades de ocupar el puesto que merece. El Tommy Guardia debe salir de ANATI y convertirse en una entidad científica autónoma y ágil, que integre las labores cartográficas (y quizá también las de estadística) del Instituto Nacional de Estadística y Censo, que ya tiene un trabajo cartográfico importante, y de otras entidades del estado<label for="sn-inegi" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-inegi" class="margin-toggle"/><span class="sidenote">Un posible modelo es el Instituto Nacional de Estadística, Geografía e Informática ([INEGI](https://www.inegi.org.mx/)) de México.</span>.
+<p class="newsection">Pero debo reconocer que estoy pesimista. Mientras el Instituto Geográfico Nacional “Tommy Guardia” siga siendo una dependencia de ANATI no tendrá posibilidades de ocupar el puesto que merece y que el país necesita. El Tommy Guardia debe convertirse en una entidad científica autónoma y ágil, que integre las labores cartográficas (y quizá también las de estadística) del Instituto Nacional de Estadística y Censo, que ya tiene un trabajo cartográfico importante, y el de otras entidades del estado.</p>
+
+<h2>Comentarios</h2>
+<script language="JavaScript">
+var username = "mir.rodriguez";
+var hostname = "guineo.org";
+var linktext = username + "@" + hostname ;
+document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
+</script>
+
+<div class="nombre">
+<input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
+<div class="error" id="nameError">Debes poner tu nombre<br /></div>
+</div>
+
+<div class="contact_email">
+<input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
+<div class="error" id="emailError">Necesito tu dirección de email<br /></div>
+</div>
+
+<div class="contact_comment">
+<textarea name="body" id="comment" placeholder="COMENTARIO" aria-label="Mensaje" rows="5"></textarea><br/>
+<div class="error" id="commentError">Por favor escribe un comentario<br /></div>
+<input type="hidden" name="_format" value="plain" />
+<input type="hidden" name="_language" value="es" />
+</div>
+
+<p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">ENVIAR</button>
+</form> </p>
 	<section>
 </article>
 <footer>
