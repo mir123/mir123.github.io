@@ -264,7 +264,8 @@ label.sidenote-number { display: inline; }
 
 label.margin-toggle:not(.sidenote-number) { display: none; }
 
-dt { font-size: 1.5em;}
+dt { font-size: 1.5em; 
+     margin-bottom: 0.4em;}
 
 dt a { text-decoration: none;}
 
