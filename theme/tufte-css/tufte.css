@@ -207,7 +207,9 @@ img { max-width: 100%; }
                          font-size: 1.1rem;
                          line-height: 1.3;
                          vertical-align: baseline;
-                         position: relative; }
+                         position: relative;
+                         text-indent: 0em
+ }
 
 .sidenote-number { counter-increment: sidenote-counter; }
 
