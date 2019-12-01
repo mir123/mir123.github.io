@@ -175,7 +175,7 @@ En la ventana <em>Constructor de cadena de expresión</em>, pon el siguiente có
 <p>La siguiente parte del código es la que hace la magia de los ríos afilados. Utiliza las expresiones <code>@geometry_part_num</code>, <code>@geometry_part_count</code> y <code>$length</code> para asignar grosores progresivamente mayores a cada segmento de la línea de tu río, engrosándolo según la longitud del segmento. <label for="log10" class="margin-toggle sidenote-number"></label><input type="checkbox" id="log10" class="margin-toggle"/><span class="sidenote">He usado una función logarítmica (<code>log10</code>) para que el grosor aumente rápidamente al principio del río y luego aumente más gradualmente. Me parece que los ríos más largos se ven mejor así. Puedes modificar esa parte del código y usar<br/><br/><code>* (  @geometry_part_num /  @geometry_part_count )</code><br/><br/>si prefieres que tus líneas se engrosen más gradualmente. Intenta ambas opciones para ver cuál te gusta más. </span></p>
 <p>La última parte, <code>* 3</code>, es un factor adicional que puedes utilizar si quieres que todos los ríos se vean más gruesos (multiplica por un valor mayor que 1) o más delgados (menores que 1, como 0.5, por ejemplo). Este factor y los valores de grosor los podrás ir ajustando por ensayo y error.</p>
 <p>Puedes descargar el resultado final en alta resolución <a href="/images/rios_afilados.png">aquí</a>. </p>
-<p>Este método requiere un poco más de trabajo preparando tu capa y luego tiempo para ajustar los valores de grosor en la expresión. Pero el resultado vale la pena y tu mapa se verá mucho más bonito. Comparte tus modificaciones a este método y tus mapas dejando un comentario abajo o en Twitter, me encantaría escuchar tus ideas.</p>
+<p>Este método requiere un poco más de trabajo preparando tu capa y luego tiempo para ajustar los valores de grosor en la expresión. Pero el resultado vale la pena y tu mapa se verá mucho más bonito. Comparte tus modificaciones a este método y tus mapas dejando un comentario abajo o en <a href="https://twitter.com/mir_lentejas/status/1201247664723185665">Twitter</a>, me encantaría escuchar tus ideas.</p>
 <h2>Comentarios</h2>
 <p><em><p class="newsection">Los comentarios son moderados antes de publicarse.</p></em></p>
 <script language="JavaScript">
@@ -204,7 +204,7 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
 
 <p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">SIGUIENTE &gt;</button>
 </form> </p>
-<p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1154075468997517312">comentar vía Twitter</a></p>
+<p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1201247664723185665">comentar vía Twitter</a></p>
 
 <hr>
 	<section>
