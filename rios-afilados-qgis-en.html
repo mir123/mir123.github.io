@@ -183,7 +183,7 @@ In the <em>Expression string builder</em> dialog that appears, copy the followin
 <p>The following section of the code does the magic of the tapered rivers. It uses the expressions <code>@geometry_part_num</code>, <code>@geometry_part_count</code> and <code>$length</code> to asign progressively thicker values to each segment of your line, making it wider the longer your line is.<label for="log10" class="margin-toggle sidenote-number"></label><input type="checkbox" id="log10" class="margin-toggle"/><span class="sidenote">I've used a logarithmic function (<code>log10</code>) so that width increases rapidly at the beginning of the stream and then increases more slowly. It seems to me longer rivers look better this way. You can change this part of the code and use <br/><br/><code>* (  @geometry_part_num /  @geometry_part_count )</code><br/><br/>if you prefer your lines to become wider more gradually. Try both options to see which one you like better.</span></p>
 <p>The last section, <code>* 3</code>, is an additional factor you can use if you want all of your rivers to be wider (multiply by a number larger than 1) or thinner (less than 1, like 0.5, for example). This factor and the width values are something you want to adjust by trial and error.</p>
 <p>Check <a href="/images/rios_afilados.png">here</a> the final result in high resolution. </p>
-<p>This method requires a bit more work preparing your dataset and then time to adjust the width values in the expression. But the result is worth it and your map will look much better. Share your modifications to this method and your resulting maps leaving a comment below or in <a href="https://twitter.com/mir_lentejas/status/1201247664723185665">Twitter</a>, I'd love to hear your thoughts and ideas.</p>
+<p>This method requires a bit more work preparing your dataset and then time to adjust the width values in the expression. But the result is worth it and your map will look much better. Share your modifications to this method and your resulting maps leaving a comment below, on <a href="https://twitter.com/mir_lentejas/status/1201950941026672641">Twitter</a> or <a href="https://www.reddit.com/r/QGIS/comments/e5ukog/my_tutorial_on_making_watershed_maps_with_qgis/">Reddit</a>, I'd love to hear your thoughts and ideas.</p>
 <h2>Comments</h2>
 <p><em><p class="newsection">Comments are moderated before they are published.</p></em></p>
 <script language="JavaScript">
@@ -212,7 +212,7 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
 
 <p><button type="submit" style="margin-left: -1.5em;" value="SUBMIT">NEXT &gt;</button>
 </form> </p>
-<p class="newsection">You can also comment <a href="https://twitter.com/mir_lentejas/status/1201247664723185665">on Twitter</a></p>
+<p class="newsection">You can also comment on <a href="https://twitter.com/mir_lentejas/status/1201950941026672641">Twitter</a> or <a href="https://www.reddit.com/r/QGIS/comments/e5ukog/my_tutorial_on_making_watershed_maps_with_qgis/">Reddit</a></p>
 
 <hr>
 	<section>
