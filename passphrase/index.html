@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Demo de generador de frase clave en JS</title>
+    <title>Generador de frase clave</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
     <script type="text/javascript">
@@ -71,8 +71,8 @@
 
             for (var i = 0, len = p.length; i < len; i++) {
                 var largo = p[i].innerHTML.length
-                var random = Math.random() * 15;
-                var factor = random + (900 / largo);
+                var random = Math.random() * 10;
+                var factor = random + (500 / largo) + 10;
                 p[i].style.fontSize = factor + "px";
             }
 
@@ -103,7 +103,8 @@
             padding: 0.2em;
             /* white-space: pre; */
             flex-wrap: wrap;
-            width: 100vw;
+            width: 95vw;
+            margin: 10px;
         }
         
         .passPhrase {
