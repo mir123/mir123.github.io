@@ -9,6 +9,7 @@
     <title>Generador de frase clave</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
+    <script src="geopattern.min.js"></script>
     <script type="text/javascript">
         //<![CDATA[
 
@@ -75,6 +76,11 @@
                 var factor = random + (500 / largo) + 10;
                 p[i].style.fontSize = factor + "px";
             }
+
+
+            var pattern = GeoPattern.generate(allPhrases[0].toString());
+
+            document.getElementById("passphrasebox").style.backgroundImage = pattern.toDataUrl();
 
         }
 
