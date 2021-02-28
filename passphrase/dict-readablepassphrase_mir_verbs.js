@@ -1306,7 +1306,7 @@ RPSentenceTemplate.templates = {
         ["noun", 2, 1, 5, 1, 4, false, true, true, true],
     ]),
 
-    normal: new RPSentenceTemplate([
+    normalV: new RPSentenceTemplate([
         ["verb", 1, 1, 1, 1, 1, [1, 1], false],
         ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
         ["noun", 2, 1, 5, 1, 4, false, true, [1, 1], true],
