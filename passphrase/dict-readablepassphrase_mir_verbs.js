@@ -1,11 +1,14 @@
 /**
- * @file This is a port of the C# ReadablePassphraseGenerator, by Murray Grant
+ * Generador de frases clave legibles en español, adaptado de readablePassphraseJS por Steven Zeck
+ * 
+ * @file This is a Spanish version of readablePassphraseJS by Steven Zeck, itself a port of the C# ReadablePassphraseGenerator, by Murray Grant
+ * @author Mir Rodriguez Lombardo <mir123@gmail.com>
  * @author Steven Zeck <saintly@innocent.com>
- * @version 1.0.1
+ * @version 1.0
  * @license Apache-2
  *
  *
- *  ReadablePassphrase objects generate random english sentences
+ *  Los objetos ReadablePassphrase generan frases aleatorias en español
  *  @param {(string|object)} [template] - create a sentence using the given template (either a string name of a predefined template, or an RPSentenceTemplate object)
  *  @param {(string|object)} [mutator]  - use a mutator to add random uppercase & numbers (either a string name of a predefined mutator, or an RPMutator object)
  */
@@ -20,9 +23,9 @@ function ReadablePassphrase(template) {
 }
 
 /**
- *  ReadablePassphrase.randomness() is used by all ReadablePassphrase objects as a source of randomness.
- *  It uses a weak source of randomness by default.
- *  If using ReadablePassphrase in a production environment, you should replace this function with a better one
+ *  ReadablePassphrase.randomness() es usado por todos los objetos ReadablePassphrase como fuente de aleatoriedad.
+ *  Aquí usamos una función que utiliza crypto.getRandomValues y que supuestamente produce valores realmente aleatorios
+ *  Puedes reemplazar esto por una función mejor si así lo deseas
  *  @param {number} [multiplier=1] - get a value between 0 and multiplier (including 0, but not including multiplier)
  *  @return {number} A random, floating-point number between 0 and 1 (or multiplier, if provided)
  */
@@ -142,7 +145,6 @@ ReadablePassphrase.prototype.addTemplate = function(template) {
         if (finalize) break; // some verb templates cause premature completion
     }
 
-
 };
 
 /**
@@ -159,10 +161,7 @@ ReadablePassphrase.prototype.last = function() {
  *  @return {boolean} returns true if no more clauses should be added after this
  */
 ReadablePassphrase.prototype.addClause = function(factors) {
-    // console.log("addClause this");
-    // console.log(this);
-    // console.log("addClause factors");
-    // console.log(factors);
+
     switch (factors.type) {
         case "noun":
             return this.addNoun(factors);
@@ -235,8 +234,6 @@ ReadablePassphrase.prototype.addVerb = function(factors) {
     else pluralVerb = false;
 
     //console.log(' is plural: ' + pluralVerb);
-
-
 
     var makeInterrogative = factors.byName("interrogative"),
         tense = factors.byName("subtype");
@@ -349,18 +346,22 @@ ReadablePassphrase.prototype.addCommonNoun = function(factors) {
     return false;
 };
 
+/**
+ *  Decidir si el sustantivo deberá ser singular o plural. Luego agregaremos el preludio
+ *  @param {object} factors - an object representing a noun clause (see README for examples)
+ *  @return {boolean} returns true if the following noun should be plural
+ */
 
+ReadablePassphrase.prototype.chooseSingularOrPlural = function(factors) {
+    var isPlural = !factors.byName("singular");
+    return isPlural;
+};
 
 /**
  *  Add a prelude to a noun to the current passphrase, eg. "before the"
  *  @param {object} factors - an object representing a noun clause (see README for examples)
  *  @return {boolean} returns true if the following noun should be plural
  */
-//ReadablePassphrase.prototype.addNounPrelude = function(factors) {
-ReadablePassphrase.prototype.chooseSingularOrPlural = function(factors) {
-    var isPlural = !factors.byName("singular");
-    return isPlural;
-};
 
 ReadablePassphrase.prototype.addNounPrelude = function(palabra, factors) {
     isPlural = !palabra.types.singular;
@@ -368,6 +369,15 @@ ReadablePassphrase.prototype.addNounPrelude = function(palabra, factors) {
     definiteOrIndefinite = factors.byName(
         isPlural ? "articuloPlural" : "articuloSingular"
     );
+
+    if (
+        factors.byName("preposition") &&
+        (!this.last() || !this.last().hasTypes("preposition"))
+    ) {
+        this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
+    }
+
+
     switch (definiteOrIndefinite) {
         case "none":
             break;
@@ -409,9 +419,7 @@ ReadablePassphrase.prototype.agregarAdjetivo = function(palabra, factors) {
     esFemenino = palabra.types.F ? true : false;
 
     adjetivo = RPWordList.adjectives.getRandomWord(palabra, this.usedWords);
-    // console.log("Adjetivo: ")
-    // console.log(adjetivo)
-    // console.log(" esplural: " + isPlural + " / esFemenino: " + esFemenino)
+
     return adjetivo;
 };
 
@@ -647,13 +655,13 @@ function RPWordListVerb(transitiveType, verbArray) {
         // console.log( RPWordListVerb.tenses );
     }
 
-    // Todo este asunto de unpacking no funciona en español, en cambio se puede hacer más eficiente el almacenamiento
+    // Todo este asunto de unpacking, como estaba en el original, no funciona en español, tenemos que guardar los verbos ya conjugados
     // de gerundios: estaba &1, estaban &1, y otros
     for (var verbNum = 0; verbNum < verbArray.length; verbNum++) {
         var thisVerb = verbArray[verbNum];
         if (typeof thisVerb == "string") thisVerb = [thisVerb];
-        var baseWord = thisVerb[0],
-            baseWordTrim = thisVerb[0].replace(/e$/, "");
+        // var baseWord = thisVerb[0],
+        //     baseWordTrim = thisVerb[0].replace(/e$/, "");
         for (var specNum = 0; specNum < RPWordListVerb.tenses.length; specNum++) {
 
             var thisSpec = RPWordListVerb.tenses[specNum];
@@ -691,10 +699,9 @@ RPWordListVerb.tenses = [
     "preteritoPerfectoSimplePlural"
 ];
 
-
-
 /**
  *  Returns 'transitive' or 'intransitive', biased toward whichever pool is bigger.  Eg, 5 transitive + 1 intransitive returns 'transitive' 5:1
+ *  Actualmente en español no hay listas separadas de verbos, todos son "intransitive"
  *  @return {string} 'transitive' or 'intransitive'
  */
 RPWordListVerb.getRandomTransitivity = function() {
@@ -774,8 +781,10 @@ RPWordListArticle.prototype.getRandomIndefiniteArticle = function(
 };
 
 /**
- *  Get a random article from the pool
- *  @param {boolean} definite - if true, returns a definite article (eg. 'the'), otherwise an indefinite one.
+ *  Obtiene un artículo de la lista, según sus características
+ *  @param {boolean} definido - si es cierto, devuelve un artículo definido, si no uno indefinido
+ *  @param {boolean} isPlural - si es cierto, devuelve un artículo plural, si no, singular
+ *  @param {boolean} esFemenino - si es cierto, devuelve un artículo femenino, si no, masculino
  *  @return {object} an RPWord() object with the chosen word
  */
 RPWordListArticle.prototype.getRandomWord = function(
@@ -784,8 +793,7 @@ RPWordListArticle.prototype.getRandomWord = function(
     esFemenino
 ) {
     var word = this.list[ReadablePassphrase.randomInt(this.list.length)];
-    // console.log("definido,isPlural,esFemenino");
-    // console.log(definido, isPlural, esFemenino);
+
     var returnWord = new RPWord(
         ["articulo", definido ? "definido" : "indefinido"],
         definido ?
@@ -805,7 +813,6 @@ RPWordListArticle.prototype.getRandomWord = function(
         word.indefinido.singular.F :
         word.indefinido.singular.M
     );
-    //if (!definido) returnWord.indefiniteBeforeVowel = word.indefiniteBeforeVowel;
     return returnWord;
 };
 
@@ -1070,22 +1077,17 @@ function RPSentenceTemplate(template) {
                             none: el[3],
                             definido: el[4],
                             indefinido: el[5],
-                            // demonstrative: el[7],
-                            // personalPronoun: el[8],
                         },
                         adjective: el[6],
                         adjectiveDespues: el[7],
-
-                        // preposition: el[10],
-                        // number: el[11],
-                        singular: el[8],
+                        preposition: el[8],
+                        singular: el[9],
                     };
                     break;
                 case "verb":
                     this[i] = {
                         type: "verb",
                         subtype: {
-
                             gerundio: el[1],
                             futuro: el[2],
                             presente: el[3],
@@ -1095,7 +1097,6 @@ function RPSentenceTemplate(template) {
                         adverb: el[6],
                         interrogative: el[7]
                     };
-
 
                     break;
                 default:
@@ -1128,6 +1129,7 @@ function RPSentenceTemplate(template) {
 
 /**
  *  Returns the number of bits of entropy in the template
+ *  TODO adaptar esto al patrón de plantillas en español
  *  @return {number} floating-point number of bits
  */
 RPSentenceTemplate.prototype.entropy = function() {
@@ -1270,56 +1272,12 @@ RPSentenceTemplate.templates = {
     // Shorthand to select a random template out of a set of similar ones
     random: [
         "normal",
-        "normal3",
-        "normalAnd",
-        "sustantivoSolo",
-        "strongSpeech"
-        // "normalSpeech",
-        // "strong",
-        // "strongAnd",
-        // "strongSpeech",
-        // "insane",
-        // "insaneAnd",
-        // "insaneSpeech",
+        // "normal3",
+        // "normalAnd",
+        "tituloDeLibro",
+        // "strongSpeech"
     ],
-    //randomShort: [
-    // "normal",
-    // "normal2",
-    // "normalAnd2",
-    // "normalAnd3",
 
-    // "normalEqual",
-    // "normalRequired",
-    // "strong",
-    // "insane",
-    // "strongEqual",
-    //],
-    // randomLong: [
-    //     "normalAnd",
-    //     "normalSpeech",
-    //     "normalEqualSpeech",
-    //     "normalRequiredAnd",
-    //     "normalRequiredSpeech",
-    //     "insaneEqual",
-    //     "normalEqualAnd",
-    //     "strongRequired",
-    //     "strongSpeech",
-    //     "strongAnd",
-    // ],
-    // randomForever: [
-    //     "strongEqualSpeech",
-    //     "insaneAnd",
-    //     "insaneSpeech",
-    //     "strongEqualAnd",
-    //     "insaneRequired",
-    //     "strongRequired",
-    //     "strongRequiredSpeech",
-    //     "insaneEqualSpeech",
-    //     "insaneEqualAnd",
-    //     "strongRequiredAnd",
-    //     "insaneRequiredSpeech",
-    //     "insaneRequiredAnd",
-    // ],
 
     // Sustantivo:
 
@@ -1327,7 +1285,7 @@ RPSentenceTemplate.templates = {
     // article [choice: none, definite, indefinite ] 
     // adjective [boolean] - whether to include an adjective
     // position adjetivo [boolean] - si el adjetivo va después (true) o antes (false) del sustantivo
-
+    // preposition[boolean] - whether to include a preposition
     // singular [boolean] - whether the noun is singular (plural if false)
 
     // Verbo:
@@ -1336,18 +1294,32 @@ RPSentenceTemplate.templates = {
     // interrogative [boolean] - whether to make the whole phrase interrogative
 
     // actual templates
-    sustantivoSolo: new RPSentenceTemplate([
-        ["noun", 1, 0, 5, 4, 1, true, true, [1, 1]],
+    tituloDeLibro: new RPSentenceTemplate([
+        ["noun", 1, 0, 5, 4, 1, true, true, false, [1, 1]],
         // ["verb", 1, 1, 1, 1, 1, [1, 1], false],
         // ["noun", 2, 1, 5, 1, 4, false, false, false],
     ]),
 
+    normal: new RPSentenceTemplate([
+        ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
+        ["verb", 1, 1, 1, 1, 1, [1, 1], false],
+        ["noun", 2, 1, 5, 1, 4, false, true, true, true],
+    ]),
 
     normal: new RPSentenceTemplate([
-        ["noun", 1, 0, 5, 4, 1, [1, 1], true, [1, 1]],
         ["verb", 1, 1, 1, 1, 1, [1, 1], false],
-        ["noun", 2, 1, 5, 1, 4, false, false, false],
+        ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
+        ["noun", 2, 1, 5, 1, 4, false, true, [1, 1], true],
     ]),
+
+    elbuayHizo: new RPSentenceTemplate([
+        ["noun", 1, 1, 5, 1, 2, [1, 2],
+            [1, 2], false, [1, 1]
+        ],
+        ["verb", 0, 1, 1, 1, 1, false, false],
+    ]),
+
+
     normal2: new RPSentenceTemplate([
         ["noun", 1, 1, 5, 3, 1, [2, 1], false, [2, 1]],
         ["verb", 1, 2, 1, 2, 1, [1, 2], true],
@@ -1369,231 +1341,13 @@ RPSentenceTemplate.templates = {
         ],
         ["noun", 1, 0, 0, 5, 4, false, true, true],
     ]),
+
     normalAnd: new RPSentenceTemplate([
         ["noun", 2, 1, 2, 5, 4, false, true, false],
         ["verb", 2, 8, 2, 6, 6, false, [1, 8]],
-        ["noun", 1, 0, 2, 5, 4, [1, 1], false, [1, 2]],
         "conjunction", ["noun", 1, 0, 1, 5, 4, true, true, false],
     ]),
-    // normalAnd2: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 2, 5, 4, false, true, false],
-    //     ["verb", 2, 1, 1, 6, 6, false, [1, 8]],
-    //     ["noun", 1, 0, 0, 5, 4, [1, 1], true, [1, 2]],
-    //     "conjunction", ["verb", 2, 1, 1, 6, 6, [1, 2],
-    //         [1, 8]
-    //     ],
-    // ]),
-    // normalAnd3: new RPSentenceTemplate([
-    //     ["noun", 2, 1, 2, 5, 4, false, true, false],
-    //     ["verb", 2, 8, 2, 6, 6, false, [1, 8]],
-    //     ["noun", 1, 0, 1, 5, 4, [2, 1], true, [1, 2]],
-    //     ["verb", 2, 8, 2, 6, 6, false, [1, 8]],
-    //     "conjunction", ["noun", 1, 0, 1, 5, 4, true, true, false],
-    // ]),
 
-
-
-
-    // normalSpeech: new RPSentenceTemplate([
-    //     ["noun", 7, 1, 0, 0, 4, 4, 0, 2, false, false, false, true],
-    //     "directSpeech", ["noun", 12, 1, 2, 5, 4, 4, 0, 2, false, false, [1, 5], true],
-    //     ["verb", 10, 8, 8, 0, 0, 0, 0, false, [1, 8], 0, 0],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 0, 2, false, false, false, true],
-    // ]),
-    // normalEqual: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 1, 1, 1, 0, 1, false, false, [1, 1], true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // normalEqualAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 1, 1, 1, 0, 1, false, false, [1, 1], true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 0, 1, false, false, false, true],
-    //     "conjunction", ["noun", 1, 0, 0, 1, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // normalEqualSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    //     "directSpeech", ["noun", 1, 1, 1, 1, 1, 1, 0, 1, false, false, [1, 1], true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // normalRequired: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 0, 1, 1, 0, 1, false, false, true, true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // normalRequiredAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 0, 1, 1, 0, 1, false, false, true, true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    //     "conjunction", ["noun", 1, 0, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // normalRequiredSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    //     "directSpeech", ["noun", 1, 1, 1, 0, 1, 1, 0, 1, false, false, true, true],
-    //     ["verb", 1, 1, 1, 0, 0, 0, 0, false, [1, 1], 0, 0],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 0, 1, false, false, false, true],
-    // ]),
-    // strong: new RPSentenceTemplate([
-    //     ["noun", 12, 1, 2, 5, 4, 4, 1, 2, false, false, [1, 4],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 2, false, [1, 8], 0, 4],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [1, 15], false, true
-    //     ],
-    // ]),
-    // strongAnd: new RPSentenceTemplate([
-    //     ["noun", 12, 1, 2, 5, 4, 4, 1, 2, false, false, [1, 4],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 2, false, [1, 8], 0, 4],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [1, 15], false, true
-    //     ],
-    //     "conjunction", ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6], false, false, true],
-    // ]),
-    // strongSpeech: new RPSentenceTemplate([
-    //     ["noun", 7, 1, 0, 0, 4, 4, 1, 2, false, false, false, [7, 3]],
-    //     "directSpeech", ["noun", 12, 1, 2, 5, 4, 4, 1, 2, false, false, [1, 4],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 2, false, [1, 8], 0, 4],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [1, 15], false, true
-    //     ],
-    // ]),
-    // strongEqual: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 1, 1, 1, 1, 1, false, false, [1, 1],
-    //         [1, 1]
-    //     ],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, true
-    //     ],
-    // ]),
-    // strongEqualAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 1, 1, 1, 1, 1, false, false, [1, 1],
-    //         [1, 1]
-    //     ],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, true
-    //     ],
-    //     "conjunction", ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1], false, false, true],
-    // ]),
-    // strongEqualSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 1, 1, false, false, false, [1, 1]],
-    //     "directSpeech", ["noun", 1, 1, 1, 1, 1, 1, 1, 1, false, false, [1, 1],
-    //         [1, 1]
-    //     ],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, true
-    //     ],
-    // ]),
-    // strongRequired: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 0, 1, 1, 1, 1, false, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, true, false, true],
-    // ]),
-    // strongRequiredAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 1, 0, 1, 1, 1, 1, false, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, , 0, 1, 1, 1, 1, true, true, false, true],
-    //     "conjunction", ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, false, false, true],
-    // ]),
-    // strongRequiredSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 1, 1, false, false, false, [1, 1]],
-    //     "directSpeech", ["noun", 1, 1, 1, 0, 1, 1, 1, 1, false, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, false, [1, 1], 0, 1],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, true, false, true],
-    // ]),
-    // insane: new RPSentenceTemplate([
-    //     ["noun", 8, 0, 1, 5, 4, 4, 1, 2, [3, 6], false, [1, 3],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 5, [3, 10],
-    //         [1, 8], 1, 5
-    //     ],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [2, 8], false, [7, 3]
-    //     ],
-    // ]),
-    // insaneAnd: new RPSentenceTemplate([
-    //     ["noun", 8, 0, 1, 5, 4, 4, 1, 2, [3, 6], false, [1, 3],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 5, [3, 10],
-    //         [1, 8], 1, 5
-    //     ],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [2, 8], false, [7, 3]
-    //     ],
-    //     "conjunction", ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6], false, false, [7, 3]],
-    // ]),
-    // insaneSpeech: new RPSentenceTemplate([
-    //     ["noun", 7, 1, 0, 0, 4, 4, 1, 2, [3, 6], false, false, [7, 3]],
-    //     "directSpeech", ["noun", 8, 0, 1, 5, 4, 4, 1, 2, [3, 6], false, [1, 3],
-    //         [7, 3]
-    //     ],
-    //     ["verb", 10, 10, 10, 5, 5, 5, 5, [3, 10],
-    //         [1, 8], 1, 5
-    //     ],
-    //     ["noun", 1, 0, 0, 5, 4, 4, 1, 2, [3, 6],
-    //         [2, 8], false, [7, 3]
-    //     ],
-    // ]),
-    // insaneEqual: new RPSentenceTemplate([
-    //     ["noun", 1, 0, 1, 1, 1, 1, 1, 1, [1, 1], false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], 1, 1
-    //     ],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, [1, 1]
-    //     ],
-    // ]),
-    // insaneEqualAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 0, 1, 1, 1, 1, 1, 1, [1, 1], false, [1, 1],
-    //         [1, 1]
-    //     ],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], 1, 1
-    //     ],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, [1, 1]
-    //     ],
-    //     "conjunction", ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1], false, false, [1, 1]],
-    // ]),
-    // insaneEqualSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 1, 1, [1, 1], false, false, [1, 1]],
-    //     "directSpeech", ["noun", 1, 0, 1, 1, 1, 1, 1, 1, [1, 1], false, [1, 1],
-    //         [1, 1]
-    //     ],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], 1, 1
-    //     ],
-    //     ["noun", 1, 0, 0, 1, 1, 1, 1, 1, [1, 1],
-    //         [1, 1], false, [1, 1]
-    //     ],
-    // ]),
-    // insaneRequired: new RPSentenceTemplate([
-    //     ["noun", 1, 0, 1, 0, 1, 1, 1, 1, true, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, true, [1, 1], 1, 1],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, true, false, [1, 1]],
-    // ]),
-    // insaneRequiredAnd: new RPSentenceTemplate([
-    //     ["noun", 1, 0, 1, 0, 1, 1, 1, 1, true, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, true, [1, 1], 1, 1],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, true, false, [1, 1]],
-    //     "conjunction", ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, false, false, [1, 1]],
-    // ]),
-    // insaneRequiredSpeech: new RPSentenceTemplate([
-    //     ["noun", 1, 1, 0, 0, 1, 1, 1, 1, true, false, false, [1, 1]],
-    //     "directSpeech", ["noun", 1, 0, 1, 0, 1, 1, 1, 1, true, false, true, [1, 1]],
-    //     ["verb", 1, 1, 1, 1, 1, 1, 1, true, [1, 1], 1, 1],
-    //     ["noun", 1, 0, 0, 0, 1, 1, 1, 1, true, true, false, [1, 1]],
-    // ]),
 };
 
 RPWordList.numbers = new RPWordListNumber(1, 999);
@@ -1601,6 +1355,8 @@ RPWordList.indefinitePronouns = new RPWordListIndefinitePronoun([
     { singular: "one", personal: true, plural: "ones" },
     { singular: "thing", personal: false, plural: "things" },
 ]);
+
+// TODO método para aumentar la probabilidad de elegir y u o (permitirlo en plantilla) e incorporarlo al cálculo de entropía
 RPWordList.conjunctions = new RPWordList("conjunction", [
     "y",
     "y",
@@ -1767,14 +1523,14 @@ RPWordList.conjunctions = new RPWordList("conjunction", [
 //     ["this", "these"],
 //     ["that", "those"],
 // ]);
-RPWordList.interrogatives = new RPWordListPlural("interrogative", [
-    ["why does", "why do"],
-    ["how does", "how do"],
-    ["when does", "when did"],
-    ["can", "can"],
-    ["will", "will"],
-    ["should", "should"],
-]);
+// RPWordList.interrogatives = new RPWordListPlural("interrogative", [
+//     ["why does", "why do"],
+//     ["how does", "how do"],
+//     ["when does", "when did"],
+//     ["can", "can"],
+//     ["will", "will"],
+//     ["should", "should"],
+// ]);
 
 RPWordList.articulos = new RPWordListArticle([{
     definido: {
@@ -1786,6 +1542,8 @@ RPWordList.articulos = new RPWordListArticle([{
         plural: { M: "unos", F: "unas" },
     },
 }, ]);
+
+// Adjetivos, sustantivos, adverbios y verbos Copyright © 2006, 2012 Scott Sadowsky & Ricardo Martínez Gamboa Todos los derechos reservados. All Rights Reserved. Inscripción No 154.198 (Chile).
 
 RPWordList.adjectives = new RPWordListAdjetivo("adjective", [
     ["primero", "primera"],
@@ -3520,6 +3278,7 @@ RPWordList.adverbs = new RPWordList("adverb", [
     "éticamente"
 
 ]);
+// Fuente: http://blog.tsedi.com/verbos-dicendi-declarativos-o-del-habla/
 
 RPWordList.speechVerbs = new RPWordList("speechVerb", [
     "abordó",
@@ -4984,76 +4743,52 @@ RPWordList.properNouns = new RPWordList("properNoun", [
 
 ]);
 
-// RPWordList.prepositions = new RPWordList("preposition", [
-//     "about",
-//     "above",
-//     "across from",
-//     "according to",
-//     "after",
-//     "ahead of",
-//     "against",
-//     "alongside",
-//     "amidst",
-//     "amoung",
-//     "apart from",
-//     "around",
-//     "as per",
-//     "as far as",
-//     "as well as",
-//     "aside from",
-//     "because of",
-//     "before",
-//     "behind",
-//     "below",
-//     "beside",
-//     "between",
-//     "beyond",
-//     "but",
-//     "by",
-//     "by means of",
-//     "close to",
-//     "except",
-//     "except for",
-//     "far from",
-//     "followed by",
-//     "from",
-//     "given",
-//     "in",
-//     "in addition to",
-//     "in front of",
-//     "in place of",
-//     "in spite of",
-//     "inside",
-//     "into",
-//     "left of",
-//     "near",
-//     "next to",
-//     "on",
-//     "on account of",
-//     "on behalf of",
-//     "on top of",
-//     "onto",
-//     "out",
-//     "out of",
-//     "outside",
-//     "past",
-//     "plus",
-//     "prior to",
-//     "right of",
-//     "sans",
-//     "since",
-//     "thanks to",
-//     "to",
-//     "towards",
-//     "toward",
-//     "under",
-//     "until",
-//     "upon",
-//     "via",
-//     "with",
-//     "within",
-//     "without",
-// ]);
+RPWordList.prepositions = new RPWordList("preposition", [
+    "a",
+    "ante",
+    "bajo",
+    "cabe",
+    "con",
+    "contra",
+    "de",
+    "desde",
+    "durante",
+    "en ",
+    "entre",
+    "hacia",
+    "hasta",
+    "mediante",
+    "para",
+    "por",
+    "según",
+    "sin",
+    "so",
+    "sobre",
+    "tras",
+    "durante",
+    "mediante",
+    "vía",
+    "versus",
+    "a causa de",
+    "a falta de",
+    "con base en",
+    "a favor de",
+    "a costa de",
+    "en contra de",
+    "respecto a",
+    "acerca de",
+    "con motivo de",
+    "junto a",
+    "a razón de",
+    "frente a",
+    "en relación con",
+    "en torno a",
+    "debajo de",
+    "a través de",
+    "de modo que",
+    "de acuerdo a",
+    "por medio de",
+]);
 
 RPWordList.nouns = new RPWordListPlural("noun", [
     ["año", "M"],
@@ -9334,6 +9069,9 @@ RPWordList.nouns = new RPWordListPlural("noun", [
     ["esclarecimiento", "M"],
     ["casita", "F"],
 ]);
+
+// No hay distinción entre transitivos e intransitivos
+// TODO eliminar el parámetro
 
 RPWordList.intransitiveVerbs = new RPWordListVerb("intransitive", [
     [
@@ -41751,38 +41489,6 @@ RPWordList.intransitiveVerbs = new RPWordListVerb("intransitive", [
         "yantaba", "yantaban",
         "yantó", "yantaron",
     ],
-]);
-
-RPWordList.verbs = new RPWordListVerb("transitive", [
-    "abase",
-    "abate",
-    "abolish",
-    "abort",
-    "abrade",
-    "abrogate",
-    "absorb",
-    "abstract",
-    "accede",
-    "acclaim",
-    "accost",
-    "accrue",
-    "acquire",
-    "actuate",
-    "adapt",
-    "add",
-    "adhere",
-    "adjust",
-    "admire",
-    "adopt",
-    "adore",
-    "adorn",
-    "advance",
-    "advise",
-    "affect",
-    "afflict",
-    "afford",
-    "aggrivate",
-    "agitate"
 ]);
 
 if (typeof ReadablePassphrase_Callback == "function") {
