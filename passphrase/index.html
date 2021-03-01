@@ -56,14 +56,22 @@
             var allPhrases = [];
 
             // DEMO: get a list of available templates, then loop through them to create an example of each
-            ReadablePassphrase.templates().forEach(function(templateName) {
-                var passPhrase = new ReadablePassphrase(templateName);
-                // console.log( passPhrase ); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
-                //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
-                phrases.push("<p class='passPhrase'>" + passPhrase + "</p>");
-                allPhrases.push("-" + passPhrase)
-                    //phrases.push(templateName + ": " + passPhrase);
-            });
+            // ReadablePassphrase.templates().forEach(function(templateName) {
+            //     var passPhrase = new ReadablePassphrase(templateName);
+            //     // console.log( passPhrase ); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
+            //     //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
+            //     phrases.push(templateName + " <p class='passPhrase'>" + passPhrase + "</p>");
+            //     allPhrases.push("-" + passPhrase)
+            //         //phrases.push(templateName + ": " + passPhrase);
+            // });
+
+            var passPhrase = new ReadablePassphrase("random");
+            // console.log( passPhrase ); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
+            //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
+            phrases.push(" <p class='passPhrase'>" + passPhrase + "</p>");
+            allPhrases.push("-" + passPhrase)
+                //phrases.push(templateName + ": " + passPhrase);
+
 
             document.getElementById("passphrasebox").innerHTML = phrases.join("\n");
             //document.getElementById("entropy").innerHTML = ui.entropyUsed; // Fun fact: looping through available templates uses about 650 random numbers
