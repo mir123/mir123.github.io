@@ -1324,7 +1324,10 @@ RPSentenceTemplate.templates = {
     normal2: new RPSentenceTemplate([
         ["noun", 2, 1, 5, 3, 1, [2, 1], false, false, [2, 1]],
         ["verb", 1, 2, 1, 2, 1, [1, 2], true],
-        ["noun", 2, 1, 5, 1, 2, true, [1, 1], false, [1, 2]],
+        ["noun", 2, 1, 5, 1, 2, true, [1, 1],
+            [1, 2],
+            [1, 2]
+        ],
     ]),
     normal3: new RPSentenceTemplate([
         ["noun", 1, 1, 5, 3, 1, [2, 1], true, false, [2, 1]],
