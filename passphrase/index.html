@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Generador de frase clave</title>
+    <title>Generador de frases de paso</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
     <script src="geopattern.min.js"></script>
@@ -64,15 +64,19 @@
             //     allPhrases.push("-" + passPhrase)
             //         //phrases.push(templateName + ": " + passPhrase);
             // });
-
-            var passPhrase = new ReadablePassphrase("random");
-            // console.log( passPhrase ); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
+            //var i;
+            var passPhrase;
+            //for (i = 0; i < 100; i++) {
+            passPhrase = new ReadablePassphrase("random");
+            //console.log(passPhrase); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
             //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
-            phrases.push(" <p class='passPhrase'>" + passPhrase + "</p>");
+
+
+            phrases.push(" <p class='passPhrase'>" + passPhrase + "</p>" + " ( " + Math.round(passPhrase.template.entropy()) + ")");
             allPhrases.push("-" + passPhrase)
                 //phrases.push(templateName + ": " + passPhrase);
 
-
+            //}
             document.getElementById("passphrasebox").innerHTML = phrases.join("\n");
             //document.getElementById("entropy").innerHTML = ui.entropyUsed; // Fun fact: looping through available templates uses about 650 random numbers
 
@@ -153,7 +157,7 @@
 </head>
 
 <body onload="loadRPDictionary();">
-    <h2>Generador de frases clave</h2>
+    <h2>Generador de frases de paso</h2>
     <div id="passphrase_container">
         <div id="passphrasebox"></div>
 

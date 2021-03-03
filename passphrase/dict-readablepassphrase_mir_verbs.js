@@ -12,417 +12,399 @@
  *  @param {(string|object)} [template] - create a sentence using the given template (either a string name of a predefined template, or an RPSentenceTemplate object)
  *  @param {(string|object)} [mutator]  - use a mutator to add random uppercase & numbers (either a string name of a predefined mutator, or an RPMutator object)
  */
-function ReadablePassphrase(template) {
-    this.parts = [];
-    this.length = 0;
-    this.usedWords = {};
-    // this.mutator = new RPMutator(mutator);
 
-    if (template) this.addTemplate(template);
-    return this;
+class ReadablePassphrase {
+    constructor(template) {
+        this.parts = [];
+        this.length = 0;
+        this.usedWords = {};
+        // this.mutator = new RPMutator(mutator);
+        if (template)
+            this.addTemplate(template);
+        return this;
+    }
+
+    /**
+     *  Get the string representation of the generated phrase
+     *  @return {string} A phrase, eg "the milk will eat the angry decision"
+     */
+    toString() {
+        var phrase = [];
+        for (var wordNum = 0; wordNum < this.parts.length; wordNum++)
+            phrase.push(this.parts[wordNum].value);
+        //return this.mutator.mutate(phrase.join(" "));
+
+        return phrase.join(" ").replace(" ,", ",");
+    }
+
+    // ****** methods called by addTemplate() *******
+    /**
+     *  Add a template to the end of the current phrase.
+     *  Called automatically by the constructor if you pass a template to the constructor.
+     *  @param {(string|object)} template - use the given template (either a string name of a predefined template, or an RPSentenceTemplate object)
+     */
+    addTemplate(template) {
+        if (typeof template == "string")
+            template = RPSentenceTemplate.byName(template);
+        this.template = template;
+        for (var templateNumber = 0; templateNumber < template.length; templateNumber++) {
+            var thisTemplate = template[templateNumber];
+            var finalize = this.addClause(new RPRandomFactors(thisTemplate));
+            if (finalize)
+                break; // some verb templates cause premature completion
+        }
+    }
+
+    /**
+     *  Get the last clause in the phrase, or null if the phrase is empty
+     *  @return {object} an RPWord() object or null
+     */
+    last() {
+        return this.length > 0 ? this.parts[this.length - 1] : null;
+    }
+
+    /**
+     *  Add a clause to the current passphrase
+     *  @param {object} factors - an object representing a clause (see README for examples)
+     *  @return {boolean} returns true if no more clauses should be added after this
+     */
+    addClause(factors) {
+
+
+        switch (factors.type) {
+            case "noun":
+                return this.addNoun(factors);
+            case "verb":
+                return this.addVerb(factors);
+            case "conjunction":
+                this.appendWord(RPWordList.conjunctions.getRandomWord(this.usedWords));
+                return false;
+            case "comma":
+                this.appendWord(new RPWord(["coma"], ","));
+                return false;
+            case "directSpeech":
+                this.appendWord(RPWordList.speechVerbs.getRandomWord(this.usedWords));
+                return false;
+            default:
+                throw "Unexpected clause type: " + factors.type;
+        }
+    }
+
+    /**
+     *  Add an RPWord() object to the end of the current passphrase
+     *  @param {object} word - an RPWord object
+     *  @return {object} returns the current ReadablePassphrase object
+     */
+    appendWord(word) {
+        return this.insertWord(word, this.length);
+    }
+
+    /**
+     *  Insert an RPWord() object at any position in the current passphrase
+     *  @param {object} word - an RPWord object
+     *  @param {number} position - a number representing the position in the current set of RPWords to add the new one
+     *  @return {object} returns the current ReadablePassphrase object
+     */
+    insertWord(word, position) {
+        this.parts.splice(position, 0, word);
+        this.usedWords[word.value] = true;
+        this.length++;
+        // console.log('Adding ' + word.value + ' to sentence');
+        return this;
+    }
+
+    /**
+     *  Add a Verb clause to the current passphrase
+     *  @param {object} factors - an object representing a verb clause (see README for examples)
+     *  @return {boolean} returns true if no more clauses should be added after this (triggered by some intransitive verbs)
+     */
+    addVerb(factors) {
+        // calculating whether the verb should be plural...
+        var firstNoun = null,
+            firstIndefinitePronoun = null,
+            pluralVerb = null,
+            insertInterrogative = 0;
+        for (var wordNumber = 0; wordNumber < this.length; wordNumber++) {
+            var thisWord = this.parts[wordNumber];
+            if (!firstNoun && thisWord.hasTypes("noun"))
+                firstNoun = thisWord;
+            else if (thisWord.hasTypes("speechVerb")) {
+                firstNoun = null;
+                insertInterrogative = wordNumber + 1;
+            } else if (!firstIndefinitePronoun &&
+                thisWord.hasTypes("indefinitePronoun"))
+                firstIndefinitePronoun = thisWord;
+        }
+
+
+        if (firstNoun)
+            pluralVerb = firstNoun.hasTypes("plural") ? true : false;
+        else if (firstIndefinitePronoun)
+            pluralVerb = firstIndefinitePronoun.hasTypes("plural") ? true : false;
+        else
+            pluralVerb = false;
+
+        var makeInterrogative = factors.byName("interrogative"),
+            tense = factors.byName("subtype");
+        //console.log('Make interrogative: ' + makeInterrogative + ', tense: ' + tense);
+        // if (makeInterrogative) {
+        //     this.insertWord(
+        //         RPWordList.interrogatives.getRandomWord(pluralVerb),
+        //         insertInterrogative,
+        //         this.usedWords
+        //     );
+        //     pluralVerb = true;
+        //     tense = "presentPlural";
+        // }
+        var includeAdverb = factors.byName("adverb") ?
+            ReadablePassphrase.randomness(2) >= 1 ?
+            "before" :
+            "after" :
+            "no";
+        if (includeAdverb == "before")
+            this.appendWord(RPWordList.adverbs.getRandomWord(this.usedWords));
+
+        //RPWordList[selectTransitive ? "verbs" : "intransitiveVerbs"].getRandomWord(
+
+        this.appendWord(RPWordList["verbs"].getRandomWord(
+            tense,
+            pluralVerb,
+            this.usedWords
+        ));
+
+        if (includeAdverb == "after")
+            this.appendWord(RPWordList.adverbs.getRandomWord(this.usedWords));
+        // if (addPreposition)
+        //     this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
+        //if (removeAccusativeNoun) return true; // Returning true means the sentence is done
+        return false;
+    }
+
+    /**
+     *  Add a Noun clause to the current passphrase
+     *  @param {object} factors - an object representing a noun clause (see README for examples)
+     *  @return {boolean} returns true if no more clauses should be added after this (currently always false)
+     */
+    addNoun(factors) {
+        if (factors.byName("preposition") &&
+            (!this.last() || !this.last().hasTypes("preposition"))) {
+            this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
+        }
+
+
+        var n = factors.byName("subtype");
+        switch (n) {
+            case "common":
+                return this.addCommonNoun(factors);
+                break;
+                // case "nounFromAdjective":
+                //     return this.addNounFromAdjective(factors);
+                //     break;
+            case "proper":
+                this.appendWord(RPWordList.properNouns.getRandomWord(this.usedWords));
+                return false;
+            default:
+                throw "Unknown noun subtype: " + n;
+        }
+    }
+
+    /**
+     *  Add a common Noun clause to the current passphrase (eg. "dog", "cat", "justice")
+     *  @param {object} factors - an object representing a noun clause (see README for examples)
+     *  @return {boolean} returns true if no more clauses should be added after this (currently always false)
+     */
+    addCommonNoun(factors) {
+        var isPlural = this.chooseSingularOrPlural(factors);
+
+        if (factors.byName("number") &&
+            (isPlural || factors.mustBeTrue("singular"))) {
+            if (!isPlural &&
+                !(this.length && this.last().hasTypes(["articulo", "indefinido"])))
+                this.appendWord(RPWordList.numbers.getSingularNumberWord());
+            else if (isPlural)
+                this.appendWord(RPWordList.numbers.getPluralNumberWord());
+        }
+
+        var palabra = RPWordList.nouns.getRandomWord(isPlural, this.usedWords);
+
+        this.addNounPrelude(palabra, factors);
+
+
+        if (factors.byName("adjective") && !factors.byName("adjectiveDespues")) {
+
+            this.appendWord(this.agregarAdjetivo(palabra, factors));
+        }
+        this.appendWord(palabra);
+
+        if (factors.byName("adjective") && factors.byName("adjectiveDespues")) {
+
+            this.appendWord(this.agregarAdjetivo(palabra, factors));
+        }
+
+        return false;
+    }
+
+    /**
+     *  Decidir si el sustantivo deberá ser singular o plural. Luego agregaremos el preludio
+     *  @param {object} factors - an object representing a noun clause (see README for examples)
+     *  @return {boolean} returns true if the following noun should be plural
+     */
+    chooseSingularOrPlural(factors) {
+        var isPlural = !factors.byName("singular");
+        return isPlural;
+    }
+
+    /**
+     *  Add a prelude to a noun to the current passphrase, eg. "before the"
+     *  @param {object} factors - an object representing a noun clause (see README for examples)
+     *  @return {boolean} returns true if the following noun should be plural
+     */
+    addNounPrelude(palabra, factors) {
+        var isPlural = !palabra.types.singular;
+        var esFemenino = palabra.types.F ? true : false;
+        var definiteOrIndefinite = factors.byName(
+            isPlural ? "articuloPlural" : "articuloSingular"
+        );
+        var prelude = "";
+
+        // if (
+        //     factors.byName("preposition") &&
+        //     (!this.last() || !this.last().hasTypes("preposition"))
+        // ) {
+        //     this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
+        // }
+        switch (definiteOrIndefinite) {
+            case "none":
+                break;
+            case "definido":
+                prelude = RPWordList.articulos.getRandomDefiniteArticle(
+                    isPlural,
+                    esFemenino
+                );
+                break;
+            case "indefinido":
+                prelude = RPWordList.articulos.getRandomIndefiniteArticle(
+                    isPlural,
+                    esFemenino
+                );
+                break;
+                // case "demonstrative":
+                //     this.appendWord(RPWordList.demonstratives.getRandomWord(isPlural));
+                //     break;
+                // case "personalPronoun":
+                //     this.appendWord(
+                //         RPWordList.personalPronouns.getRandomWord(isPlural, this.usedWords)
+                //     );
+                //    break;
+            default:
+                throw "Unknown case result from computeFactor";
+        }
+        if (definiteOrIndefinite != "none") {
+            this.appendWord(prelude);
+            palabra.prelude = prelude;
+        } else {
+            palabra.prelude = false;
+        }
+        return palabra;
+    }
+
+    agregarAdjetivo(palabra, factors) {
+        var isPlural = !palabra.types.singular;
+        var esFemenino = palabra.types.F ? true : false;
+
+        return RPWordList.adjectives.getRandomWord(palabra, this.usedWords);
+    }
+
+    /**
+     *  ReadablePassphrase.randomness() es usado por todos los objetos ReadablePassphrase como fuente de aleatoriedad.
+     *  Aquí usamos una función que utiliza crypto.getRandomValues y que supuestamente produce valores realmente aleatorios
+     *  Puedes reemplazar esto por una función mejor si así lo deseas
+     *  @param {number} [multiplier=1] - get a value between 0 and multiplier (including 0, but not including multiplier)
+     *  @return {number} A random, floating-point number between 0 and 1 (or multiplier, if provided)
+     */
+    // ReadablePassphrase.randomness = function(multiplier) {
+    //     return Math.random() * (multiplier || 1);
+    // };
+    // http://stackoverflow.com/questions/18230217/javascript-generate-a-random-number-within-a-range-using-crypto-getrandomvalues
+    // Tomado de https://github.com/EFForg/OpenWireless/blob/master/app/js/diceware.js
+    static randomness(max) {
+        var min = 0;
+        var rval = 0;
+        var range = (max * 100);
+
+        var bits_needed = Math.ceil(Math.log2(range));
+        if (bits_needed > 53) {
+            throw new Exception("We cannot generate numbers larger than 53 bits.");
+        }
+        var bytes_needed = Math.ceil(bits_needed / 8);
+        var mask = Math.pow(2, bits_needed) - 1;
+        // 7776 -> (2^13 = 8192) -1 == 8191 or 0x00001111 11111111
+        // Create byte array and fill with N random numbers
+        var byteArray = new Uint8Array(bytes_needed);
+        window.crypto.getRandomValues(byteArray);
+
+        var p = (bytes_needed - 1) * 8;
+        for (var i = 0; i < bytes_needed; i++) {
+            rval += byteArray[i] * Math.pow(2, p);
+            p -= 8;
+        }
+
+        // Use & to apply the mask and reduce the number of recursive lookups
+        rval = rval & mask;
+
+        if (rval >= range) {
+            // Integer out of acceptable range
+            return this.randomness(max);
+        }
+        // Return an integer that falls within the range
+        return rval / 100;
+    }
+
+    /**
+     *  Convenience function: get a random integer
+     *  @param {number} [multiplier=2] Get a random number betweeen 0 and multiplier (including 0 but not including multiplier)
+     *  @return {number} A random integer
+     */
+    static randomInt(multiplier) {
+        return Math.floor(ReadablePassphrase.randomness(multiplier || 2));
+    }
+
+    /**
+     *  Get a list of names of predefined templates
+     *  @return {string[]} A list of predefined templates, in no particular order
+     */
+    static templates() {
+        var templates = [];
+        for (var templateName in RPSentenceTemplate.templates)
+            templates.push(templateName);
+        return templates;
+    }
+
+    /**
+     *  Get a list of names of predefined mutators
+     *  @return {string[]} A list of predefined mutators, in no particular order
+     */
+    static mutators() {
+        var mutators = [];
+        for (var mutatorName in RPMutator.mutators)
+            mutators.push(mutatorName);
+        return mutators;
+    }
+
+    /**
+     *  Get the number of bits of entropy in a template + mutator
+     *  @param {string} template - name of the given template (not a template object)
+     *  @param {(string|object)} [mutator]  - either a string name of a predefined mutator, or an RPMutator object
+     *  @return {number} floating-point number of bits
+     */
+    static entropyOf(template, mutator) {
+        mutator = mutator ? new RPMutator(mutator) : null;
+        return (
+            RPSentenceTemplate.entropyOf(template) + (mutator ? mutator.entropy() : 0)
+        );
+    }
 }
 
-/**
- *  ReadablePassphrase.randomness() es usado por todos los objetos ReadablePassphrase como fuente de aleatoriedad.
- *  Aquí usamos una función que utiliza crypto.getRandomValues y que supuestamente produce valores realmente aleatorios
- *  Puedes reemplazar esto por una función mejor si así lo deseas
- *  @param {number} [multiplier=1] - get a value between 0 and multiplier (including 0, but not including multiplier)
- *  @return {number} A random, floating-point number between 0 and 1 (or multiplier, if provided)
- */
-// ReadablePassphrase.randomness = function(multiplier) {
-//     return Math.random() * (multiplier || 1);
-// };
-
-// http://stackoverflow.com/questions/18230217/javascript-generate-a-random-number-within-a-range-using-crypto-getrandomvalues
-// Tomado de https://github.com/EFForg/OpenWireless/blob/master/app/js/diceware.js
-
-ReadablePassphrase.randomness = function(max) {
-    var min = 0;
-    var rval = 0;
-    var range = max - min;
-
-    var bits_needed = Math.ceil(Math.log2(range));
-    if (bits_needed > 53) {
-        throw new Exception("We cannot generate numbers larger than 53 bits.");
-    }
-    var bytes_needed = Math.ceil(bits_needed / 8);
-    var mask = Math.pow(2, bits_needed) - 1;
-    // 7776 -> (2^13 = 8192) -1 == 8191 or 0x00001111 11111111
-
-    // Create byte array and fill with N random numbers
-    var byteArray = new Uint8Array(bytes_needed);
-    window.crypto.getRandomValues(byteArray);
-
-    var p = (bytes_needed - 1) * 8;
-    for (var i = 0; i < bytes_needed; i++) {
-        rval += byteArray[i] * Math.pow(2, p);
-        p -= 8;
-    }
-
-    // Use & to apply the mask and reduce the number of recursive lookups
-    rval = rval & mask;
-
-    if (rval >= range) {
-        // Integer out of acceptable range
-        return this.randomness(max);
-    }
-    // Return an integer that falls within the range
-    return min + rval;
-};
-
-/**
- *  Convenience function: get a random integer
- *  @param {number} [multiplier=2] Get a random number betweeen 0 and multiplier (including 0 but not including multiplier)
- *  @return {number} A random integer
- */
-ReadablePassphrase.randomInt = function(multiplier) {
-    return Math.floor(ReadablePassphrase.randomness(multiplier || 2));
-};
-
-/**
- *  Get a list of names of predefined templates
- *  @return {string[]} A list of predefined templates, in no particular order
- */
-ReadablePassphrase.templates = function() {
-    var templates = [];
-    for (var templateName in RPSentenceTemplate.templates)
-        templates.push(templateName);
-    return templates;
-};
-
-/**
- *  Get a list of names of predefined mutators
- *  @return {string[]} A list of predefined mutators, in no particular order
- */
-ReadablePassphrase.mutators = function() {
-    var mutators = [];
-    for (var mutatorName in RPMutator.mutators) mutators.push(mutatorName);
-    return mutators;
-};
-
-/**
- *  Get the number of bits of entropy in a template + mutator
- *  @param {string} template - name of the given template (not a template object)
- *  @param {(string|object)} [mutator]  - either a string name of a predefined mutator, or an RPMutator object
- *  @return {number} floating-point number of bits
- */
-ReadablePassphrase.entropyOf = function(template, mutator) {
-    mutator = mutator ? new RPMutator(mutator) : null;
-    return (
-        RPSentenceTemplate.entropyOf(template) + (mutator ? mutator.entropy() : 0)
-    );
-};
-
-/**
- *  Get the string representation of the generated phrase
- *  @return {string} A phrase, eg "the milk will eat the angry decision"
- */
-ReadablePassphrase.prototype.toString = function() {
-    var phrase = [];
-    for (var wordNum = 0; wordNum < this.parts.length; wordNum++)
-        phrase.push(this.parts[wordNum].value);
-    //return this.mutator.mutate(phrase.join(" "));
-    return phrase.join(" ");
-};
-
-// ****** methods called by addTemplate() *******
-
-/**
- *  Add a template to the end of the current phrase.
- *  Called automatically by the constructor if you pass a template to the constructor.
- *  @param {(string|object)} template - use the given template (either a string name of a predefined template, or an RPSentenceTemplate object)
- */
-ReadablePassphrase.prototype.addTemplate = function(template) {
-    if (typeof template == "string")
-        template = RPSentenceTemplate.byName(template);
-    this.template = template;
-    for (
-        var templateNumber = 0; templateNumber < template.length; templateNumber++
-    ) {
-        var thisTemplate = template[templateNumber];
-        var finalize = this.addClause(new RPRandomFactors(thisTemplate));
-        if (finalize) break; // some verb templates cause premature completion
-    }
-};
-
-/**
- *  Get the last clause in the phrase, or null if the phrase is empty
- *  @return {object} an RPWord() object or null
- */
-ReadablePassphrase.prototype.last = function() {
-    return this.length > 0 ? this.parts[this.length - 1] : null;
-};
-
-/**
- *  Add a clause to the current passphrase
- *  @param {object} factors - an object representing a clause (see README for examples)
- *  @return {boolean} returns true if no more clauses should be added after this
- */
-ReadablePassphrase.prototype.addClause = function(factors) {
-    switch (factors.type) {
-        case "noun":
-            return this.addNoun(factors);
-        case "verb":
-            return this.addVerb(factors);
-        case "conjunction":
-            this.appendWord(RPWordList.conjunctions.getRandomWord(this.usedWords));
-            return false;
-        case "directSpeech":
-            this.appendWord(RPWordList.speechVerbs.getRandomWord(this.usedWords));
-            return false;
-        default:
-            throw "Unexpected clause type: " + factors.type;
-    }
-};
-
-/**
- *  Add an RPWord() object to the end of the current passphrase
- *  @param {object} word - an RPWord object
- *  @return {object} returns the current ReadablePassphrase object
- */
-ReadablePassphrase.prototype.appendWord = function(word) {
-    return this.insertWord(word, this.length);
-};
-
-/**
- *  Insert an RPWord() object at any position in the current passphrase
- *  @param {object} word - an RPWord object
- *  @param {number} position - a number representing the position in the current set of RPWords to add the new one
- *  @return {object} returns the current ReadablePassphrase object
- */
-ReadablePassphrase.prototype.insertWord = function(word, position) {
-    this.parts.splice(position, 0, word);
-    this.usedWords[word.value] = true;
-    this.length++;
-    // console.log('Adding ' + word.value + ' to sentence');
-    return this;
-};
-
-/**
- *  Add a Verb clause to the current passphrase
- *  @param {object} factors - an object representing a verb clause (see README for examples)
- *  @return {boolean} returns true if no more clauses should be added after this (triggered by some intransitive verbs)
- */
-ReadablePassphrase.prototype.addVerb = function(factors) {
-    // calculating whether the verb should be plural...
-    var firstNoun = null,
-        firstIndefinitePronoun = null,
-        pluralVerb = null,
-        insertInterrogative = 0;
-    for (var wordNumber = 0; wordNumber < this.length; wordNumber++) {
-        var thisWord = this.parts[wordNumber];
-        if (!firstNoun && thisWord.hasTypes("noun")) firstNoun = thisWord;
-        else if (thisWord.hasTypes("speechVerb")) {
-            firstNoun = null;
-            insertInterrogative = wordNumber + 1;
-        } else if (!firstIndefinitePronoun &&
-            thisWord.hasTypes("indefinitePronoun")
-        )
-            firstIndefinitePronoun = thisWord;
-    }
-
-    // console.log('FirstNoun: ')
-    // console.log(firstNoun)
-    // console.log('indefPronoun: ' + firstIndefinitePronoun)
-
-    if (firstNoun) pluralVerb = firstNoun.hasTypes("plural") ? true : false;
-    else if (firstIndefinitePronoun)
-        pluralVerb = firstIndefinitePronoun.hasTypes("plural") ? true : false;
-    else pluralVerb = false;
-
-    //console.log(' is plural: ' + pluralVerb);
-
-    var makeInterrogative = factors.byName("interrogative"),
-        tense = factors.byName("subtype");
-    //console.log('Make interrogative: ' + makeInterrogative + ', tense: ' + tense);
-    // if (makeInterrogative) {
-    //     this.insertWord(
-    //         RPWordList.interrogatives.getRandomWord(pluralVerb),
-    //         insertInterrogative,
-    //         this.usedWords
-    //     );
-    //     pluralVerb = true;
-    //     tense = "presentPlural";
-    // }
-
-    var includeAdverb = factors.byName("adverb") ?
-        ReadablePassphrase.randomness(2) >= 1 ?
-        "before" :
-        "after" :
-        "no";
-    if (includeAdverb == "before")
-        this.appendWord(RPWordList.adverbs.getRandomWord(this.usedWords));
-
-    //RPWordList[selectTransitive ? "verbs" : "intransitiveVerbs"].getRandomWord(
-
-    verbo = RPWordList["intransitiveVerbs"].getRandomWord(
-        tense,
-        pluralVerb,
-        this.usedWords
-    );
-    // console.log("tense: " + tense + " / pluralVerb: " + pluralVerb + " / verbo: ")
-    // console.log(verbo)
-    this.appendWord(verbo);
-
-    if (includeAdverb == "after")
-        this.appendWord(RPWordList.adverbs.getRandomWord(this.usedWords));
-    // if (addPreposition)
-    //     this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
-
-    //if (removeAccusativeNoun) return true; // Returning true means the sentence is done
-    return false;
-};
-
-/**
- *  Add a Noun clause to the current passphrase
- *  @param {object} factors - an object representing a noun clause (see README for examples)
- *  @return {boolean} returns true if no more clauses should be added after this (currently always false)
- */
-ReadablePassphrase.prototype.addNoun = function(factors) {
-    if (
-        factors.byName("preposition") &&
-        (!this.last() || !this.last().hasTypes("preposition"))
-    ) {
-        this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
-    }
-
-    console.log("factors");
-    console.log(factors);
-
-    var n = factors.byName("subtype");
-    switch (n) {
-        case "common":
-            return this.addCommonNoun(factors);
-            break;
-            // case "nounFromAdjective":
-            //     return this.addNounFromAdjective(factors);
-            //     break;
-        case "proper":
-            this.appendWord(RPWordList.properNouns.getRandomWord(this.usedWords));
-            return false;
-        default:
-            throw "Unknown noun subtype: " + n;
-    }
-};
-
-/**
- *  Add a common Noun clause to the current passphrase (eg. "dog", "cat", "justice")
- *  @param {object} factors - an object representing a noun clause (see README for examples)
- *  @return {boolean} returns true if no more clauses should be added after this (currently always false)
- */
-ReadablePassphrase.prototype.addCommonNoun = function(factors) {
-    var isPlural = this.chooseSingularOrPlural(factors);
-
-    if (
-        factors.byName("number") &&
-        (isPlural || factors.mustBeTrue("singular"))
-    ) {
-        if (!isPlural &&
-            !(this.length && this.last().hasTypes(["articulo", "indefinido"]))
-        )
-            this.appendWord(RPWordList.numbers.getSingularNumberWord());
-        else if (isPlural)
-            this.appendWord(RPWordList.numbers.getPluralNumberWord());
-    }
-
-    palabra = RPWordList.nouns.getRandomWord(isPlural, this.usedWords);
-    // console.log("palabra");
-    // console.log(palabra);
-    this.addNounPrelude(palabra, factors);
-
-    // console.log("factores")
-    // console.log(factors)
-    if (factors.byName("adjective") && !factors.byName("adjectiveDespues")) {
-        // console.log("adjetivo antes")
-        // console.log(palabra)
-        this.appendWord(this.agregarAdjetivo(palabra, factors));
-    }
-    this.appendWord(palabra);
-
-    if (factors.byName("adjective") && factors.byName("adjectiveDespues")) {
-        // console.log("adjetivo luego")
-        // console.log(palabra)
-
-        this.appendWord(this.agregarAdjetivo(palabra, factors));
-    }
-
-    return false;
-};
-
-/**
- *  Decidir si el sustantivo deberá ser singular o plural. Luego agregaremos el preludio
- *  @param {object} factors - an object representing a noun clause (see README for examples)
- *  @return {boolean} returns true if the following noun should be plural
- */
-
-ReadablePassphrase.prototype.chooseSingularOrPlural = function(factors) {
-    var isPlural = !factors.byName("singular");
-    return isPlural;
-};
-
-/**
- *  Add a prelude to a noun to the current passphrase, eg. "before the"
- *  @param {object} factors - an object representing a noun clause (see README for examples)
- *  @return {boolean} returns true if the following noun should be plural
- */
-
-ReadablePassphrase.prototype.addNounPrelude = function(palabra, factors) {
-    isPlural = !palabra.types.singular;
-    esFemenino = palabra.types.F ? true : false;
-    definiteOrIndefinite = factors.byName(
-        isPlural ? "articuloPlural" : "articuloSingular"
-    );
-
-    // if (
-    //     factors.byName("preposition") &&
-    //     (!this.last() || !this.last().hasTypes("preposition"))
-    // ) {
-    //     this.appendWord(RPWordList.prepositions.getRandomWord(this.usedWords));
-    // }
-
-    switch (definiteOrIndefinite) {
-        case "none":
-            break;
-        case "definido":
-            prelude = RPWordList.articulos.getRandomDefiniteArticle(
-                isPlural,
-                esFemenino
-            );
-            break;
-        case "indefinido":
-            prelude = RPWordList.articulos.getRandomIndefiniteArticle(
-                isPlural,
-                esFemenino
-            );
-            break;
-            // case "demonstrative":
-            //     this.appendWord(RPWordList.demonstratives.getRandomWord(isPlural));
-            //     break;
-            // case "personalPronoun":
-            //     this.appendWord(
-            //         RPWordList.personalPronouns.getRandomWord(isPlural, this.usedWords)
-            //     );
-            //    break;
-        default:
-            throw "Unknown case result from computeFactor";
-    }
-    if (definiteOrIndefinite != "none") {
-        this.appendWord(prelude);
-        palabra.prelude = prelude;
-    } else {
-        palabra.prelude = false;
-    }
-    return palabra;
-};
-
-ReadablePassphrase.prototype.agregarAdjetivo = function(palabra, factors) {
-    isPlural = !palabra.types.singular;
-    esFemenino = palabra.types.F ? true : false;
-
-    adjetivo = RPWordList.adjectives.getRandomWord(palabra, this.usedWords);
-
-    return adjetivo;
-};
 
 /**
  *  This object represents a word in a sentence, plus some attributes that describe the type of word
@@ -468,34 +450,36 @@ class RPWord {
  *  @param {string} type  - a string describing the type of all words in this list
  *  @param {string[]} wordArray - an array of words
  */
-function RPWordList(type, wordArray) {
-    this.list = wordArray;
-    this.type = type;
-    this.length = wordArray.length;
-    return this;
+class RPWordList {
+    constructor(type, wordArray) {
+            this.list = wordArray;
+            this.type = type;
+            this.length = wordArray.length;
+            return this;
+        }
+        /**
+         *  Get a random word from the pool.
+         *  Note that passing alreadyChosen{} actually weakens the overall strength of the passphrase slightly
+         *  @param {object} [alreadyChosen] - if a hash of words that are already chosen is provided, this will avoid returning one already chosen
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomWord(alreadyChosen) {
+        var word,
+            attempts = 100;
+        do {
+            word = this.list[ReadablePassphrase.randomInt(this.length)];
+
+            if (attempts-- < 1)
+                throw (
+                    "Exceeded max attempts in RPWordList.getRandomWord() for type " +
+                    this.type
+                );
+        } while (alreadyChosen && alreadyChosen[word]);
+
+        return new RPWord(this.type, word);
+    }
 }
 
-/**
- *  Get a random word from the pool.
- *  Note that passing alreadyChosen{} actually weakens the overall strength of the passphrase slightly
- *  @param {object} [alreadyChosen] - if a hash of words that are already chosen is provided, this will avoid returning one already chosen
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordList.prototype.getRandomWord = function(alreadyChosen) {
-    var word,
-        attempts = 100;
-    do {
-        word = this.list[ReadablePassphrase.randomInt(this.length)];
-
-        if (attempts-- < 1)
-            throw (
-                "Exceeded max attempts in RPWordList.getRandomWord() for type " +
-                this.type
-            );
-    } while (alreadyChosen && alreadyChosen[word]);
-
-    return new RPWord(this.type, word);
-};
 
 /**
  *  This object represents a pool of word pairs of a similar type, with the first element in each pair being the singular form and the second the plural
@@ -503,28 +487,39 @@ RPWordList.prototype.getRandomWord = function(alreadyChosen) {
  *  @param {object[]} wordArray - an array of a word pairs, eg [[ 'mouse', 'mice ], ['dog','dogs' ]]
  *  Convertido a español eliminando la posibilidad de array -- siempre es string (la primera parte del array) y siempre construye el plural programáticamente.
  */
-class RPWordListPlural {
+class RPWordListPlural extends RPWordList {
     constructor(type, pluralWordArray, genero) {
-            RPWordList.call(this, type, pluralWordArray);
+            super(type, pluralWordArray);
             this.genero = genero;
             for (var wordNum = 0; wordNum < this.list.length; wordNum++) {
                 var thisWord = this.list[wordNum][0];
+
                 var genero = this.list[wordNum][1];
                 //if (typeof thisWord == "string")
-                if (thisWord.substring(thisWord.length - 1).match(/^[aeiou]/)) {
+                if (thisWord.substring(thisWord.length - 1).match(/^[aeiouáéíóú]/)) {
                     this.list[wordNum] = [thisWord, thisWord + "s"];
-                } else if (thisWord.substring(thisWord.length - 1).match(/^[z]/)) {
-                    this.list[wordNum] = [
-                        thisWord,
-                        thisWord.substring(0, thisWord.length - 1) + "ces",
-                    ];
                 } else {
-                    this.list[wordNum] = [thisWord, thisWord + "es"];
+                    //Quitar posibles tildes de últimas dos letras -- no van al convertir al plural
+                    var thisWordP = thisWord.substring(0, thisWord.length - 2) + thisWord.substring(thisWord.length - 2).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+                    if (thisWord.substring(thisWord.length - 1).match(/^[z]/)) {
+
+                        this.list[wordNum] = [
+                            thisWord,
+                            thisWordP.substring(0, thisWordP.length - 1) + "ces",
+                        ];
+                    } else {
+
+                        this.list[wordNum] = [thisWord, thisWordP + "es"];
+                    }
                 }
                 if (type == "noun") {
                     this.list[wordNum][2] = genero;
                 }
             }
+
+
+
             return this;
         }
         /**
@@ -563,9 +558,9 @@ class RPWordListPlural {
  *  @param {object[]} wordArray - un array de pares de adjetivos, masculino y femenino
  */
 
-class RPWordListAdjetivo {
+class RPWordListAdjetivo extends RPWordList {
     constructor(type, adjectiveArray) {
-            RPWordList.call(this, type, adjectiveArray);
+            super(type, adjectiveArray);
             var adjetivoPlural = "";
             for (var wordNum = 0; wordNum < this.list.length; wordNum++) {
                 var thisWord = this.list[wordNum];
@@ -594,9 +589,8 @@ class RPWordListAdjetivo {
          *  @return {object} an RPWord() object with the chosen word
          */
     getRandomWord(palabra, alreadyChosen) {
-        isPlural = !palabra.types.singular;
-        esFemenino = palabra.types.F ? true : false;
-        //console.log(this.list)
+        var isPlural = !palabra.types.singular;
+        var esFemenino = palabra.types.F ? true : false;
         var word = null,
             attempts = 100,
             x = null,
@@ -613,7 +607,6 @@ class RPWordListAdjetivo {
                 );
         } while (!word || (alreadyChosen && alreadyChosen[word]));
 
-        //console.log("Adjetivo: " + word)
         return new RPWord(
             [this.type, isPlural ? "plural" : "singular", esFemenino ? "F" : "M"],
             word
@@ -623,59 +616,111 @@ class RPWordListAdjetivo {
 
 /**
  *  This object represents a pool of verbs, with each verb having multiple possible tenses
- *  @param {string} transitiveType  - either 'transitive' or 'intransitive' depending on the type of verbs in the list
+ *  @param {string} transitiveType  - en español por el momento siempre "intransitive"
  *  @param {object[]} verbArray - an array of a verbs, each represented as a 14-element array of tenses (see RPWordListVerb.tenses for order)
  */
-function RPWordListVerb(transitiveType, verbArray) {
-    this.list = [];
+class RPWordListVerb {
+    constructor(transitiveType, verbArray) {
+            this.list = [];
 
-    if (typeof RPWordListVerb.tenses[0] == "string") {
-        // compile the tenses
-        for (var specNum = 0; specNum < RPWordListVerb.tenses.length; specNum++) {
-            var thisSpec = RPWordListVerb.tenses[specNum];
-            var specObj = {
-                fullTense: thisSpec,
-                tense: null,
-                continuous: false,
-                plural: false,
-            };
-            var tenseMatch = thisSpec.match(
-                /^(preteritoImperfecto|preteritoPerfectoSimple|presente|futuro|subjunctive)/
-                //    /^(preterito|presente|futuro)/
-            );
-            if (tenseMatch) specObj.tense = tenseMatch[0];
-            if (thisSpec.match(/Gerundio/)) specObj.continuous = true;
-            // if (thisSpec.match(/Gerundio/)) specObj.continuous = true;
-            if (thisSpec.match(/Plural/)) specObj.plural = true;
-            RPWordListVerb.tenses[specNum] = specObj;
-        }
-        // console.log( RPWordListVerb.tenses );
-    }
+            if (typeof RPWordListVerb.tenses[0] == "string") {
+                // compile the tenses
+                for (var specNum = 0; specNum < RPWordListVerb.tenses.length; specNum++) {
+                    var thisSpec = RPWordListVerb.tenses[specNum];
+                    var specObj = {
+                        fullTense: thisSpec,
+                        tense: null,
+                        continuous: false,
+                        plural: false,
+                    };
+                    var tenseMatch = thisSpec.match(
+                        /^(preteritoImperfecto|preteritoPerfectoSimple|presente|futuro|subjunctive)/
+                        //    /^(preterito|presente|futuro)/
+                    );
+                    if (tenseMatch)
+                        specObj.tense = tenseMatch[0];
+                    if (thisSpec.match(/Gerundio/))
+                        specObj.continuous = true;
+                    // if (thisSpec.match(/Gerundio/)) specObj.continuous = true;
+                    if (thisSpec.match(/Plural/))
+                        specObj.plural = true;
+                    RPWordListVerb.tenses[specNum] = specObj;
+                }
+            }
 
-    // Todo este asunto de unpacking, como estaba en el original, no funciona en español, tenemos que guardar los verbos ya conjugados
-    // de gerundios: estaba &1, estaban &1, y otros
-    for (var verbNum = 0; verbNum < verbArray.length; verbNum++) {
-        var thisVerb = verbArray[verbNum];
-        if (typeof thisVerb == "string") thisVerb = [thisVerb];
-        // var baseWord = thisVerb[0],
-        //     baseWordTrim = thisVerb[0].replace(/e$/, "");
-        for (var specNum = 0; specNum < RPWordListVerb.tenses.length; specNum++) {
-            var thisSpec = RPWordListVerb.tenses[specNum];
-            var thisWord = thisVerb[specNum];
-            var types = [
-                "verb",
-                thisSpec.fullTense,
-                thisSpec.tense,
-                thisSpec.plural ? "plural" : "singular",
-                transitiveType,
-            ];
-            if (thisSpec.continuous) types.push("gerundio");
-            this.list.push(new RPWord(types, thisWord));
+            // Todo este asunto de unpacking, como estaba en el original, no funciona en español, tenemos que guardar los verbos ya conjugados
+            // de gerundios: estaba &1, estaban &1, y otros
+            for (var verbNum = 0; verbNum < verbArray.length; verbNum++) {
+                var thisVerb = verbArray[verbNum];
+                if (typeof thisVerb == "string")
+                    thisVerb = [thisVerb];
+                // var baseWord = thisVerb[0],
+                //     baseWordTrim = thisVerb[0].replace(/e$/, "");
+                for (var specNum = 0; specNum < RPWordListVerb.tenses.length; specNum++) {
+                    var thisSpec = RPWordListVerb.tenses[specNum];
+                    var thisWord = thisVerb[specNum];
+                    var types = [
+                        "verb",
+                        thisSpec.fullTense,
+                        thisSpec.tense,
+                        thisSpec.plural ? "plural" : "singular",
+                        transitiveType,
+                    ];
+                    if (thisSpec.continuous)
+                        types.push("gerundio");
+                    this.list.push(new RPWord(types, thisWord));
+                }
+            }
+            this.length = this.list.length;
+            return this;
         }
-    }
-    //console.log(this);
-    this.length = this.list.length;
-    return this;
+        /**
+         *  Get a random word from the pool.
+         *  Note that passing alreadyChosen{} actually weakens the overall strength of the passphrase slightly
+         *  @param {string} [tense] - name of the tense being requested, eg. 'pastContinuousPlural'
+         *  @param {boolean} [isPlural] - true if the plural form of the word is being requested
+         *  @param {object} [alreadyChosen] - if a hash of words that are already chosen is provided, this will avoid returning one already chosen
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomWord(tense,
+            isPlural,
+            alreadyChosen) {
+            var types = [];
+
+            if (typeof isPlural == "boolean" && tense && tense != "gerundio") {
+                types.push(isPlural ? "plural" : "singular");
+                types.push(tense);
+            }
+
+            //if (tense && tense == "continuousPast") types.push("continuous", "past");
+            else if (tense)
+                types.push(tense);
+
+            var options = [];
+            for (var wordNum = 0; wordNum < this.list.length; wordNum++) {
+                var thisWord = this.list[wordNum];
+                if ((!alreadyChosen || !alreadyChosen[thisWord.value]) &&
+                    thisWord.hasTypes(types))
+                    options.push(thisWord);
+            }
+            if (!options.length)
+                throw "No verbs match criteria!";
+            return options[ReadablePassphrase.randomInt(options.length)];
+        }
+        //     /**
+        //      *  Returns 'transitive' or 'intransitive', biased toward whichever pool is bigger.  Eg, 5 transitive + 1 intransitive returns 'transitive' 5:1
+        //      *  Actualmente en español no hay listas separadas de verbos, todos son "intransitive"
+        //      *  @return {string} 'transitive' or 'intransitive'
+        //      */
+        // static getRandomTransitivity() {
+        //     return RPRandomFactors.computeFactor([
+        //             RPWordList.verbs.length,
+        //             RPWordList.verbs.length,
+        //         ]) ?
+        //         "transitive" //"intransitive";
+        //         :
+        //         "transitive";
+        // }
 }
 
 /**
@@ -695,198 +740,150 @@ RPWordListVerb.tenses = [
     "preteritoPerfectoSimplePlural",
 ];
 
-/**
- *  Returns 'transitive' or 'intransitive', biased toward whichever pool is bigger.  Eg, 5 transitive + 1 intransitive returns 'transitive' 5:1
- *  Actualmente en español no hay listas separadas de verbos, todos son "intransitive"
- *  @return {string} 'transitive' or 'intransitive'
- */
-RPWordListVerb.getRandomTransitivity = function() {
-    return RPRandomFactors.computeFactor([
-            RPWordList.verbs.length,
-            RPWordList.intransitiveVerbs.length,
-        ]) ?
-        "transitive" //"intransitive";
-        :
-        "transitive";
-};
 
-/**
- *  Get a random word from the pool.
- *  Note that passing alreadyChosen{} actually weakens the overall strength of the passphrase slightly
- *  @param {string} [tense] - name of the tense being requested, eg. 'pastContinuousPlural'
- *  @param {boolean} [isPlural] - true if the plural form of the word is being requested
- *  @param {object} [alreadyChosen] - if a hash of words that are already chosen is provided, this will avoid returning one already chosen
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListVerb.prototype.getRandomWord = function(
-    tense,
-    isPlural,
-    alreadyChosen
-) {
-    var types = [];
-
-    if (typeof isPlural == "boolean" && tense && tense != "gerundio") {
-        types.push(isPlural ? "plural" : "singular");
-        types.push(tense);
-    }
-    //if (tense && tense == "continuousPast") types.push("continuous", "past");
-    else if (tense) types.push(tense);
-
-    var options = [];
-    for (var wordNum = 0; wordNum < this.list.length; wordNum++) {
-        var thisWord = this.list[wordNum];
-        if (
-            (!alreadyChosen || !alreadyChosen[thisWord.value]) &&
-            thisWord.hasTypes(types)
-        )
-            options.push(thisWord);
-    }
-    if (!options.length) throw "No verbs match criteria!";
-    return options[ReadablePassphrase.randomInt(options.length)];
-};
 
 /**
  *  This object represents a pool of random articulos.  Currently there is only 1 article in the list "a", "an" or "the"
  *  @param {object[]} articleArray - an array of article objects {definite: ..., indefinite: ..., indefiniteBeforeVowel: ...}
  */
-function RPWordListArticle(articleArray) {
-    this.list = articleArray;
-    this.length = articleArray.length;
+class RPWordListArticle {
+    constructor(articleArray) {
+            this.list = articleArray;
+            this.length = articleArray.length;
+        }
+        /**
+         *  Get a random definite article from the pool.  Currently always returns 'the'
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomDefiniteArticle(isPlural,
+            esFemenino) {
+            return this.getRandomWord(true, isPlural, esFemenino);
+        }
+        /**
+         *  Get a random indefinite article from the pool.  Currently always returns 'a/an'
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomIndefiniteArticle(isPlural,
+            esFemenino) {
+            return this.getRandomWord(false, isPlural, esFemenino);
+        }
+        /**
+         *  Obtiene un artículo de la lista, según sus características
+         *  @param {boolean} definido - si es cierto, devuelve un artículo definido, si no uno indefinido
+         *  @param {boolean} isPlural - si es cierto, devuelve un artículo plural, si no, singular
+         *  @param {boolean} esFemenino - si es cierto, devuelve un artículo femenino, si no, masculino
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomWord(definido,
+        isPlural,
+        esFemenino) {
+        var word = this.list[ReadablePassphrase.randomInt(this.list.length)];
+
+        var returnWord = new RPWord(
+            ["articulo", definido ? "definido" : "indefinido"],
+            definido ?
+            isPlural ?
+            esFemenino ?
+            word.definido.plural.F :
+            word.definido.plural.M :
+            esFemenino ?
+            word.definido.singular.F :
+            word.definido.singular.M // indefinido
+            :
+            isPlural ?
+            esFemenino ?
+            word.indefinido.plural.F :
+            word.indefinido.plural.M :
+            esFemenino ?
+            word.indefinido.singular.F :
+            word.indefinido.singular.M
+        );
+        return returnWord;
+    }
 }
 
-/**
- *  Get a random definite article from the pool.  Currently always returns 'the'
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListArticle.prototype.getRandomDefiniteArticle = function(
-    isPlural,
-    esFemenino
-) {
-    return this.getRandomWord(true, isPlural, esFemenino);
-};
 
-/**
- *  Get a random indefinite article from the pool.  Currently always returns 'a/an'
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListArticle.prototype.getRandomIndefiniteArticle = function(
-    isPlural,
-    esFemenino
-) {
-    return this.getRandomWord(false, isPlural, esFemenino);
-};
 
-/**
- *  Obtiene un artículo de la lista, según sus características
- *  @param {boolean} definido - si es cierto, devuelve un artículo definido, si no uno indefinido
- *  @param {boolean} isPlural - si es cierto, devuelve un artículo plural, si no, singular
- *  @param {boolean} esFemenino - si es cierto, devuelve un artículo femenino, si no, masculino
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListArticle.prototype.getRandomWord = function(
-    definido,
-    isPlural,
-    esFemenino
-) {
-    var word = this.list[ReadablePassphrase.randomInt(this.list.length)];
-
-    var returnWord = new RPWord(
-        ["articulo", definido ? "definido" : "indefinido"],
-        definido ?
-        isPlural ?
-        esFemenino ?
-        word.definido.plural.F :
-        word.definido.plural.M :
-        esFemenino ?
-        word.definido.singular.F :
-        word.definido.singular.M // indefinido
-        :
-        isPlural ?
-        esFemenino ?
-        word.indefinido.plural.F :
-        word.indefinido.plural.M :
-        esFemenino ?
-        word.indefinido.singular.F :
-        word.indefinido.singular.M
-    );
-    return returnWord;
-};
 
 /**
  *  This object represents a pool of random numbers.
  *  @param {number} start - an integer representing where the lowest number to return
  *  @param {number} end - an integer representing the highest number to return
  */
-function RPWordListNumber(start, end) {
-    this.start = start;
-    this.end = end;
-    this.length = 1 + end - start;
+class RPWordListNumber {
+    constructor(start, end) {
+            this.start = start;
+            this.end = end;
+            this.length = 1 + end - start;
+        }
+        /**
+         *  Get a random singular number (always returns '1')
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getSingularNumberWord() {
+            return new RPWord(["number", "requiresSingularNoun"], "1");
+        }
+        /**
+         *  Get a random plural number (between 2 and 'end', inclusive)
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getPluralNumberWord() {
+        var start = this.start;
+        if (start < 2)
+            start = 2;
+        var thisNumber = ReadablePassphrase.randomInt(this.end - this.start) + this.start;
+        return new RPWord(["number"], thisNumber.toString());
+    }
 }
 
-/**
- *  Get a random singular number (always returns '1')
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListNumber.prototype.getSingularNumberWord = function() {
-    return new RPWord(["number", "requiresSingularNoun"], "1");
-};
 
-/**
- *  Get a random plural number (between 2 and 'end', inclusive)
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListNumber.prototype.getPluralNumberWord = function() {
-    var start = this.start;
-    if (start < 2) start = 2;
-    var thisNumber =
-        ReadablePassphrase.randomInt(this.end - this.start) + this.start;
-    return new RPWord(["number"], thisNumber.toString());
-};
 
 /**
  *  This object represents a pool of indefinite pronouns.  There is currently 1 personal pronoun, and 1 impersonal
  *  @param {object[]} indefinitePronounArray - an array of indefinitePronoun objects {personal: [bool], singular: ..., plural: ...}
  */
-function RPWordListIndefinitePronoun(indefinitePronounArray) {
-    this.list = indefinitePronounArray;
-    this.length = indefinitePronounArray.length;
-    this.personal = [];
-    this.impersonal = [];
-    for (
-        var pronounNum = 0; pronounNum < indefinitePronounArray.length; pronounNum++
-    ) {
-        var thisPronoun = indefinitePronounArray[pronounNum];
-        if (thisPronoun.personal) this.personal.push(thisPronoun);
-        else this.impersonal.push(thisPronoun);
+class RPWordListIndefinitePronoun {
+    constructor(indefinitePronounArray) {
+            this.list = indefinitePronounArray;
+            this.length = indefinitePronounArray.length;
+            this.personal = [];
+            this.impersonal = [];
+            for (var pronounNum = 0; pronounNum < indefinitePronounArray.length; pronounNum++) {
+                var thisPronoun = indefinitePronounArray[pronounNum];
+                if (thisPronoun.personal)
+                    this.personal.push(thisPronoun);
+                else
+                    this.impersonal.push(thisPronoun);
+            }
+        }
+        /**
+         *  Get a random word from the pool.
+         *  @param {string} [personal] - true if a personal pronoun is being requested
+         *  @param {boolean} [plural] - true if the plural form of the word is being requested
+         *  @return {object} an RPWord() object with the chosen word
+         */
+    getRandomWord(personal,
+        plural) {
+        var searchList = this.list;
+        if (personal)
+            searchList = this.personal;
+        else if (typeof personal != "undefined")
+            searchList = this.impersonal;
+
+        var word = searchList[ReadablePassphrase.randomInt(searchList.length)];
+        var returnWord = new RPWord(
+            [
+                "indefinitePronoun",
+                "pronoun",
+                "indefinido",
+                plural ? "plural" : "singular",
+            ],
+            word[plural ? "plural" : "singular"],
+            word
+        );
+        return returnWord;
     }
 }
-/**
- *  Get a random word from the pool.
- *  @param {string} [personal] - true if a personal pronoun is being requested
- *  @param {boolean} [plural] - true if the plural form of the word is being requested
- *  @return {object} an RPWord() object with the chosen word
- */
-RPWordListIndefinitePronoun.prototype.getRandomWord = function(
-    personal,
-    plural
-) {
-    var searchList = this.list;
-    if (personal) searchList = this.personal;
-    else if (typeof personal != "undefined") searchList = this.impersonal;
-
-    var word = searchList[ReadablePassphrase.randomInt(searchList.length)];
-    var returnWord = new RPWord(
-        [
-            "indefinitePronoun",
-            "pronoun",
-            "indefinido",
-            plural ? "plural" : "singular",
-        ],
-        word[plural ? "plural" : "singular"],
-        word
-    );
-    return returnWord;
-};
 
 /**
  *  This object represents a set of random factors
@@ -895,365 +892,394 @@ RPWordListIndefinitePronoun.prototype.getRandomWord = function(
  *  If a spec is an object, it will become a string with probability according to all values in the object, eg { a: 1, b: 2, c: 1, d: 0 } returns 'b' 50% of the time.
  *  @param {object} spec - an object describing the specification and weights of various factors
  */
-function RPRandomFactors(spec) {
-    for (var prop in spec) this[prop] = spec[prop];
+class RPRandomFactors {
+    constructor(spec) {
+            for (var prop in spec)
+                this[prop] = spec[prop];
+        }
+        /**
+         *  Get the value of a factor according to the weights assigned to it.
+         *  @param {string} factorName - name of the factor being requested
+         *  @return {string|boolean} returns the string (out of a set of choices) or boolean (out of a 2-element array) randomly chosen for this factor
+         */
+    byName(factorName) {
+            return RPRandomFactors.computeFactor(this[factorName]);
+        }
+        /**
+         *  Returns true if the given factor must always be true
+         *  @param {string} factorName - name of the factor
+         *  @return {boolean} true if the factor must always be true, false if there is any chance it might be false
+         */
+    mustBeTrue(factorName) {
+            return this.chanceOf(factorName, true) == 1 ? true : false;
+        }
+        /* Function unused ----
+        RPRandomFactors.prototype.mustBeFalse = function ( factorName ) { return this.chanceOf(factorName,false) == 1 ? true : false; }
+        */
+        /**
+         *  Returns the odds that a given factor will have the given value
+         *  @param {string} factorName - name of the factor
+         *  @param {*} value - possible value of the factor, or boolean to find out if the factor could be true/false at all
+         *  @return {number} floating-point probability between 0 and 1, eg 0.25
+         */
+    chanceOf(factorName, value) {
+            switch (typeof this[factorName]) {
+                case "boolean":
+                    value = value ? true : false;
+                    return this[factorName] == value ? 1 : 0;
+                case "string":
+                case "number":
+                    if (typeof value == "boolean") {
+                        if (value)
+                            return this[factorName] ? 1 : 0;
+                        else
+                            return this[factorName] ? 0 : 1;
+                    }
+                    return this[factorName] == value ? 1 : 0;
+                case "object":
+                    if (this[factorName].length === undefined) {
+                        var total = 0,
+                            thisWeight = this[factorName][value];
+                        for (var weightFactor in this[factorName]) {
+                            total += this[factorName][weightFactor];
+                        }
+                        if (!total)
+                            return 0;
+                        if (typeof value == "boolean") {
+                            if (value)
+                                return total ? 1 : 0;
+                            else
+                                return total ? 0 : 1;
+                        }
+                        return thisWeight / total;
+                    } else if (this[factorName].length == 2) {
+                        var total = this[factorName][0] + this[factorName][1];
+                        return value ?
+                            this[factorName][0] / total :
+                            this[factorName][1] / total;
+                    }
+                default:
+                    throw (
+                        "Cannot compute chance of unknown object type: " +
+                        typeof this[factorName] +
+                        " factor: " +
+                        factorName
+                    );
+            }
+        }
+        /**
+         *  Returns the number of bits of entropy in a factor.  Eg a straight [ 1, 1 ] is a 50% chance = 1 bit
+         *  @param {string} factorName - name of the factor
+         *  @return {number} floating-point number of bits
+         */
+    entropyOf(factorName) {
+            // return number of bits of entropy in a factor
+
+            switch (typeof this[factorName]) {
+                case "boolean":
+                case "string":
+                case "number":
+                    return 0;
+                case "object":
+                    if (this[factorName].length === undefined) {
+                        var total = 0,
+                            totalEntropy = 0;
+                        for (var weightFactor in this[factorName])
+                            total += this[factorName][weightFactor];
+                        for (var weightFactor in this[factorName]) {
+                            var thisChance = this[factorName][weightFactor] / total;
+                            if (thisChance)
+                                totalEntropy += Math.abs(thisChance * Math.log2(thisChance));
+                        }
+                        return totalEntropy;
+                    } else if (this[factorName].length == 2) {
+                        var a = this[factorName][0],
+                            b = this[factorName][1],
+                            total = this[factorName][0] + this[factorName][1];
+                        return (
+                            (a / total) * Math.log2(a / total) +
+                            (b / total) * Math.log2(b / total)
+                        );
+                    }
+                default:
+                    throw (
+                        "Cannot compute chance of unknown object type: " +
+                        typeof this[factorName] +
+                        " factor: " +
+                        factorName
+                    );
+            }
+        }
+        /**
+         *  Static function that computes a random value for a specification, see RPRandomFactors() for possible specs
+         *  @param {*} factor - specification
+         *  @return {*} value of the factor, randomly-chosen if possible
+         */
+    static computeFactor(factor) {
+        switch (typeof factor) {
+            case "boolean":
+            case "string":
+            case "number":
+                return factor;
+            case "object":
+                if (factor.length === undefined) {
+                    var weights = [],
+                        totalWeight = 0;
+                    for (var weightFactor in factor) {
+                        totalWeight += factor[weightFactor];
+                        weights.push({ value: weightFactor, weight: totalWeight });
+                    }
+                    if (totalWeight == 0)
+                        return false;
+
+                    var chosenWeight = ReadablePassphrase.randomness(totalWeight);
+                    for (var checkWeight = 0; checkWeight < weights.length; checkWeight++) {
+                        if (chosenWeight < weights[checkWeight].weight) {
+                            return weights[checkWeight].value;
+                            break;
+                        }
+                    }
+
+                    return false;
+                } else if (factor.length == 2) {
+                    // console.log("factor.length = 2")
+                    // console.log(factor)
+                    var chosenWeight = ReadablePassphrase.randomness(factor[0] + factor[1]);
+                    // console.log(`chosenWeight`)
+                    // console.log(chosenWeight)
+                    return chosenWeight > factor[0] ? false : true;
+                } else
+                    throw "Unknown object type in computation";
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
 }
 
-/**
- *  Get the value of a factor according to the weights assigned to it.
- *  @param {string} factorName - name of the factor being requested
- *  @return {string|boolean} returns the string (out of a set of choices) or boolean (out of a 2-element array) randomly chosen for this factor
- */
-RPRandomFactors.prototype.byName = function(factorName) {
-    return RPRandomFactors.computeFactor(this[factorName]);
-};
 
-/**
- *  Returns true if the given factor must always be true
- *  @param {string} factorName - name of the factor
- *  @return {boolean} true if the factor must always be true, false if there is any chance it might be false
- */
-RPRandomFactors.prototype.mustBeTrue = function(factorName) {
-    return this.chanceOf(factorName, true) == 1 ? true : false;
-};
-/* Function unused ---- 
-RPRandomFactors.prototype.mustBeFalse = function ( factorName ) { return this.chanceOf(factorName,false) == 1 ? true : false; }
-*/
 
-/**
- *  Returns the odds that a given factor will have the given value
- *  @param {string} factorName - name of the factor
- *  @param {*} value - possible value of the factor, or boolean to find out if the factor could be true/false at all
- *  @return {number} floating-point probability between 0 and 1, eg 0.25
- */
-RPRandomFactors.prototype.chanceOf = function(factorName, value) {
-    switch (typeof this[factorName]) {
-        case "boolean":
-            value = value ? true : false;
-            return this[factorName] == value ? 1 : 0;
-        case "string":
-        case "number":
-            if (typeof value == "boolean") {
-                if (value) return this[factorName] ? 1 : 0;
-                else return this[factorName] ? 0 : 1;
-            }
-            return this[factorName] == value ? 1 : 0;
-        case "object":
-            if (this[factorName].length === undefined) {
-                var total = 0,
-                    thisWeight = this[factorName][value];
-                for (var weightFactor in this[factorName]) {
-                    total += this[factorName][weightFactor];
-                }
-                if (!total) return 0;
-                if (typeof value == "boolean") {
-                    if (value) return total ? 1 : 0;
-                    else return total ? 0 : 1;
-                }
-                return thisWeight / total;
-            } else if (this[factorName].length == 2) {
-                var total = this[factorName][0] + this[factorName][1];
-                return value ?
-                    this[factorName][0] / total :
-                    this[factorName][1] / total;
-            }
-        default:
-            throw (
-                "Cannot compute chance of unknown object type: " +
-                typeof this[factorName] +
-                " factor: " +
-                factorName
-            );
-    }
-};
 
-/**
- *  Returns the number of bits of entropy in a factor.  Eg a straight [ 1, 1 ] is a 50% chance = 1 bit
- *  @param {string} factorName - name of the factor
- *  @return {number} floating-point number of bits
- */
-RPRandomFactors.prototype.entropyOf = function(factorName) {
-    // return number of bits of entropy in a factor
-    switch (typeof this[factorName]) {
-        case "boolean":
-        case "string":
-        case "number":
-            return 0;
-        case "object":
-            if (this[factorName].length === undefined) {
-                var total = 0,
-                    totalEntropy = 0;
-                for (var weightFactor in this[factorName])
-                    total += this[factorName][weightFactor];
-                for (var weightFactor in this[factorName]) {
-                    var thisChance = this[factorName][weightFactor] / total;
-                    if (thisChance)
-                        totalEntropy += Math.abs(thisChance * Math.log2(thisChance));
-                }
-                return totalEntropy;
-            } else if (this[factorName].length == 2) {
-                var a = this[factorName][0],
-                    b = this[factorName][1],
-                    total = this[factorName][0] + this[factorName][1];
-                return (
-                    (a / total) * Math.log2(a / total) +
-                    (b / total) * Math.log2(b / total)
-                );
-            }
-        default:
-            throw (
-                "Cannot compute chance of unknown object type: " +
-                typeof this[factorName] +
-                " factor: " +
-                factorName
-            );
-    }
-};
-
-/**
- *  Static function that computes a random value for a specification, see RPRandomFactors() for possible specs
- *  @param {*} factor - specification
- *  @return {*} value of the factor, randomly-chosen if possible
- */
-RPRandomFactors.computeFactor = function(factor) {
-    switch (typeof factor) {
-        case "boolean":
-        case "string":
-        case "number":
-            return factor;
-        case "object":
-            if (factor.length === undefined) {
-                var weights = [],
-                    totalWeight = 0;
-                for (var weightFactor in factor) {
-                    totalWeight += factor[weightFactor];
-                    weights.push({ value: weightFactor, weight: totalWeight });
-                }
-                if (totalWeight == 0) return false;
-
-                var chosenWeight = ReadablePassphrase.randomness(totalWeight);
-                for (var checkWeight = 0; checkWeight < weights.length; checkWeight++) {
-                    if (chosenWeight < weights[checkWeight].weight) {
-                        return weights[checkWeight].value;
-                        break;
-                    }
-                }
-
-                return false;
-            } else if (factor.length == 2) {
-                var chosenWeight = ReadablePassphrase.randomness(factor[0] + factor[1]);
-                return chosenWeight > factor[0] ? false : true;
-            } else throw "Unknown object type in computation";
-            break;
-        default:
-            break;
-    }
-    return null;
-};
 
 /**
  *  This object represents a pattern for constructing a sentence.  See the README for constructing new sentence templates.
  *  @param {object[]} template - an array of clause objects
  */
-function RPSentenceTemplate(template) {
-    this.length = template.length;
-    for (var i = 0; i < template.length; i++) {
-        var el = template[i];
-        if (typeof el == "string") this[i] = { type: el };
-        else if (typeof el == "object" && el.length) {
-            // reassemble packed templates
-            switch (el[0]) {
-                case "noun":
-                    this[i] = {
-                        type: "noun",
-                        //subtype: { common: el[1], proper: el[2], nounFromAdjective: el[3] },
-                        subtype: { common: el[1], proper: el[2] },
-                        articulo: {
-                            none: el[3],
-                            definido: el[4],
-                            indefinido: el[5],
-                        },
-                        adjective: el[6],
-                        adjectiveDespues: el[7],
-                        preposition: el[8],
-                        singular: el[9],
-                    };
-                    break;
-                case "verb":
-                    this[i] = {
-                        type: "verb",
-                        subtype: {
-                            gerundio: el[1],
-                            futuro: el[2],
-                            presente: el[3],
-                            preteritoImperfecto: el[4],
-                            preteritoPerfectoSimple: el[5],
-                        },
-                        adverb: el[6],
-                        interrogative: el[7],
-                    };
+class RPSentenceTemplate {
+    constructor(template) {
+            this.length = template.length;
+            for (var i = 0; i < template.length; i++) {
+                var el = template[i];
+                if (typeof el == "string")
+                    this[i] = { type: el };
+                else if (typeof el == "object" && el.length) {
+                    // reassemble packed templates
+                    switch (el[0]) {
+                        case "noun":
+                            this[i] = {
+                                type: "noun",
+                                //subtype: { common: el[1], proper: el[2], nounFromAdjective: el[3] },
+                                subtype: { common: el[1], proper: el[2] },
+                                articulo: {
+                                    none: el[3],
+                                    definido: el[4],
+                                    indefinido: el[5],
+                                },
+                                adjective: el[6],
+                                adjectiveDespues: el[7],
+                                preposition: el[8],
+                                singular: el[9],
+                            };
+                            break;
+                        case "verb":
+                            this[i] = {
+                                type: "verb",
+                                subtype: {
+                                    gerundio: el[1],
+                                    futuro: el[2],
+                                    presente: el[3],
+                                    preteritoImperfecto: el[4],
+                                    preteritoPerfectoSimple: el[5],
+                                },
+                                adverb: el[6],
+                                interrogative: el[7],
+                            };
 
-                    break;
-                default:
-                    throw (
-                        "Error unpacking template spec array, unknown type: " +
-                        thisElement[0]
-                    );
+                            break;
+                        default:
+                            throw (
+                                "Error unpacking template spec array, unknown type: " +
+                                thisElement[0]
+                            );
+                    }
+                } else
+                    this[i] = el;
+                if (this[i].type == "noun" &&
+                    this[i].articulo &&
+                    !this[i].articuloSingular) {
+                    // unpack article weights into Singular and Plural for convenience later
+                    var s = {},
+                        p = {};
+                    for (var articleType in this[i].articulo)
+                        p[articleType] = s[articleType] = this[i].articulo[articleType];
+                    //delete s["none"];
+                    //delete p["indefinido"]; // en español no hay esta limitación
+                    delete this[i]["articulo"]; // singular nouns must have an article, plural can't have indefinite
+                    this[i].articuloSingular = s;
+                    this[i].articuloPlural = p;
+                }
             }
-        } else this[i] = el;
-        if (
-            this[i].type == "noun" &&
-            this[i].articulo &&
-            !this[i].articuloSingular
-        ) {
-            // unpack article weights into Singular and Plural for convenience later
-            var s = {},
-                p = {};
-            for (var articleType in this[i].articulo)
-                p[articleType] = s[articleType] = this[i].articulo[articleType];
-            //delete s["none"];
-            //delete p["indefinido"]; // en español no hay esta limitación
-            delete this[i]["articulo"]; // singular nouns must have an article, plural can't have indefinite
-            this[i].articuloSingular = s;
-            this[i].articuloPlural = p;
+            return this;
         }
+        /**
+         *  Returns the number of bits of entropy in the template
+         *  TODO adaptar esto al patrón de plantillas en español
+         *  @return {number} floating-point number of bits
+         */
+    entropy() {
+            var totalEntropy = 0,
+                currentMultiplier = 1;
+
+            function len2log(listName) {
+                return Math.log2(RPWordList[listName].length);
+            } // helper function
+
+            for (var templateNum = 0; templateNum < this.length; templateNum++)
+                switch (this[templateNum].type) {
+                    case "comma":
+                        break;
+                    case "conjunction":
+                        totalEntropy += len2log("conjunctions") * currentMultiplier;
+                        break;
+                    case "directSpeech":
+                        totalEntropy += len2log("speechVerbs") * currentMultiplier;
+                        break;
+                    case "noun":
+                        var factors = new RPRandomFactors(this[templateNum]),
+                            thisEntropy = 0;
+                        thisEntropy += factors.entropyOf("subtype");
+                        thisEntropy +=
+                            factors.chanceOf("subtype", "proper") * len2log("properNouns");
+
+                        var preludeEntropy = factors.entropyOf("preposition") +
+                            factors.entropyOf("singular") +
+                            factors.chanceOf("preposition", true) * len2log("prepositions") +
+                            // +
+                            factors.chanceOf("singular", true) *
+                            (factors.entropyOf("articuloSingular") +
+                                factors.chanceOf("articuloSingular", "definido") *
+                                len2log("articulos") +
+                                factors.chanceOf("articuloSingular", "indefinido") *
+                                len2log("articulos")) +
+
+                            factors.chanceOf("singular", false) *
+                            (factors.entropyOf("articuloPlural") +
+                                factors.chanceOf("articuloPlural", "definido") *
+                                len2log("articulos") +
+                                factors.chanceOf("articuloPlural", "indefinido") *
+                                len2log("articulos"));
+
+                        console.log(`factors.entropyOf("singular")`)
+                        console.log(factors.entropyOf("singular"))
+
+                        thisEntropy +=
+                            factors.chanceOf("subtype", "common") *
+                            (len2log("nouns") +
+                                factors.entropyOf("adjective") +
+                                preludeEntropy +
+                                factors.chanceOf("adjective", true) * len2log("adjectives")
+                            )
+
+                        // +
+                        // factors.chanceOf("singular", false) *
+                        // factors.chanceOf("number", true) *
+                        // len2log("numbers"));
+
+                        // thisEntropy +=
+                        //     factors.chanceOf("subtype", "nounFromAdjective") *
+                        //     (len2log("indefinitePronouns") +
+                        //         preludeEntropy +
+                        //         len2log("adjectives"));
+                        totalEntropy += thisEntropy * currentMultiplier;
+                        break;
+                    case "verb":
+                        var factors = new RPRandomFactors(this[templateNum]),
+                            verbLen = RPWordList.verbs.length * 0.9; // No usamos los infinitivos
+                        //tranLen = RPWordList.verbs.length;
+                        //var totalLen = intLen + tranLen;
+                        //var chanceOfIntransitive = intLen / totalLen;
+                        // console.log("verbLen")
+                        // console.log(verbLen)
+
+                        var thisEntropy =
+                            //factors.entropyOf("interrogative") +
+                            factors.entropyOf("adverb") +
+                            // factors.entropyOf("adverb") +
+                            //( 
+                            // chanceOfIntransitive * Math.log2(chanceOfIntransitive) +
+                            //    (tranLen / totalLen) * Math.log2(tranLen / totalLen)) +
+                            // factors.chanceOf("interrogative", true) * len2log("interrogatives") +
+                            //factors.chanceOf("adverb", true) * (len2log("adverbs") + 1) +
+                            //factors.entropyOf("verb") +
+                            Math.log2(verbLen) +
+                            factors.chanceOf("adverb", true) * (len2log("adverbs"))
+                            // +
+                            //chanceOfIntransitive *
+                            //factors.chanceOf("intransitive", "preposition") *
+                            // factors.chanceOf("preposition", true) *
+                            // len2log("prepositions");
+                        totalEntropy += thisEntropy * currentMultiplier;
+                        // currentMultiplier *=
+                        //     1 -
+                        //     chanceOfIntransitive *
+                        //     factors.chanceOf("intransitive", "noNounClause");
+                        break;
+                    default:
+                        throw "Unknown clause type in entropy";
+                }
+
+
+            return totalEntropy;
+        }
+        /**
+         *  Static function to return the number of bits of entropy in the given template
+         *  @param {string} templateName - name of the template
+         *  @return {number} floating-point number of bits
+         */
+    static entropyOf(templateName) {
+            var template = RPSentenceTemplate.templates[templateName];
+
+            if (typeof template[0] == "string") {
+                // it's a collection of templates, not a template itself
+                var entropy = 0;
+                template.forEach(function(templateName) {
+                    entropy += RPSentenceTemplate.entropyOf(templateName);
+                });
+                return entropy / template.length + Math.log2(template.length); // gain some entropy for choosing a random template
+            }
+
+            return template.entropy();
+        }
+        /**
+         *  Static function to return a template of the given name
+         *  (if the template is a collection of other templates, returns a random template from the collection)
+         *  @param {string} templateName - name of the template
+         *  @return {object} RPSentenceTemplate() object
+         */
+    static byName(templateName) {
+        var template = RPSentenceTemplate.templates[templateName];
+
+        if (typeof template[0] == "string") {
+            // it's a collection of templates, not a template itself
+            templateName = template[ReadablePassphrase.randomInt(template.length)];
+            template = RPSentenceTemplate.templates[templateName];
+        }
+
+        template.name = templateName;
+        return template;
     }
-    return this;
 }
-
-/**
- *  Returns the number of bits of entropy in the template
- *  TODO adaptar esto al patrón de plantillas en español
- *  @return {number} floating-point number of bits
- */
-RPSentenceTemplate.prototype.entropy = function() {
-    var totalEntropy = 0,
-        currentMultiplier = 1;
-
-    function len2log(listName) {
-        return Math.log2(RPWordList[listName].length);
-    } // helper function
-
-    for (var templateNum = 0; templateNum < this.length; templateNum++)
-        switch (this[templateNum].type) {
-            case "conjunction":
-                totalEntropy += len2log("conjunctions") * currentMultiplier;
-                break;
-            case "directSpeech":
-                totalEntropy += len2log("speechVerbs") * currentMultiplier;
-                break;
-            case "noun":
-                var factors = new RPRandomFactors(this[templateNum]),
-                    thisEntropy = 0;
-                thisEntropy += factors.entropyOf("subtype");
-                thisEntropy +=
-                    factors.chanceOf("subtype", "proper") * len2log("properNouns");
-                var preludeEntropy =
-                    factors.entropyOf("preposition") +
-                    factors.entropyOf("singular") +
-                    factors.chanceOf("preposition", true) * len2log("prepositions") +
-                    factors.chanceOf("singular", true) *
-                    (factors.entropyOf("articleSingular") +
-                        factors.chanceOf("articleSingular", "definite") *
-                        len2log("articles") +
-                        factors.chanceOf("articleSingular", "indefinite") *
-                        len2log("articles") +
-                        factors.chanceOf("articleSingular", "demonstrative") *
-                        len2log("demonstratives") +
-                        factors.chanceOf("articleSingular", "personalPronoun") *
-                        len2log("personalPronouns")) +
-                    factors.chanceOf("singular", false) *
-                    (factors.entropyOf("articlePlural") +
-                        factors.chanceOf("articlePlural", "definite") *
-                        len2log("articles") +
-                        factors.chanceOf("articlePlural", "demonstrative") *
-                        len2log("demonstratives") +
-                        factors.chanceOf("articlePlural", "personalPronoun") *
-                        len2log("articles"));
-                thisEntropy +=
-                    factors.chanceOf("subtype", "common") *
-                    (len2log("nouns") +
-                        factors.entropyOf("adjective") +
-                        preludeEntropy +
-                        factors.chanceOf("adjective", true) * len2log("adjectives") +
-                        factors.chanceOf("singular", false) *
-                        factors.chanceOf("number", true) *
-                        len2log("numbers"));
-
-                thisEntropy +=
-                    factors.chanceOf("subtype", "nounFromAdjective") *
-                    (len2log("indefinitePronouns") +
-                        preludeEntropy +
-                        len2log("adjectives"));
-                totalEntropy += thisEntropy * currentMultiplier;
-                break;
-            case "verb":
-                var factors = new RPRandomFactors(this[templateNum]),
-                    intLen = RPWordList.intransitiveVerbs.length,
-                    tranLen = RPWordList.verbs.length;
-                var totalLen = intLen + tranLen;
-                var chanceOfIntransitive = intLen / totalLen;
-                var thisEntropy =
-                    factors.entropyOf("interrogative") +
-                    factors.entropyOf("adverb") +
-                    factors.entropyOf("adverb") +
-                    (chanceOfIntransitive * Math.log2(chanceOfIntransitive) +
-                        (tranLen / totalLen) * Math.log2(tranLen / totalLen)) +
-                    factors.chanceOf("interrogative", true) * len2log("interrogatives") +
-                    factors.chanceOf("adverb", true) * (len2log("adverbs") + 1) +
-                    chanceOfIntransitive *
-                    factors.chanceOf("intransitive", "preposition") *
-                    len2log("prepositions");
-                totalEntropy += thisEntropy * currentMultiplier;
-                currentMultiplier *=
-                    1 -
-                    chanceOfIntransitive *
-                    factors.chanceOf("intransitive", "noNounClause");
-                break;
-            default:
-                throw "Unknown clause type in entropy";
-        }
-    return totalEntropy;
-};
-
-/**
- *  Static function to return the number of bits of entropy in the given template
- *  @param {string} templateName - name of the template
- *  @return {number} floating-point number of bits
- */
-RPSentenceTemplate.entropyOf = function(templateName) {
-    var template = RPSentenceTemplate.templates[templateName];
-
-    if (typeof template[0] == "string") {
-        // it's a collection of templates, not a template itself
-        var entropy = 0;
-        template.forEach(function(templateName) {
-            entropy += RPSentenceTemplate.entropyOf(templateName);
-        });
-        return entropy / template.length + Math.log2(template.length); // gain some entropy for choosing a random template
-    }
-
-    return template.entropy();
-};
-
-/**
- *  Static function to return a template of the given name
- *  (if the template is a collection of other templates, returns a random template from the collection)
- *  @param {string} templateName - name of the template
- *  @return {object} RPSentenceTemplate() object
- */
-RPSentenceTemplate.byName = function(templateName) {
-    var template = RPSentenceTemplate.templates[templateName];
-
-    if (typeof template[0] == "string") {
-        // it's a collection of templates, not a template itself
-        templateName = template[ReadablePassphrase.randomInt(template.length)];
-        template = RPSentenceTemplate.templates[templateName];
-    }
-
-    template.name = templateName;
-    return template;
-};
 
 /*
  *   ******************* DATA *******************
@@ -1274,6 +1300,7 @@ RPSentenceTemplate.templates = {
         "strongSpeech",
         "normalAnd",
         "tituloDeLibro",
+        "longPassphrase",
     ],
 
     // Sustantivo:
@@ -1296,6 +1323,17 @@ RPSentenceTemplate.templates = {
         ["noun", 1, 0, 5, 4, 1, true, true, false, [1, 1]],
     ]),
 
+
+
+    longPassphrase: new RPSentenceTemplate([
+        ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
+        ["verb", 1, 1, 1, 1, 1, [1, 1], false],
+        ["noun", 1, 0, 5, 1, 4, false, true, false, [1, 1]],
+        "comma", ["noun", 1, 0, 5, 4, 1, false, false, false, [1, 1]],
+        ["verb", 1, 1, 1, 1, 1, false, false],
+        ["noun", 2, 1, 5, 1, 4, false, true, true, [1, 1]],
+    ]),
+
     normal: new RPSentenceTemplate([
         ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
         ["verb", 1, 1, 1, 1, 1, [1, 1], false],
@@ -1304,12 +1342,12 @@ RPSentenceTemplate.templates = {
 
     normalNombrePropio: new RPSentenceTemplate([
         ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
-        ["verb", 1, 1, 1, 1, 1, [1, 5], false],
+        ["verb", 1, 1, 1, 1, 1, false, false],
         ["noun", 0, 1, 1, 0, 0, true, false, true, true],
     ]),
 
     normalV: new RPSentenceTemplate([
-        ["verb", 2, 1, 1, 1, 1, [1, 2], false],
+        ["verb", 2, 1, 1, 1, 1, false, false],
         ["noun", 1, 0, 5, 4, 1, [1, 1], true, false, [1, 1]],
         ["noun", 2, 1, 5, 1, 4, false, true, [1, 1], true],
     ]),
@@ -1323,7 +1361,7 @@ RPSentenceTemplate.templates = {
 
     normal2: new RPSentenceTemplate([
         ["noun", 2, 1, 5, 3, 1, [2, 1], false, false, [2, 1]],
-        ["verb", 1, 2, 1, 2, 1, [1, 2], true],
+        ["verb", 1, 2, 1, 2, 1, false, true],
         ["noun", 2, 1, 5, 1, 2, true, [1, 1],
             [1, 2],
             [1, 2]
@@ -1338,7 +1376,8 @@ RPSentenceTemplate.templates = {
         ["noun", 5, 1, 0, 1, 1, false, true, false, true],
         "directSpeech", ["noun", 12, 1, 2, 1, 2, [1, 4],
             [1, 1],
-            [7, 3]
+            [7, 3],
+            [1, 1]
         ],
         ["verb", 1, 0, 0, 0, 0, [1, 2],
             [1, 8]
@@ -1362,32 +1401,8 @@ RPWordList.indefinitePronouns = new RPWordListIndefinitePronoun([
 // TODO método para aumentar la probabilidad de elegir y u o (permitirlo en plantilla) e incorporarlo al cálculo de entropía
 RPWordList.conjunctions = new RPWordList("conjunction", [
     "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "y",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
-    "o",
     "o",
     "pero",
-    "pero",
-    "porque",
     "porque",
     "a causa de que",
     "a condición de que",
@@ -6543,7 +6558,7 @@ RPWordList.nouns = new RPWordListPlural("noun", [
     ["interés", "M"],
     ["base", "F"],
     ["martes", "M"],
-    ["agua", "F"],
+    ["agua", "M"],
     ["padre", "M"],
     ["inversión", "F"],
     ["calidad", "F"],
@@ -8163,7 +8178,7 @@ RPWordList.nouns = new RPWordListPlural("noun", [
     ["soporte", "M"],
     ["anafre", ""],
     ["doctrina", "F"],
-    ["hambre", "F"],
+    ["hambre", "M"],
     ["indio", "M"],
     ["choque", "M"],
     ["ficción", "F"],
@@ -10672,7 +10687,7 @@ RPWordList.nouns = new RPWordListPlural("noun", [
 // No hay distinción entre transitivos e intransitivos
 // TODO eliminar el parámetro
 
-RPWordList.intransitiveVerbs = new RPWordListVerb("intransitive", [
+RPWordList.verbs = new RPWordListVerb("intransitive", [
     [
         "ser",
         "siendo",
@@ -11638,13 +11653,13 @@ RPWordList.intransitiveVerbs = new RPWordListVerb("intransitive", [
         "resultar",
         "resultando",
         "resultará",
-        "result",
+        "resultarán",
         "resulta",
-        "result",
+        "resultan",
         "resultaba",
-        "result",
+        "resultaban",
         "resultó",
-        "result",
+        "resultaron",
     ],
     [
         "pagar",
@@ -53000,18 +53015,7 @@ RPWordList.intransitiveVerbs = new RPWordListVerb("intransitive", [
         "jadeó",
         "jadearon",
     ],
-    [
-        "margenar",
-        "margenando",
-        "margenará",
-        "margenarán",
-        "margena",
-        "margenan",
-        "margenaba",
-        "margenaban",
-        "margenó",
-        "margenaron",
-    ],
+
     [
         "palmotear",
         "palmoteando",
