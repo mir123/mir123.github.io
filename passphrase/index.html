@@ -88,16 +88,15 @@
           " <p class='passPhrase'>" +
             passPhrase +
             "</p>" +
-            " (entropía:&nbsp;" +
+            "<div class='entropia'> (entropía:&nbsp;" +
             Math.round(passPhrase.template.entropy()) +
-            ")"
+            ")</div>"
         );
         allPhrases.push("-" + passPhrase);
         //phrases.push(templateName + ": " + passPhrase);
 
         //}
         document.getElementById("passphrasebox").innerHTML = phrases.join("\n");
-        //document.getElementById("entropy").innerHTML = ui.entropyUsed; // Fun fact: looping through available templates uses about 650 random numbers
 
         const p = document.querySelectorAll("p");
 
@@ -129,7 +128,7 @@
 
       h2 {
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.89);
+        color: rgb(224, 224, 224);
       }
 
       h2 img {
@@ -153,10 +152,16 @@
         font-family: "Roboto Slab", serif;
         display: inline-block;
         left: 100px;
-        margin: 10px;
+        margin: 0 10px 0 10px;
         padding: 5px;
         color: white;
         font-weight: bold;
+      }
+
+      .entropia {
+        margin: 0 0 10px 10px;
+        padding: 5px;
+        display: inline;
       }
 
       .templateName {
