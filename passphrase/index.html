@@ -129,6 +129,13 @@
 
       h2 {
         font-weight: 700;
+        color: rgba(255, 255, 255, 0.89);
+      }
+
+      h2 img {
+        display: inline;
+        vertical-align: middle;
+        margin: 0 10px 0 0;
       }
 
       #passphrasebox {
@@ -173,7 +180,10 @@
   </head>
 
   <body onload="loadRPDictionary();">
-    <h2>Generador de frases de paso</h2>
+    <h2>
+      <img src="passphrase_logo_50.png" />Generador de frases-contraseña
+      legibles
+    </h2>
     <div id="passphrase_container">
       <div id="passphrasebox"></div>
     </div>
@@ -187,5 +197,8 @@
         disabled="disabled"
       />
     </div>
+    <a href="https://github.com/mir123/readablePassphraseJS-ES"
+      ><img src="github_icon.png"
+    /></a>
   </body>
 </html>
