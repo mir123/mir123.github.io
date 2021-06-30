@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+    <title>Explicando agua virtual con infografías</title>
+  <meta name="author" content="Mir Rodriguez Lombardo" />
+  <base href="">
+  <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/theme/css/main.css" /> 
+  <!--
+  Original link to favicon
+  <link rel="shortcut icon" type="text/css" href="/favicon.ico" />
+  -->
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="mask-icon" href="/favicon.svg" color="black" />
+
+
+  <!-- OpenGraph Info -->
+  <meta property="og:title" content="Explicando agua virtual con infografías" />
+  <meta property="og:type" content="article" />
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:title" content="Explicando agua virtual con infografías" />
+  <meta property="og:image" content="http://mirrodriguezlombardo.com/images/km3.png" />
+  <meta property="twitter:image" content="http://mirrodriguezlombardo.com/images/km3.png" />
+  <meta property="og:url" content="sankey-graficos-mapas.html" />
+  <meta property="og:description" content="Comparto algunas técnicas y lecciones aprendidas para hacer infografías sobre agua. Los diagramas de Sankey son una buena manera de mostrar los flujos de cosas, en este caso de agua virtual. Para incorporarlos en una infografía, hará falta aprender a usar el lenguaje de programación R y también hacer bastante diseño a mano." />
+  <meta property="twitter:description" content="Comparto algunas técnicas y lecciones aprendidas para hacer infografías sobre agua. Los diagramas de Sankey son una buena manera de mostrar los flujos de cosas, en este caso de agua virtual. Para incorporarlos en una infografía, hará falta aprender a usar el lenguaje de programación R y también hacer bastante diseño a mano." />
+  <meta property="og:locale" content="utf8" />
+  <meta property="og:site_name" content="Mir Rodriguez Lombardo" />
+  <meta property="article:published_time" content="2021-06-30" />
+  <meta property="twitter:site:id" content="@mir_lentejas" />
+  <meta property="article:section" content="Tecnología" />
+
+</head>
+
+<body>
+
+  <header>
+    <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
+    <nav class="navmenu" id="navmenu">
+     <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+            <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
+            <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
+            <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
+            <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
+            <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
+            <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
+            <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
+     </nav>
+   </header>
+
+
+
+<script type="text/javascript">
+function checkForm() {
+name = document.getElementById("name").value;
+email = document.getElementById("email").value;
+comment = document.getElementById("comment").value;
+
+if (name == "")
+{
+hideAllErrors();
+document.getElementById("nameError").style.display = "inline";
+document.getElementById("name").select();
+document.getElementById("name").focus();
+return false;
+}
+else if (email == "")
+{
+hideAllErrors();
+document.getElementById("emailError").style.display = "inline";
+document.getElementById("email").select();
+document.getElementById("email").focus();
+return false;
+}
+else if (comment == "")
+{
+hideAllErrors();
+document.getElementById("commentError").style.display = "inline";
+document.getElementById("comment").select();
+document.getElementById("comment").focus();
+return false;
+}
+if (!checkEmail(email))
+{
+alert('Email address is invalid');
+return false;
+}
+return true;
+}
+ 
+function hideAllErrors() {
+document.getElementById("nameError").style.display = "none";
+document.getElementById("emailError").style.display = "none";
+document.getElementById("commentError").style.display = "none";
+}
+ 
+function checkEmail(inputvalue) {
+var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+return pattern.test(inputvalue);
+}
+</script>
+
+<article>
+	<section>
+
+<header class="post-header">
+<h1> <a rel="bookmark"
+   title="Explicando agua virtual con infografías «Mir Rodriguez Lombardo»"
+   href="sankey-graficos-mapas.html">
+   Explicando agua virtual con infografías
+</a>
+ 
+</h1>
+<p class="subtitle"><time datetime="2021-06-30T18:31:00-05:00">30 jun 2021</time><br />
+<!--  -->
+</span></p>
+
+
+
+
+</header><p class="newsection"><i>En resumen:</i> Comparto algunas técnicas y lecciones aprendidas para hacer infografías sobre agua. Los diagramas de Sankey son una buena manera de mostrar los flujos de cosas, en este caso de agua virtual. Para incorporarlos en una infografía, hará falta aprender a usar el lenguaje de programación R y también hacer bastante diseño a mano.</p>
+
+<p class="newsection"><span class="newthought">La Revista de la Universidad de México</span> me pidió que produjera un mapa sobre flujos de agua virtual para el <a href="https://www.revistadelauniversidad.mx/releases/52ef915f-1f21-4274-a3c2-3fe91a1d29bb/agua">número de junio de 2020</a> sobre  <strong>agua</strong>. El concepto de <em>agua virtual</em> es súper interesante y muy útil para educar a la gente sobre el impacto que tiene producir lo que nos comemos y los objetos industriales que nos rodean. Es decir: para producir un limón hay que regar el limonero, y si dividimos toda esa agua que le pusieron al árbol entre los limones que se cosechan, resulta que para producir cada limón se necesitaron casi 2 litros de agua. Ese mismo cálculo lo podemos hacer para muchas otras cosas, tomando en cuenta no solo el agua usada para producir algo sino el agua necesaria para disolver los desechos de la producción. En el caso del algodón, se producen desechos al sembrar el algodón (cuando se escurren los fertilizantes a los ríos) al blanquearlo y luego al teñirlo. Según un cálculo, producir una camiseta de algodón requiere aproximadamente 3,900 litros de agua. La camiseta, entonces, contiene 3,900 litros de agua virtual.</p>
+
+<p>Los flujos de ese agua virtual entre países que comercian con esos productos agrícolas o industriales es lo que se conoce como la <em>huella hídrica</em>, un concepto creado por el científico holandés <a href="https://www.utwente.nl/en/news/2019/11/178909/in-memoriam-arjen-hoekstra">Arjen Hoekstra</a><label for="Hoekstra" class="margin-toggle">&#8853;</label><input type="checkbox" id="Hoekstra" class="margin-toggle"/><span class="marginnote">Hoekstra, que publicaba sus artículos bajo una licencia Creative Commons, produjo una <a href="https://waterfootprint.org/en/resources/waterstat/product-water-footprint-statistics/">lista exhaustiva</a> de la huella hídrica de los productos agrícolas que es una referencia fundamental</span> y promovido a través de su <a href="https://waterfootprint.org/">Water Footprint Network</a>. Hoekstra murió de manera inesperada en 2019, pero su trabajo sigue siendo esencial. El concepto de agua virtual, su validez y su utilidad son sujeto de debate. Los foros internacionales y muchos de los que piensan en estos asuntos lo incorporaron a sus análisis, pero algunos cuestionan las metodologías usadas y por consiguiente la validez de los datos. También se critica la capacidad de estas ideas para realmente producir algún cambio.</p>
+<p>Pero creo que la conclusión general es válida. También hay que mejorar la capacidad de recaudar y procesar los datos sobre gestión de agua y aprender a comunicar estos conceptos tan complejos. Acumular y ordenar esta información es una labor titánica, que involucra reunir fuentes muy diversas, muchas de ellas enterradas en informes en PDF o en papel, en artículos, entrevistas, conferencias y presentaciones de powerpoint. Otros tantos datos son aproximaciones o se tienen que extrapolar de datos antiguos. Una de las ideas de los conceptos de huella hídrica y de agua virtual es que las naciones y comunidades puedan manejar mejor su agua, pero el requisito es monitoreo y buenos datos.</p>
+<p><label for="piscinas-marginales" class="margin-toggle">&#8853;</label><input type="checkbox" id="piscinas-marginales" class="margin-toggle"/><span class="marginnote"><img alt="Un día de operaciones del Canal de Panamá utiliza suficiente agua para llenar más o menos 1,755,274 &quot;piscinas marginales&quot;" src="/images/piscinas_marginales.jpg"> <a href="https://www.instagram.com/infidelbastro/">Jonathan Harker</a> y yo ideamos una vez una comparación de la capacidad de las esclusas del Canal de Panamá (o sea, el agua que gasta el Canal) con las piscinas plegables populares en los barrios. En ese entonces la elite política del país, principal beneficiaria del Canal y sus negocios anexos, estaba criticando las piscinas por desperdiciar agua.</span></p>
+<p class="newsection"><span class="newthought">El primer reto</span> al hacer gráficos sobre este tema es intentar transmitir el órden de magnitud de los datos. Estas cifras hablan de cantidades enormes de agua, muy difíciles de imaginar, expresadas en kilómetros cúbicos (km<sup>3</sup>). </p>
+
+<p><img alt="¿Cuánto es 1 kilómetro cúbico de agua?" src="/images/km3_agua.png"></p>
+<p>La primera infografía (el diseño editorial es de Krystal Mejía) intenta crear una imagen mental del órden de magnitud de nuestras cifras. <strong>¿Cuánto es 1 km<sup>3</sup> de agua?</strong> muestra un diagrama (hecho con <a href="https://inkscape.org/">Inkscape</a>) que utiliza a modo de comparación un edificio grande e icónico de la ciudad de México, la Torre Latinoamericana, de 166 m de altura (182 m hasta la punta de la antena). Un cubo imaginario con 1 km<sup>3</sup> de agua mediría 1 km de alto. Usando una simple regla de 3 dibujé una línea proporcional a mi diagrama de la torre y con ella el resto del cubo y lo llené de agua azul. Sigue siendo imposible imaginarlo, así que busqué algunos datos de Wikipedia y de un artículo de 2011<label for="ortegaref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="ortegaref" class="margin-toggle"/><span class="sidenote">Nuria Merce Ortega Font, "El agua en números", Casa del tiempo, UAM, marzo de 2011, Vol. IV  época IV  número 41.</span> con cifras sobre México. Igual no creo que ayudó tanto, pero al menos tenemos una idea. ¿Qué otras comparaciones útiles y didácticas se podrían hacer? </p>
+<p>El siguiente tema es la comparación entre uso de agua sostenible y uso insostenible. El principal usuario de agua en el mundo es la agricultura (seguido de la industria y el uso doméstico), así que decidí graficar una comparación de la sostenibilidad de los sistemas de riego. Además, había datos recientes<label for="lorenzoref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="lorenzoref" class="margin-toggle"/><span class="sidenote">Rosa, Lorenzo, et al. "Global unsustainable virtual water flows in agricultural trade." Environmental Research Letters 14.11 (2019): 114001.</span>. Resulta que más de la mitad de los sistemas de riego agrícola en el mundo son insostenibles, </p>
+<p><img alt="Riego insostenible" src="/images/riego_insostenible_original.png">
+es decir que se extraen más rápido de lo que se recargan las reservas de agua disponible y acaban con los flujos necesarios para los ecosistemas. Los peores en este sentido son la India, China, Pakistán y los Estados Unidos. El el caso de México, se estima que el 63% de los 28 km<sup>3</sup> de agua de riego agrícola de México provienen de fuentes insostenibles, sin embargo apenas el 4% de los pozos se monitorea y no lo sabemos con certeza. Además, muchos pozos agrícolas son usados irregularmente para minería, industrias, turismo y uso doméstico.</p>
+<p>El gráfico de arriba es la versión que envié a los editores. Quería que el grosor de las barras reflejara el total de agua de riego agrícola, agregando una dimensión adicional que permitiera comprar la importancia relativa de cada región. No hallé manera sencilla de hacerlo. Simplemente no es posible usando una hoja de cálculo. Así que finalmente, después de años de verlo mencionado y no usarlo, tuve que meter la mano en <strong>R</strong>, un lenguaje de programación para estadísticas y gráficos. Si estás interesadx en hacer infografías basadas en datos, tarde o temprano tendrás que aprender <a href="https://www.r-project.org/">R</a>. Si nunca has programado, creo que R es una buena opción para comenzar y hay innumerables tutoriales y cursos disponibles.</p>
+<p>Lo primero fue reunir los datos del artículo de Rosa et al, convenientemente disponibles en formato Excel, y agrupar las cifras por país en continentes. Al final, quedé con esta tabla, lista para importar a R en formato csv. La columna valor está en porcentajes, el ancho es el volumen total de riego:</p>
+<p><br/></p>
+<table>
+<thead>
+<tr>
+<th>region</th>
+<th>variable</th>
+<th>valor</th>
+<th>ancho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asia del Sur</td>
+<td>insostenible</td>
+<td>0.534190397198415</td>
+<td>434.04</td>
+</tr>
+<tr>
+<td>Asia del Sur</td>
+<td>sostenible</td>
+<td>0.465809602801585</td>
+<td>434.04</td>
+</tr>
+<tr>
+<td>Asia del Este y Pacífico</td>
+<td>insostenible</td>
+<td>0.539271075661903</td>
+<td>180.54</td>
+</tr>
+<tr>
+<td>Asia del Este y Pacífico</td>
+<td>sostenible</td>
+<td>0.460728924338097</td>
+<td>180.54</td>
+</tr>
+<tr>
+<td>Norteamérica</td>
+<td>insostenible</td>
+<td>0.619229699666296</td>
+<td>143.84</td>
+</tr>
+<tr>
+<td>Norteamérica</td>
+<td>sostenible</td>
+<td>0.380770300333704</td>
+<td>143.84</td>
+</tr>
+<tr>
+<td>Medio Oriente y África del Norte</td>
+<td>insostenible</td>
+<td>0.559066666666667</td>
+<td>150</td>
+</tr>
+<tr>
+<td>Medio Oriente y África del Norte</td>
+<td>sostenible</td>
+<td>0.440933333333333</td>
+<td>150</td>
+</tr>
+<tr>
+<td>Europa y Asia Central</td>
+<td>insostenible</td>
+<td>0.390086900547152</td>
+<td>124.28</td>
+</tr>
+<tr>
+<td>Europa y Asia Central</td>
+<td>sostenible</td>
+<td>0.609913099452848</td>
+<td>124.28</td>
+</tr>
+<tr>
+<td>África Subsahariana</td>
+<td>insostenible</td>
+<td>0.430569105691057</td>
+<td>30.75</td>
+</tr>
+<tr>
+<td>África Subsahariana</td>
+<td>sostenible</td>
+<td>0.569430894308943</td>
+<td>30.75</td>
+</tr>
+<tr>
+<td>Latinoamérica y el Caribe</td>
+<td>insostenible</td>
+<td>0.178110944527736</td>
+<td>33.35</td>
+</tr>
+<tr>
+<td>Latinoamérica y el Caribe</td>
+<td>sostenible</td>
+<td>0.821889055472264</td>
+<td>33.35</td>
+</tr>
+<tr>
+<td>Escala</td>
+<td>insostenible</td>
+<td>0.5</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Escala</td>
+<td>sostenible</td>
+<td>0.5</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p><br/></p>
+<p>El código R para hacer el gráfico es súper corto:
+<br/></p>
+<div class="highlight"><pre><span></span><span class="c1"># Dibuja un gráfico de barras horizontales con el grosor determinado por una variable</span>
+
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span>
+
+<span class="n">irr</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;riego_sost_insost.csv&quot;</span><span class="p">))</span>
+
+<span class="nf">ggplot</span><span class="p">(</span><span class="n">irr</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">valor</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">variable</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">ancho</span><span class="o">/</span><span class="m">400</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s">&quot;x&quot;</span><span class="p">))</span> <span class="o">+</span>  <span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>y produce esto,</p>
+<p><img alt="Riego insostenible de R" src="/images/Rplot01.png">
+lo exportas a PDF y lo abres en Inkscape para arreglarlo. El diseño final de Krystal Mejía con las correcciones de los editores quedó así:</p>
+<p><img alt="Riego insostenible" src="/images/infografia_agua_final_3.jpg"></p>
+<p><label for="mapahoekstra" class="margin-toggle "></label><input type="checkbox" id="mapahoekstra" class="margin-toggle"/><span class="marginnote"><img alt="Mapa global del balance de agua virtual y flujos entre países" src="/images/Hoekstra-flujo-global-agua-virtual.jpg"> Balance de agua virtual por país y dirección de los flujos brutos de agua virtual relacionados con productos agrícolas e industriales en el periodo 1996–2005. Tomado de Hoekstra y Mekonnen, "The water footprint of humanity." Proceedings of the national academy of sciences 109.9 (2012): 3232-3237.</span></p>
+<p class="newsection"><span class="newthought">Los flujos comerciales de agua virtual</span> nos pueden dar una métrica de la sostenibilidad de las economías de los países y las regiones. Hoekstra y Mekonen publicaron en 2011 un mapa clásico que muestra que los principales exportadores (brutos) de agua virtual están en Norteamérica. El grosor de la flecha indica la cantidad. La flecha gorda de Estados Unidos a México refleja las importaciones masivas de productos a México luego de la firma del tradado de libre comercio de América del Norte. El color indica el balance nacional neto de agua virtual, los países en verde son exportadores netos y los países en rojo, importadores de agua virtual. Hay muchos detalles que no aparecen aquí, por ejemplo si los flujos son de agua azul (riego) o verde (lluvia y agua subterránea).</p>
+
+<p>Los datos del estudio de Hoekstra son de hace más de 15 años, pero no conozco de otro trabajo más reciente con niveles comparables de alcance y detalle. Así que me tuve que conformar con los datos del trabajo de Rosa et al. de 2019, con las cifras de comercio de agua agrícola insostenible entre países. ¿Podríamos intentar hacer un mapa comparable y aspirar a una mayor densidad de datos?</p>
+<p><label for="sankey-euskadi" class="margin-toggle">&#8853;</label><input type="checkbox" id="sankey-euskadi" class="margin-toggle"/><span class="marginnote"><img alt="Diagramas de sankey sobre flujos de materiales en el País Vasco y en la Unión Europea" src="/images/pais_vasco_economia_circular_sankey.jpg"> Estos diagramas de Sankey comparan el flujo de materiales en el País Vasco y en la Unión Europea, en un <a href="https://www.euskadi.eus/contenidos/informacion/economia_circular/es_def/adjuntos/Indicadores_economia_circular_pais_vasco_2018.pdf">informe sobre indicadores de economía circular</a>. Se puede ver la diferencia en importaciones y exportaciones, por ejemplo, y cuánto del flujo de materiales (minerales, combustible, biomasa) es circular.</span>El mapa de Hoekstra es un ejemplo de <a href="https://es.wikipedia.org/wiki/Diagrama_de_Sankey">diagrama de Sankey</a>, un tipo de gráfico apto para reflejar flujos. El grosor de una línea determina la magnitud del flujo entre nodos, que pueden ser energía entre secciones de una máquina, dinero entre participantes de un mercado o agua virtual entre países. Para hacer estos diagramas, una vez más echamos mano de R.</p>
+<p>El paquete de R <a href="https://logfc.wordpress.com/2014/02/27/riverplot/">riverplot</a> permite hacer diagramas de Sankey que incorporan las coordenadas de los nodos. El autor de ese paquete lo usó para replicar el famoso gráfico de Minard, <a href="https://www.edwardtufte.com/tufte/minard">citado por Edward Tufte</a> como la mejor infografía jamás dibujada. Usando  R y <strong>riverplot</strong> intenté mapear los flujos entre todos los países: </p>
+<p><img alt="Mapa Sankey de flujos de agua virtual entre países" src="/images/rplot_mapa_1.jpg">
+Imagina el mapamundi de fondo. Un poquito apiñado. Luego traté de resumirlo a regiones:</p>
+<p><img alt="Mapa Sankey de flujos de agua virtual entre regiones" src="/images/rplot_mapa_2.jpg"></p>
+<p>Y finalmente hice solo las exportaciones de México:</p>
+<p><img alt="Mapa Sankey de flujos de agua virtual entre países" src="/images/rplot_mapa_3.jpg"></p>
+<p>Está bien feo y no cuenta bien ninguna historia. A pesar de que me tomó 4 días llegar a ese punto (estas cosas toman tiempo, ¡recuerda siempre cobrar bien!) decidí tirarlo a la basura. Bajé un poco las expectativas y me puse a hacer uno más sencillo. </p>
+<p>Con ese fin usé el paquete <a href="http://christophergandrud.github.io/networkD3/">networkD3</a> de R, que incorpora la fantástica biblioteca Javascript <a href="https://d3js.org/">D3</a> para hacer diagramas de red, incluyendo Sankey. La ventaja del networkD3 es que el producto final es un archivo HTML que incluye el código SVG del diagrama, es decir que recortando esa sección del HTML podemos producir un archivo para abrir y modificar en Inkscape y pasarlo a la diseñadora editorial. </p>
+<p><img alt="Diagrama Sankey sobre el comercio global de agua virtual de riego insostenible" src="/images/infografia_agua_final_4.jpg"></p>
+<p>Para llegar a ese punto pasé por varias versiones intentando poner cada región una sola vez, en lugar de a cada lado del diagrama:</p>
+<p><img alt="Versión anterior del diagrama Sankey sobre el comercio global de agua virtual de riego insostenible" src="/images/sankey_agua_circular.jpg">
+que no funciona muy bien, aunque es visualmente interesante ver los flujos dentro de cada región.</p>
+<p><a href="#" id="showModal" ><label for="sankeyinteractivo" class="margin-toggle "></label><input type="checkbox" id="sankeyinteractivo" class="margin-toggle"/><span class="marginnote"><img alt="Enlace a diagrama Sankey interactivo" src="/images/sankey_agua_thumbnail.jpg"> Haz clic aquí para ver el diagrama Sankey interactivo producido por D3.</span></a></p>
+<p>La biblioteca D3 está diseñada para producir gráficos interactivos en la web, lo cual es un producto totalmente diferente que un diagrama para una revista impresa. Haz clic en la imagen aquí al costado para ver una versión interactiva. En este gráfico puedes visualizar con un color cada región por separado al mover el puntero encima del nodo y las cantidades aparecen al poner el puntero sobre las coneziones. También puedes cambiar el órden de los nodos. </p>
+<p>A continuación el código R que produce este diagrama. Los datos están en dos archivos csv, <a href="/adjuntos/regiones_d3.csv">uno con la lista de regiones</a>
+ y otro con <a href="/adjuntos/exportacion_importacion_d3.csv">los flujos entre cada región</a> (recuerda citar la fuente, Rosa, Lorenzo, et al. (2019) si usas estos datos):</p>
+<div class="highlight"><pre><span></span><span class="c1"># Dibuja un diagrama de Sankey de los movimientos de agua entre regiones del mundo</span>
+<span class="c1"># Con datos de Hoekstra et al.</span>
+
+<span class="nf">library</span><span class="p">(</span><span class="n">networkD3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">htmlwidgets</span><span class="p">)</span>
+
+<span class="n">regiones</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;/home/mir/Dropbox/proyectos/revista_u/agua/regiones_d3.csv&quot;</span><span class="p">,</span>
+                    <span class="n">col_types</span> <span class="o">=</span> <span class="nf">cols</span><span class="p">(</span>
+                    <span class="n">ID</span> <span class="o">=</span> <span class="nf">col_skip</span><span class="p">(),</span>
+                    <span class="n">region</span> <span class="o">=</span> <span class="nf">col_character</span><span class="p">(),</span>
+                    <span class="n">grupo</span> <span class="o">=</span> <span class="nf">col_character</span><span class="p">(),</span>
+                    <span class="n">total</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
+                    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="nf">class</span><span class="p">(</span><span class="n">regiones</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
+
+<span class="n">bordes</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;/home/mir/Dropbox/proyectos/revista_u/agua/exportacion_importacion_d3.csv&quot;</span><span class="p">,</span>  
+                    <span class="n">col_types</span> <span class="o">=</span> <span class="nf">cols</span><span class="p">(</span>
+                    <span class="n">ID1</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span> 
+                    <span class="n">ID2</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span> 
+                    <span class="n">volumen</span><span class="o">=</span><span class="nf">col_double</span><span class="p">(),</span>
+                    <span class="n">color</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
+                 <span class="p">)</span>
+<span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">regiones</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;grupo&quot;</span><span class="p">,</span><span class="s">&quot;total&quot;</span><span class="p">)</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span> <span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;volumen&quot;</span><span class="p">,</span><span class="s">&quot;color&quot;</span><span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
+
+<span class="n">red</span> <span class="o">&lt;-</span> <span class="nf">sankeyNetwork</span><span class="p">(</span>
+      <span class="n">Links</span> <span class="o">=</span> <span class="n">bordes</span><span class="p">,</span> 
+      <span class="n">Nodes</span> <span class="o">=</span> <span class="n">regiones</span><span class="p">,</span> 
+      <span class="n">Source</span> <span class="o">=</span> <span class="s">&#39;source&#39;</span><span class="p">,</span> 
+      <span class="n">Target</span> <span class="o">=</span> <span class="s">&#39;target&#39;</span><span class="p">,</span> 
+      <span class="n">Value</span> <span class="o">=</span> <span class="s">&#39;volumen&#39;</span><span class="p">,</span> 
+      <span class="n">NodeID</span> <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+      <span class="n">NodeGroup</span> <span class="o">=</span> <span class="s">&#39;grupo&#39;</span><span class="p">,</span>
+      <span class="n">nodeWidth</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
+      <span class="n">nodePadding</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
+      <span class="n">LinkGroup</span> <span class="o">=</span> <span class="s">&#39;color&#39;</span><span class="p">,</span>
+      <span class="n">sinksRight</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+      <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;km3&quot;</span><span class="p">,</span>
+      <span class="n">fontSize</span> <span class="o">=</span> <span class="s">&quot;10&quot;</span><span class="p">,</span>
+      <span class="n">fontFamily</span> <span class="o">=</span> <span class="s">&quot;sans&quot;</span><span class="p">,</span>
+      <span class="n">width</span> <span class="o">=</span> <span class="s">&quot;100vw&quot;</span><span class="p">,</span>
+      <span class="n">height</span> <span class="o">=</span> <span class="s">&quot;100vh&quot;</span><span class="p">,</span>
+      <span class="n">iterations</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+
+<span class="nf">saveWidget</span><span class="p">(</span><span class="n">widget</span> <span class="o">=</span> <span class="n">red</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;sankey_agua.html&quot;</span><span class="p">,</span> 
+           <span class="n">selfcontained</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+
+
+<p class="newsection"><span class="newthought">La huella hídrica</span> de los productos agrícolas e industriales nos da una medida rápida del agua necesaria para producirlos. Esto incluye el agua de riego, la de los procesos industriales y la necesaria para diluir los desechos de los procesos. Una vez más, usé datos de Hoekstra<label for="hoekstraref2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="hoekstraref2" class="margin-toggle"/><span class="sidenote">Mekonnen, M.M. & Hoekstra, A.Y. (2011) The green, blue and grey water footprint of crops and derived crop products, Hydrology and Earth System Sciences, 15(5): 1577-1600.</span>, pero también de Amigos de la Tierra<label for="foeref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="fueref" class="margin-toggle"/><span class="sidenote">Burley, Helen. "Mind your step: Land and water footprint of every day products" Friends of the earth (2015).</span> y un artículo<label for="wuref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="wuref" class="margin-toggle"/><span class="sidenote">Wu, May, and Hui Xu. Consumptive water use in the production of ethanol and petroleum gasoline—2018 update. No. ANL/ESD/09-1 Rev. 2. Argonne National Lab.(ANL), Argonne, IL (Estados Unidos), 2018.</span> sobre el uso de agua para la producción de gasolina.</p>
+
+<p><img alt="Riego insostenible" src="/images/infografia_agua_final_1.jpg"></p>
+<p>Esta infografía es una adaptación del <a href="http://virtualwater.eu/">diseño original</a> del alemán <a href="http://www.kekeritz.com/">Timm Kekeritz</a> y se puede ver de una forma u otra en <a href="http://thewaterweeat.com/">otros</a> <a href="https://www.mo.be/zeronaut/hoe-watervoetafdruk-verkleinen">lugares</a>. Se podría decir que es demasiado genérico, pero creo que hay que darle crédito a Kekeritz. Una vez elegidos los productos e investigado las cifras, lo produje 100% a mano con Inkscape, usando el caracter Unicode de gota de agua (💧) y repitiéndolo cuantas veces fuera necesario. ¿Existe alguna herramienta que ayude con esto?</p>
+<p>Y eso es todo. Puedes ver las infografías en el sitio web de la <a href="https://www.revistadelauniversidad.mx/articles/e27fd1ff-9d55-42cf-8417-89189f78bff1/huella-hidrica-y-agua-virtual">Revista de la Universidad de México</a>.</p>
+<p class="newsection"><span class="newthought">Hay una lección muy importante</span> que aprendí de esta chamba. Si quieres que tu mapa o diagrama Sankey sea visualmente atractivo, no existe software (todavía) que lo haga automáticamente. Siempre será necesario diseñarlo a mano. Quizá hubiera sido posible hacer el mapa de flujos de agua de riego, pero hubiera tomado mucho más tiempo que el necesario para entregar la infografía a tiempo. Vale la pena, los mapas y diagramas de Sankey con flechas o barras de grosor variable son una excelente herramienta de comunicaciones y para la educación.</p>
+
+<h2>Comentarios</h2>
+<p><em><p class="newsection">Los comentarios son moderados antes de publicarse.</p></em></p>
+<script language="JavaScript">
+var username = "mir.rodriguez";
+var hostname = "guineo.org";
+var linktext = username + "@" + hostname ;
+document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
+</script>
+
+<div class="nombre">
+<input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
+<div class="error" id="nameError">Debes poner tu nombre<br /></div>
+</div>
+
+<div class="contact_email">
+<input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
+<div class="error" id="emailError">Necesito tu dirección de email<br /></div>
+</div>
+
+<div class="contact_comment">
+<textarea name="body" id="comment" placeholder="COMENTARIO" aria-label="Mensaje" rows="5"></textarea><br/>
+<div class="error" id="commentError">Por favor escribe un comentario<br /></div>
+<input type="hidden" name="_format" value="plain" />
+<input type="hidden" name="_language" value="es" />
+</div>
+
+<p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">SIGUIENTE</button>
+</form> </p>
+<p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1153386856962240512">comentar vía Twitter</a></p>
+
+<div id="modal" class="modal">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<button class="btn btn-default" type="button" onclick="modal.close();">&#10006;</button>
+</div>
+
+<div class="modal-body">
+
+<iframe id="sankey_agua" src="" title="W3Schools Free Online Web Tutorials"></iframe> 
+
+</div>
+
+
+</div>
+</div>
+</div>
+
+<style>
+.modal {
+display: none;
+background: rgba(0, 0, 0, .30);
+z-index: 999;
+padding: 30px 0;
+
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+
+overflow-x: hidden;
+overflow-y: auto;
+}
+
+.modal .modal-dialog {
+position: relative;
+width: 1100px;
+border-radius: 6px;
+-webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+height: 100%;
+margin: 0 auto;
+background-color: #fffff8;
+}
+
+.modal-content {
+position: relative;
+width: 100%;
+height: 100%;
+pointer-events: auto;
+outline: 0;
+display: flex;
+flex-direction: column;
+}
+
+.modal-header {
+
+align-items: center;
+justify-content: space-between;
+padding: 1rem 1rem;
+border-top-left-radius: calc(.3rem - 1px);
+border-top-right-radius: calc(.3rem - 1px);
+}
+
+.modal-body {
+position: relative;
+margin: 1rem;
+height:100%;
+}
+
+iframe {
+width:100%;
+height:100%;
+border:none;
+}
+
+button {
+  border:none;
+  cursor:pointer;
+}
+
+</style>
+
+<script>
+(function (global, factory) {
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+typeof define === 'function' && define.amd ? define(factory) :
+(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.RModal = factory());
+}(this, (function () {
+var splitClasses = function (classes) { return (("" + (classes || ''))
+.split(' ')
+.filter(function (cls) { return !!cls; })); };
+var addClass = function (el, classes) {
+splitClasses(classes).forEach(function (cls) {
+el.classList.add(cls);
+});
+};
+var removeClass = function (el, classes) {
+splitClasses(classes).forEach(function (cls) {
+el.classList.remove(cls);
+});
+};
+var RModal = /** @class */ (function () {
+function RModal(el, opts) {
+var _this = this;
+if (opts === void 0) { opts = {}; }
+this.version = '1.1.0';
+this.focusOutElement = null;
+this.opened = false;
+this.opts = {
+bodyClass: 'modal-open',
+dialogClass: 'modal-dialog',
+dialogOpenClass: 'bounceInDown',
+dialogCloseClass: 'bounceOutUp',
+focus: true,
+focusElements: [
+'a[href]', 'area[href]', 'input:not([disabled]):not([type=hidden])',
+'button:not([disabled])', 'select:not([disabled])',
+'textarea:not([disabled])', 'iframe', 'object', 'embed',
+'*[tabindex]', '*[contenteditable]'
+],
+escapeClose: true,
+content: undefined,
+closeTimeout: 500
+};
+Object.keys(opts).forEach(function (key) {
+var optionsKey = key;
+/* istanbul ignore else */
+if (opts[optionsKey] !== undefined) {
+_this.opts[optionsKey] = opts[optionsKey];
+}
+});
+this.overlay = el;
+this.dialog = el.querySelector("." + this.opts.dialogClass);
+if (this.opts.content) {
+this.content(this.opts.content);
+}
+}
+RModal.prototype.open = function (content) {
+var _this = this;
+this.content(content);
+if (typeof this.opts.beforeOpen !== 'function') {
+return this._doOpen();
+}
+this.opts.beforeOpen(function () {
+_this._doOpen();
+});
+};
+RModal.prototype._doOpen = function () {
+addClass(document.body, this.opts.bodyClass);
+removeClass(this.dialog, this.opts.dialogCloseClass);
+addClass(this.dialog, this.opts.dialogOpenClass);
+this.overlay.style.display = 'block';
+if (this.opts.focus) {
+this.focusOutElement = document.activeElement;
+this.focus();
+}
+if (typeof this.opts.afterOpen === 'function') {
+this.opts.afterOpen();
+}
+this.opened = true;
+};
+RModal.prototype.close = function () {
+var _this = this;
+if (typeof this.opts.beforeClose !== 'function') {
+return this._doClose();
+}
+this.opts.beforeClose(function () {
+_this._doClose();
+});
+};
+RModal.prototype._doClose = function () {
+var _this = this;
+removeClass(this.dialog, this.opts.dialogOpenClass);
+addClass(this.dialog, this.opts.dialogCloseClass);
+removeClass(document.body, this.opts.bodyClass);
+if (this.opts.focus) {
+this.focus(this.focusOutElement);
+}
+setTimeout(function () {
+_this.overlay.style.display = 'none';
+if (typeof _this.opts.afterClose === 'function') {
+_this.opts.afterClose();
+}
+_this.opened = false;
+}, this.opts.closeTimeout);
+};
+RModal.prototype.content = function (html) {
+if (html === undefined) {
+return this.dialog.innerHTML;
+}
+this.dialog.innerHTML = html;
+};
+RModal.prototype.elements = function (selector, fallback) {
+fallback = fallback || window.navigator.appVersion.indexOf('MSIE 9.0') > -1;
+selector = Array.isArray(selector) ? selector.join(',') : selector;
+return [].filter.call(this.dialog.querySelectorAll(selector), function (element) {
+if (fallback) {
+var style = window.getComputedStyle(element);
+return style.display !== 'none' && style.visibility !== 'hidden';
+}
+return element.offsetParent !== null;
+});
+};
+RModal.prototype.focus = function (el) {
+el = el || this.elements(this.opts.focusElements || '')[0] || this.dialog.firstChild;
+if (el && typeof el.focus === 'function') {
+el.focus();
+}
+};
+RModal.prototype.keydown = function (ev) {
+if (this.opts.escapeClose && ev.which == 27) {
+this.close();
+}
+var stopEvent = function () {
+ev.preventDefault();
+ev.stopPropagation();
+};
+if (this.opened && ev.which == 9 && this.dialog.contains(ev.target)) {
+var elements = this.elements(this.opts.focusElements || ''), first = elements[0], last = elements[elements.length - 1];
+if (first == last) {
+stopEvent();
+}
+else if (ev.target == first && ev.shiftKey) {
+stopEvent();
+last.focus();
+}
+else if (ev.target == last && !ev.shiftKey) {
+stopEvent();
+first.focus();
+}
+}
+};
+RModal.version = '1.1.0';
+return RModal;
+}());
+
+return RModal;
+
+})));
+//# sourceMappingURL=rmodal.js.map
+
+window.onload = function() {
+var modal = new RModal(document.getElementById('modal'), {
+//content: 'Abracadabra'
+beforeOpen: function(next) {
+// document.body.addEventListener("click", function(){ modal.close(); }); 
+next();
+},
+afterOpen: function() {
+},
+beforeClose: function(next) {
+next();
+},
+afterClose: function() {
+//document.body.removeEventListener("click", function(){ modal.close(); });
+},
+  // dialogOpenClass: 'animate__slideInDown',
+  // dialogCloseClass: 'animate__slideOutUp'
+  // // bodyClass: 'modal-open',
+  // // dialogClass: 'modal-dialog',
+
+  // // focus: true,
+  // // focusElements: ['input.form-control', 'textarea', 'button.btn-primary'],
+
+  // // escapeClose: true
+});
+
+document.addEventListener('keydown', function(ev) {
+modal.keydown(ev);
+}, false);
+
+document.getElementById('showModal').addEventListener("click", function(ev) {
+ev.preventDefault();
+
+document.getElementById('sankey_agua').src="sankey_agua_hovers.html";
+modal.open();
+}, false);
+
+window.modal = modal;
+}
+
+</script>
+	<section>
+</article>
+<footer>
+   <header>
+
+
+  <nav class="navmenu" id="navmenu">
+
+          <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
+          <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
+          <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
+          <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
+          <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
+          <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
+          <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
+   </nav>
+ </header>
+  <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> --> 
+</footer>
+</body>
+</html>

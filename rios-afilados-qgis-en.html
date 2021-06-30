@@ -51,6 +51,7 @@
      <li><a class="navitemlink" href="/archives.html">Notas</a></li>
             <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
             <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
+            <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
             <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
             <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
             <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
@@ -163,17 +164,17 @@ return pattern.test(inputvalue);
  <img alt="" src="/images/rios_stroke_width.jpg">
 In the <em>Expression string builder</em> dialog that appears, copy the following code:</li>
 </ol>
-<div class="highlight"><pre><span></span> <span class="nv">CASE</span> 
- <span class="nv">WHEN</span> <span class="s2">&quot;</span><span class="s">AA_ORDEN</span><span class="s2">&quot;</span>  <span class="o">=</span> <span class="mi">5</span> <span class="k">THEN</span> <span class="mi">1</span>
- <span class="nv">WHEN</span> <span class="s2">&quot;</span><span class="s">AA_ORDEN</span><span class="s2">&quot;</span>  <span class="o">=</span> <span class="mi">4</span> <span class="k">THEN</span> <span class="mi">2</span>
- <span class="nv">WHEN</span> <span class="s2">&quot;</span><span class="s">AA_ORDEN</span><span class="s2">&quot;</span>  <span class="o">=</span> <span class="mi">3</span> <span class="k">THEN</span> <span class="mi">3</span>
- <span class="nv">WHEN</span> <span class="s2">&quot;</span><span class="s">AA_ORDEN</span><span class="s2">&quot;</span>  <span class="o">=</span> <span class="mi">2</span> <span class="k">THEN</span> <span class="mi">3</span>.<span class="mi">5</span>
- <span class="nv">WHEN</span> <span class="s2">&quot;</span><span class="s">AA_ORDEN</span><span class="s2">&quot;</span>  <span class="o">=</span> <span class="mi">1</span> <span class="k">THEN</span> <span class="mi">5</span>
- <span class="k">ELSE</span> <span class="mi">10</span>
- <span class="k">END</span> 
- <span class="o">*</span> <span class="ss">(</span>  <span class="nv">log10</span><span class="ss">(</span>@<span class="nv">geometry_part_num</span><span class="ss">)</span> <span class="o">/</span>  <span class="nv">log10</span><span class="ss">(</span>@<span class="nv">geometry_part_count</span><span class="ss">)</span> <span class="ss">)</span> 
- <span class="o">*</span> <span class="nv">log10</span><span class="ss">(</span>$<span class="nv">length</span><span class="ss">)</span> 
- <span class="o">*</span> <span class="mi">3</span>
+<div class="highlight"><pre><span></span><span class="w"> </span><span class="k">CASE</span><span class="w"> </span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mf">3.5</span><span class="w"></span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">5</span><span class="w"></span>
+<span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
+<span class="w"> </span><span class="k">END</span><span class="w"> </span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="nf">log10</span><span class="p">(</span><span class="nv">@geometry_part_num</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w">  </span><span class="nf">log10</span><span class="p">(</span><span class="nv">@geometry_part_count</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="err">$</span><span class="n">length</span><span class="p">)</span><span class="w"> </span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 </pre></div>
 
 
@@ -226,6 +227,7 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
           <li><a class="navitemlink" href="/archives.html">Notas</a></li>
           <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
           <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
+          <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
           <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
           <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
           <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
