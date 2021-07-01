@@ -1,101 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <title>Mir Rodriguez Lombardo: Contacto</title>
-  <meta name="author" content="Mir Rodriguez Lombardo" />
-  <base href="">
-  <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="/theme/css/main.css" /> 
-  <!--
+    <meta name="author" content="Mir Rodriguez Lombardo" />
+    <base href="">
+    <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+    <!--
   Original link to favicon
   <link rel="shortcut icon" type="text/css" href="/favicon.ico" />
   -->
-  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="mask-icon" href="/favicon.svg" color="black" />
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="black" />  
+    <!-- Script para comentarios y feedback -->
 
+    <script src="/js/formchecks.js"></script>
 
-  <!-- OpenGraph Info -->
-  <meta property="og:title" content="Mir Rodriguez Lombardo"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:description" content=""/>
-  <meta property="og:url" content=""/>
-
-</head>
+    <!-- OpenGraph Info -->
+    <meta property="og:title" content="Mir Rodriguez Lombardo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="" />
+    <meta property="og:url" content="" />  </head>
 
 <body>
 
-  <header>
-    <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
-    <nav class="navmenu" id="navmenu">
-     <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-            <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
-            <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
-            <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
-            <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
-            <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
-            <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
-            <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
-     </nav>
-   </header>
+    <header>
+        <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
+        <nav class="navmenu" id="navmenu">
+            <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                       <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
+                <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
+                <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
+                <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
+                <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
+                <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
+                <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
+          </nav>
+    </header>
 
-
-<article>
+ <article>
 	<section>
 	<h1>Ponte en contacto o deja un comentario</h1>
-<script type="text/javascript">
-function checkForm() {
-name = document.getElementById("name").value;
-email = document.getElementById("email").value;
-comment = document.getElementById("comment").value;
-
-if (name == "")
-{
-hideAllErrors();
-document.getElementById("nameError").style.display = "inline";
-document.getElementById("name").select();
-document.getElementById("name").focus();
-return false;
-}
-else if (email == "")
-{
-hideAllErrors();
-document.getElementById("emailError").style.display = "inline";
-document.getElementById("email").select();
-document.getElementById("email").focus();
-return false;
-}
-else if (comment == "")
-{
-hideAllErrors();
-document.getElementById("commentError").style.display = "inline";
-document.getElementById("comment").select();
-document.getElementById("comment").focus();
-return false;
-}
-if (!checkEmail(email))
-{
-alert('Email address is invalid');
-return false;
-}
-return true;
-}
-
-function hideAllErrors() {
-document.getElementById("nameError").style.display = "none";
-document.getElementById("emailError").style.display = "none";
-document.getElementById("commentError").style.display = "none";
-}
-
-function checkEmail(inputvalue) {
-var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-return pattern.test(inputvalue);
-}
-</script>
-
 <p>¿Tienes preguntas, me quieres contratar o tienes algo que contarme? Gracias por ponerte en contacto. Usualmente te contestaré en menos de 24 horas<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">A menos que esté sin señal en medio del bosque o del océano.</span>.</p>
 <script language="JavaScript">
 var username = "mir.rodriguez";
@@ -127,23 +77,24 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
 <p>Vivo entre las ciudades de México y Panamá. También estoy en <a href="https://twitter.com/mir_lentejas">Twitter</a>, en <a href="https://www.instagram.com/mir.cero/">Instagram</a> y en <a href="https://www.linkedin.com/in/mir-rodriguez/">LinkedIn</a>. Aquí está mi <a href="https://www.facebook.com/mir.rodriguez">Facebook</a>, que últimamente uso sólo para mensajes.</p>
 	</section>
 </article>
-<footer>
-   <header>
+    <footer>
+        <header>
 
 
-  <nav class="navmenu" id="navmenu">
+            <nav class="navmenu" id="navmenu">
 
-          <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
-          <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
-          <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
-          <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
-          <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
-          <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
-          <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
-   </nav>
- </header>
-  <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> --> 
-</footer>
+                <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
+                    <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
+                    <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
+                    <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
+                    <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
+                    <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
+                    <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
+              </nav>
+        </header>
+        <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> -->
+    </footer>
 </body>
+
 </html>

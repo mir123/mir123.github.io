@@ -1,71 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <title>Mir Rodriguez Lombardo: Web</title>
-  <meta name="author" content="Mir Rodriguez Lombardo" />
-  <base href="">
-  <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="/theme/css/main.css" /> 
-  <!--
+    <meta name="author" content="Mir Rodriguez Lombardo" />
+    <base href="">
+    <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+    <!--
   Original link to favicon
   <link rel="shortcut icon" type="text/css" href="/favicon.ico" />
   -->
-  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="mask-icon" href="/favicon.svg" color="black" />
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="black" />  
+    <!-- Script para comentarios y feedback -->
 
+    <script src="/js/formchecks.js"></script>
 
-  <!-- OpenGraph Info -->
-  <meta property="og:title" content="Mir Rodriguez Lombardo"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:description" content=""/>
-  <meta property="og:url" content=""/>
-
-</head>
+    <!-- OpenGraph Info -->
+    <meta property="og:title" content="Mir Rodriguez Lombardo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="" />
+    <meta property="og:url" content="" />  </head>
 
 <body>
 
-  <header>
-    <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
-    <nav class="navmenu" id="navmenu">
-     <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-            <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
-            <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
-            <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
-            <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
-            <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
-            <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
-            <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
-     </nav>
-   </header>
+    <header>
+        <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
+        <nav class="navmenu" id="navmenu">
+            <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                       <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
+                <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
+                <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
+                <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
+                <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
+                <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
+                <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
+          </nav>
+    </header>
 
-
-<article>
+ <article>
 	<section>
-	<h1>Presencia en la red</h1>
-<p>Hago páginas web</p>
+	<h1>Te armo tu página web</h1>
+<p>Si eres artista, escritor, activista o científico, necesitas una presencia en internet que no sea sólo en redes sociales. Al menos un dominio con tu nombre, donde puedas publicar fotos y textos sin censura y totalmente bajo tu control. Puedes hacerlo tan complicado o tan sencillo como quieras. Te puedo ayudar a realizar tus ideas y encargarme de los detalles técnicos. Hablemos y cuéntame en qué estás pensando. </p>
+<h2>¡Quiero que me hagas un sitio web!</h2>
+<script language="JavaScript">
+var username = "mir.rodriguez";
+var hostname = "guineo.org";
+var linktext = username + "@" + hostname ;
+document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
+</script>
+
+<div class="nombre">
+<input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
+<div class="error" id="nameError">Debes poner tu nombre<br /></div>
+</div>
+
+<div class="contact_email">
+<input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
+<div class="error" id="emailError">Necesito tu dirección de email<br /></div>
+</div>
+
+<div class="contact_comment">
+<textarea name="body" id="comment" placeholder="¿QUÉ TIENES EN MENTE?" aria-label="Mensaje" rows="5"></textarea><br/>
+<div class="error" id="commentError">Por favor escríbeme algo<br /></div>
+<input type="hidden" name="_format" value="plain" />
+<input type="hidden" name="_language" value="es" />
+</div>
+
+<p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">SIGUIENTE</button>
+</form> </p>
 	</section>
 </article>
-<footer>
-   <header>
+    <footer>
+        <header>
 
 
-  <nav class="navmenu" id="navmenu">
+            <nav class="navmenu" id="navmenu">
 
-          <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
-          <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
-          <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
-          <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
-          <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
-          <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
-          <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
-   </nav>
- </header>
-  <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> --> 
-</footer>
+                <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
+                    <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
+                    <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
+                    <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
+                    <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
+                    <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
+                    <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
+              </nav>
+        </header>
+        <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> -->
+    </footer>
 </body>
+
 </html>
