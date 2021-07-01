@@ -381,7 +381,7 @@ h3>code {
 
 .highlight {
     font-size: 0.9rem;
-    width: 52.5%;
+    /* width: 52.5%; */
     margin-left: 2.5%;
     overflow-x: auto;
 }
@@ -389,7 +389,7 @@ h3>code {
 pre.code,
 div.highlight {
     font-size: 0.9rem;
-    width: 52.5%;
+    /* width: 52.5%; */
     margin-left: 2.5%;
     overflow-x: auto;
 }
