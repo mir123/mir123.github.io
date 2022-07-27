@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mapa de comida</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <script src="aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene id="gallery-scene" background="color: #ACECEC">
+      <a-assets>
+        <!-- 52 Portraits -->
+        <img id="mapa" src="portfolio/paredALTA3.jpg" />
+        <img id="image-anna" src="portfolio/anna.jpg" />
+        <img id="image-comic" src="portfolio/comic-book-lovers.jpg" />
+        <img id="image-game" src="portfolio/game-time.jpg" />
+        <img id="image-home" src="portfolio/hometime.jpg" />
+        <img id="image-ines" src="portfolio/ines.jpg" />
+        <img id="image-rebel" src="portfolio/rebel.jpg" />
+        <!-- Markets -->
+        <img id="image-butchers" src="portfolio/butchers.jpg" />
+        <img id="image-fishmongers" src="portfolio/fishmongers.jpg" />
+        <img id="image-octopus" src="portfolio/octopus.jpg" />
+        <img id="image-pancakes" src="portfolio/pancakes.jpg" />
+        <!-- Discarded -->
+        <img id="image-hat" src="portfolio/post-hat.jpg" />
+        <img id="image-skate" src="portfolio/skateboards.jpg" />
+        <img id="image-door" src="portfolio/door-nowhere.jpg" />
+        <img id="image-carts" src="portfolio/carts.jpg" />
+      </a-assets>
+
+      <!-- Main light -->
+      <!-- <a-entity
+        position="0 25 37.5"
+        rotation="0 0 0"
+        light="color: #fff; type: point; intensity: 0.9;"
+      ></a-entity>
+
+      <a-entity position="0 0 7.5">
+        <a-camera
+          id="camera-1"
+          wasd-controls="acceleration:350;"
+          adAxis="z	"
+          active="true"
+        ></a-camera>
+      </a-entity> -->
+
+      <!-- Forward wall -->
+      <a-box width="125" height="35" depth="0.25" position="0 0 0" color="#fff">
+      </a-box>
+
+      <!-- Middle image: pancakes -->
+      <a-box
+        width="18.7"
+        height="12"
+        depth="0.25"
+        position="0.25 -1.5 0.3"
+      ></a-box>
+      <a-box width="6" height="1" depth="0.25" position="0 -9 0.15">
+        <a-text
+          value="Making pancakes"
+          color="#000"
+          position="0 0 0.25"
+          scale="2.5 2.5 0.5"
+          align="center"
+        ></a-text>
+      </a-box>
+      <a-image
+        src="#image-pancakes"
+        width="18.7"
+        height="12"
+        depth="0.1"
+        position="0.5 -1.5 0.45"
+      ></a-image>
+
+      <!-- Left wall -->
+      <a-box
+        width="110"
+        height="35"
+        depth="0.25"
+        position="-61.25 0 40"
+        rotation="0 90 0"
+        color="#fff"
+      >
+      </a-box>
+
+      <!-- Right wall PRINCIPAL -->
+      <a-box
+        width="110"
+        height="35"
+        depth="0.25"
+        position="61.25 0 40"
+        rotation="0 -90 0"
+        color="#fff"
+      >
+        <a-entity position="-5 0 45">
+          <a-camera id="camera-3" active="true"></a-camera>
+        </a-entity>
+
+        <!-- image -->
+        <a-box
+          width="61.94"
+          height="35"
+          depth="0.25"
+          position="0 0 0.3"
+        ></a-box>
+
+        <a-image
+          src="#mapa"
+          width="61.94"
+          height="35"
+          depth="0.1"
+          position="-9 0 0.45"
+        ></a-image>
+      </a-box>
+
+      <!-- Behind wall -->
+      <a-box
+        width="125"
+        height="35"
+        depth="0.25"
+        position="0 0 62"
+        rotation="0 180 0"
+        color="#fff"
+      >
+        <a-box
+          width="18"
+          height="12"
+          depth="0.25"
+          position="-1.25 -1.5 0.3"
+        ></a-box>
+        <a-box width="6" height="1" depth="0.25" position="-1.25 -9 0.15">
+          <a-text
+            value="Ines"
+            color="#000"
+            position="0 0 0.25"
+            scale="2.5 2.5 0.5"
+            align="center"
+          ></a-text>
+        </a-box>
+        <a-image
+          src="#image-ines"
+          width="18"
+          height="12"
+          depth="0.1"
+          position="-1.25 -1.5 0.45"
+        ></a-image>
+        <!-- <a-entity position="0 0 25">
+          <a-camera id="camera-4" active="false"></a-camera>
+        </a-entity> -->
+      </a-box>
+
+      <!-- Ground -->
+      <a-plane
+        height="110"
+        width="125"
+        rotation="-90 0 0"
+        position="0 -17.5 39.75"
+        material="src: white-wood.jpg; shader: flat; repeat: 6 6;"
+      ></a-plane>
+
+      <!-- Ceiling -->
+      <a-plane
+        height="110"
+        width="125"
+        rotation="-270 0 0"
+        position="0 17.5 39.75"
+        material="src: ceiling-tile.png; shader: flat; repeat: 20 20;"
+      ></a-plane>
+    </a-scene>
+
+    <!-- <script type="text/javascript">
+      var scene = document.querySelector("#gallery-scene");
+      var camera = 1;
+
+      scene.addEventListener(
+        "click",
+        function () {
+          var currentCam = "#camera-" + camera;
+          if (camera < 3) {
+            camera++;
+          } else {
+            camera = 1;
+          }
+
+          var nextCam = "#camera-" + camera;
+
+          document.querySelector(currentCam).setAttribute("active", false);
+          document.querySelector(nextCam).setAttribute("active", true);
+        },
+        false
+      );
+    </script> -->
+  </body>
+</html>
