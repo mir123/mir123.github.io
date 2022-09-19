@@ -207,10 +207,10 @@
     </script>
     <a-scene id="gallery-scene" background="color: #ACECEC" renderer="maxCanvasHeight: 9566; maxCanvasWidth: 16929; antialias:false;" physics="debug: false; gravity: 0; restitution: 0.9; " screen-controls>
         <a-assets>
-            <img id="mapa" src="portfolio/paredMEDIA.jpg" />
+            <img id="mapa" src="portfolio/paredMEDIA_G.jpg" />
             <img id="logo-cencalli" src="portfolio/logo_cencalli.jpg" />
         </a-assets>
-        <a-entity id="cameraRig" position="1 1.60 2.15" rotation="0 -90 0">
+        <a-entity id="cameraRig" position="1 1.60 2.82" rotation="0 -90 0">
             <a-entity camera look-controls extended-wasd-controls="flyEnabled: true; turnEnabled: true; lookEnabled: true; maxLookAngle: 60;" extended-wasd-controls="flyEnabled: true;" id="camera">
             </a-entity>
             <a-entity id="ctlL" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #camera; startEvents: teleportstart; endEvents: teleportend" raycaster="objects: .collidable; far:1.2;" laser-controls="hand: left" input-listen>
@@ -238,7 +238,7 @@
       </a-entity> -->
         <a-entity scale="1 1 1">
             <!-- Forward wall -->
-            <a-plane width="6.50" height="2.43" position="0 1.21 0" color="#fff">
+            <a-plane width="7.92" height="3.32" position="0 1.66 0" color="#fff">
             </a-plane>
 
             <!-- Middle image: pancakes -->
@@ -253,7 +253,7 @@
       ></a-image> -->
 
             <!-- Behind wall -->
-            <a-plane width="6.50" height="2.43" position="0 1.21 4.3" rotation="0 180 0" color="#fff">
+            <a-plane width="7.92" height="3.32" position="0 1.66 5.64" rotation="0 180 0" color="#fff">
                 <a-image src="#logo-cencalli" width="0.83" height="0.83" depth="0.01" position="-0.089 0 0.45"></a-image>
                 <!-- <a-entity position="0 0 25">
  <a-camera id="camera-4" active="false"></a-camera>
@@ -261,11 +261,11 @@
             </a-plane>
 
             <!-- Left wall -->
-            <a-plane width="4.3" height="2.43" position="-3.25 1.21 2.15" rotation="0 90 0" color="#fff">
+            <a-plane width="5.64" height="3.32" position="-3.96 1.66 2.82" rotation="0 90 0" color="#fff">
             </a-plane>
 
             <!-- Right wall PRINCIPAL -->
-            <a-plane width="4.3" height="2.4" depth="0.02" position="3.25 1.21 2.15" rotation="0 -90 0" color="#fff">
+            <a-plane width="5.64" height="2.4" depth="0.02" position="3.96 1.66 2.82" rotation="0 -90 0" color="#fff">
                 <!-- <a-entity position="-0.35 -0.83 3.12">
           <a-camera
             id="camera-3"
@@ -281,20 +281,20 @@
         </a-entity> -->
                 <!-- image -->
                 <!-- <a-box
-          width="4.3"
-          height="2.43"
+          width="5.64"
+          height="3.32"
           depth="0.02"
           position="0 0 0.02"
         ></a-box> -->
 
-                <a-image src="#mapa" width="4.3" height="2.43" depth="0.02" position="0 0 0.03"></a-image>
+                <a-image src="#mapa" width="5.64" height="3.32" depth="0.02" position="0 0 0.03"></a-image>
             </a-plane>
 
             <!-- Ground -->
-            <a-plane height="4.3" width="6.50" rotation="-90 0 0" position="0 0 2.15" material="src: wooden-floor-texture-5.jpg; shader: flat; repeat: 6 6;"></a-plane>
+            <a-plane height="5.64" width="7.92" rotation="-90 0 0" position="0 0 2.82" material="src: wooden-floor-texture-5.jpg; shader: flat; repeat: 6 6;"></a-plane>
 
             <!-- Ceiling -->
-            <a-plane height="4.3" width="6.50" rotation="-270 0 0" position="0 2.42 2.15" material="src: ceiling-tile.png; shader: flat; repeat: 20 20;"></a-plane>
+            <a-plane height="5.64" width="7.92" rotation="-270 0 0" position="0 3.32 2.82" material="src: ceiling-tile.png; shader: flat; repeat: 20 20;"></a-plane>
         </a-entity>
     </a-scene>
 
