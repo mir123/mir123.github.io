@@ -28,6 +28,8 @@
     <script type="text/javascript">
       //<![CDATA[
 
+      passPhraseBox = {};
+
       // stub UI config
       var ui = {
         RPdictionaryLoaded: false,
@@ -37,11 +39,12 @@
 
       // called by body.onload
       function loadRPDictionary() {
+        passPhraseBox = document.getElementById("passphrasebox");
+
         if (ui.RPdictionaryLoaded) return true;
         if (ui.RPattemptingLoad) return false;
         ui.RPattemptingLoad = true;
-        document.getElementById("passphrasebox").innerHTML =
-          "Cargando diccionario...";
+        passPhraseBox.innerHTML = "Cargando diccionario...";
         var dictScript = document.createElement("script");
         dictScript.type = "text/javascript";
         dictScript.src = "dict-readablepassphrase_mir_verbs.js";
@@ -52,7 +55,7 @@
 
       // called after the readable passphrase dictionary has loaded (it's about 250k un-minified)
       function ReadablePassphrase_Callback() {
-        document.getElementById("more_phrases_button").disabled = false;
+        document.getElementById("morePhrasesButton").disabled = false;
 
         // DEMO: Replace the randomness function normally used by ReadablePassphrase with our own
         // You would normally use this feature to replace the function with a better source of randomness, eg. mouse movements, random.org, etc..
@@ -67,6 +70,8 @@
       function getMorePhrases() {
         var phrases = [];
         var allPhrases = [];
+
+        passPhraseBox.innerHTML = "";
 
         // DEMO: get a list of available templates, then loop through them to create an example of each
         // ReadablePassphrase.templates().forEach(function(templateName) {
@@ -84,34 +89,66 @@
         //console.log(passPhrase); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
         //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
 
-        phrases.push(
-          " <p class='passPhrase'>" +
-            passPhrase +
-            "</p>" +
-            "<div class='entropia'> (entropía:&nbsp;" +
-            Math.round(passPhrase.template.entropy()) +
-            ")</div>"
-        );
+        passPhraseElement = document.createElement("textarea");
+        passPhraseElement.setAttribute("id", "passphrase");
+        passPhraseElement.className = "passPhrase";
+
+        entropyElement = document.createElement("div");
+        entropyElement.className = "entropia";
+        entropyElement.innerHTML =
+          "(entropía:&nbsp;" + Math.round(passPhrase.template.entropy()) + ")";
+
+        passPhraseBox.appendChild(passPhraseElement);
+        passPhraseBox.appendChild(entropyElement);
+
+        passPhraseElement.value = passPhrase;
+
+        passPhraseElement.style.height = "1px";
+        passPhraseElement.style.height =
+          25 + passPhraseElement.scrollHeight + "px";
+
+        // phrases.push(
+        //   " <p class='passPhrase'>" +
+        //     passPhrase +
+        //     "</p>" +
+        //     "<div class='entropia'> (entropía:&nbsp;" +
+        //     Math.round(passPhrase.template.entropy()) +
+        //     ")</div>"
+        // );
         allPhrases.push("-" + passPhrase);
         //phrases.push(templateName + ": " + passPhrase);
 
         //}
-        document.getElementById("passphrasebox").innerHTML = phrases.join("\n");
+        // passPhraseBox.innerHTML = phrases.join("\n");
 
-        const p = document.querySelectorAll("p");
+        // const p = document.querySelectorAll("p");
 
-        for (var i = 0, len = p.length; i < len; i++) {
-          var largo = p[i].innerHTML.length;
-          var random = Math.random() * 10;
-          var factor = random + 500 / largo + 10;
-          p[i].style.fontSize = factor + "px";
-        }
+        // for (var i = 0, len = p.length; i < len; i++) {
+        //   var largo = p[i].innerHTML.length;
+        //   var random = Math.random() * 10;
+        //   var factor = random + 500 / largo + 10;
+        //   p[i].style.fontSize = factor + "px";
+        // }
+
+        var largo = passPhraseElement.value.length;
+        var random = Math.random() * 10;
+        var factor = random + 500 / largo + 10;
+        passPhraseElement.style.fontSize = factor + "px";
 
         var pattern = GeoPattern.generate(allPhrases[0].toString());
 
-        document.getElementById(
-          "passphrasebox"
-        ).style.backgroundImage = pattern.toDataUrl();
+        passPhraseBox.style.backgroundImage = pattern.toDataUrl();
+      }
+
+      // Select and copy passPhraseBox to clipboard
+
+      function copyToClipboard() {
+        var copyText = document.getElementById("passphrase");
+        copyText.select();
+        // copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        var buttonC = document.getElementById("copyButton");
+        buttonC.focus();
       }
 
       // ]]> // end CDATA
@@ -156,6 +193,11 @@
         padding: 5px;
         color: white;
         font-weight: bold;
+        background: transparent;
+        border: none;
+        width: calc(95vw - 20px);
+        overflow: hidden;
+        resize: none;
       }
 
       .entropia {
@@ -169,7 +211,8 @@
         display: inline;
       }
 
-      #more_phrases_button {
+      #morePhrasesButton,
+      #copyButton {
         font-family: "Roboto Slab", serif;
         font-weight: 800;
         font-size: 26px;
@@ -195,11 +238,17 @@
 
     <div>
       <input
-        id="more_phrases_button"
+        id="morePhrasesButton"
         type="button"
         onclick="getMorePhrases();"
         value="Más"
         disabled="disabled"
+      />
+      <input
+        id="copyButton"
+        type="button"
+        onclick="copyToClipboard();"
+        value="Copy"
       />
     </div>
     <a href="https://github.com/mir123/readablePassphraseJS-ES"
