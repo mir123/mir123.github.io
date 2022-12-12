@@ -1,258 +1,231 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generador de frases-contraseña</title>
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:creator" content="@mir_lentejas" />
-    <meta
-      property="og:url"
-      content="http://mirrodriguezlombardo.com/passphrase/"
-    />
-    <meta property="og:title" content="Generador de frases-clave en español" />
-    <meta
-      property="og:description"
-      content="Genera contraseñas super seguras y fáciles de recordar en español (beta)"
-    />
-    <meta
-      property="og:image"
-      content="http://mirrodriguezlombardo.com/passphrase/passphrase_logo.png"
-    />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="geopattern.min.js"></script>
-    <script type="text/javascript">
-      //<![CDATA[
 
-      passPhraseBox = {};
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de frases-contraseña</title>
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:creator" content="@mir_lentejas" />
+  <meta property="og:url" content="http://mirrodriguezlombardo.com/passphrase/" />
+  <meta property="og:title" content="Generador de frases fuertes legibles en español" />
+  <meta property="og:description" content="Genera contraseñas super seguras y fáciles de recordar en español" />
+  <meta property="og:image" content="http://mirrodriguezlombardo.com/passphrase/passphrase_logo.png" />
+  <link rel="stylesheet" href="readable_passphrase_ES.css">
+  <script src="geopattern.min.js"></script>
 
-      // stub UI config
-      var ui = {
-        RPdictionaryLoaded: false,
-        RPattemptingLoad: false,
-        //entropyUsed: 0,
+
+</head>
+
+<!-- <body onload="loadRPScripts();"> -->
+
+<body>
+  <div class="contenedor">
+    <h1>
+      <img src="passphrase_logo_50.png" />Generador de frases fuertes legibles
+    </h1>
+    <div>
+      <input id="morePhrasesButton" type="button" onclick="getMorePhrases();" value="Generar" disabled="disabled" />
+      <input id="copyButton" type="button" onclick="copyToClipboard();" value="Copiar" />
+    </div>
+    <div id="passphraseContainer">
+      <div id="passphrasebox">
+        <textarea id="passphrase" class="passPhrase"></textarea>
+        <div id="entropia" class="entropia"></div>
+      </div>
+    </div>
+    <div id="templateChoiceContainer">
+      <label for="templateChoice" class="textoPlantillaLabel">Escoge una plantilla para la frase, </label>
+      <select id="templateChoice">
+      </select>
+    </div>
+
+    <div class="accordion">
+      <input type="checkbox" id="accordionCheck">
+      <label class="accordionLabel" for="accordionCheck">o diseña una </label>
+      <div id="customTemplateContainer" class="customTemplateContainer">
+        <input id="addVerb" type="button" onclick="addBlock(blocksDef['verb']);" value="+ verbo" />
+        <input id="addNoun" type="button" onclick="addBlock(blocksDef['noun']);" value="+ sustantivo" />
+        <input id="addConjunction" type="button" onclick="addBlock(blocksDef['conjunction']);" value="+ conjunción" />
+        <input id="addDeclarativo" type="button" onclick="addBlock(blocksDef['directSpeech']);" value="+ declarativo" />
+        <input id="addComa" type="button" onclick="addBlock(blocksDef['comma']);" value="+ coma" />
+        <input id="borrarTodo" type="button" onclick="deleteAllBlocks();" value="&#x1F5D1" />
+        <div id="templateContainer">
+          <div id="blocksContainer"></div>
+          <div id="menuContainer"></div>
+        </div>
+        <div id="textoPlantillaContainer">
+          <label for="textoPlantilla" class="textoPlantillaLabel">Plantilla de frase:</label>
+          <textarea id="textoPlantilla"></textarea>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="readme">
+      <h2 id="las-frases-fuertes">Las <em>frases fuertes</em></h2>
+      <p>Una <strong>frase fuerte</strong> funciona igual que una contraseña pero es mucho más segura y al mismo tiempo
+        fácil de recordar.</p>
+      <p>Cada vez que te registras en una aplicación, servicio o sitio web te piden usar un nombre de usuario y un
+        password o contraseña. Desafortunadamente las contraseñas clásicas ya no son <a href="https://es.wikipedia.org/wiki/Seguridad_de_la_contrase%C3%B1a">realmente seguras</a>.</p>
+      <p>Hay algunas posibles soluciones:</p>
+      <ul>
+        <li>Usar un gestor de claves como <a href="https://keepass.info/">Keepass</a>, <a
+            href="https://www.lastpass.com/">LastPass</a> o tu <a
+            href="https://www.mozilla.org/en-US/firefox/features/password-manager/">navegador</a>. Te pueden ayudar a
+          crear contraseñas seguras, como <code>yn5rCS9W6y1nX34j</code>, y encargarse de recordarlas cada vez que
+          visitas alguna aplicación</li>
+        <li>Configurar un sistema de verificación de dos factores (2FA, le dicen) con un app que genera un código o que
+          te lo envía a tu teléfono o
+          por email para poder entrar</li>
+        <li>Usar una <a href="https://www.yubico.com/">llave física</a> que introduces en el USB cada vez que necesitas
+          autenticarte</li>
+        <li>Crear una frase fuerte que puedas recordar</li>
+      </ul>
+      <p>Una contraseña como la que menciono en el punto 1 podría ser casi imposible de adivinar por un potencial
+        intruso. Desafortunadamente la
+        mayoría de nosotros usamos contraseñas súper inseguras. Un alto porcentaje de las personas usan
+        <code>123456</code>, <code>querty</code> o <code>password</code> como palabra secreta para proteger sus cuentas.
+        Algunos reemplazamos letras por números, como <code>Aut0m0v1l3s</code>. Estas contraseñas son muy fáciles de
+        adivinar por alguien que quiera entrar sin autorización (hackear) tu cuenta de redes sociales, tu email o alguna
+        aplicación que uses.
+      </p>
+      <p>Aquí es dónde entra el concepto de “frases fuertes” o frases contraseña, donde usamos palabras en lugar de
+        letras y números.</p>
+      <ul>
+        <li>Las frases fuertes son más fáciles de recordar</li>
+        <li>Se pueden crear frases fuertes que una son casi imposibles de adivinar</li>
+      </ul>
+      <p>La clásica tira cómica <a href="https://xkcd.com/936">xkcd</a> lo explica así:</p>
+      <img class="xkcd" src="xkcd.png">
+      <p class="xkcd"><em>“Tras 20 años de trabajo hemos logrado entrenar a todxs para que usen contraseñas que son
+          difíciles de recordar para los humanos, pero fáciles de adivinar para las computadoras.“</em></p>
+      <p>Mi objetivo es generar frases fuertes que sean legibles. Aunque el texto no tenga ningún sentido (si tu cerebro
+        está bueno y sano) tendrá una legibilidad que lo haga más fácil de recordar. Esta frase puedes usarla como la
+        contraseña maestra de tu gestor de contraseñas o directamente en aplicaciones y servicios. El sistema que ves
+        aquí contiene más de 55,000 palabras que se pueden combinar de distintas formas, lo cual lo hace muy seguro. El
+        número de <strong>entropía</strong> te da una indicación de qué tan fuerte es la frase como contraseña. Una
+        frase más larga tendrá una entropía mayor. Un número de 60 o más se considera bastante impenetrable.</p>
+      <p>Aquí utilizo la <a href="https://sadowsky.cl/lifcach.html">Lista de frecuencia de palabras del español
+          chileno</a> por Scott Sadowsky y Ricardo Martínez Gamboa, los verbos los conjugué con Python usando la
+        biblioteca <a href="https://github.com/bretttolbert/verbecc">verbecc</a> de Brett Tolbert. A esta lista le
+        agregué los 1000 nombres panameños más comunes, tomados de una lista que publicó el Tribunal Electoral de Panamá
+        y que es la misma que usé en mi generador de nombres panameños <a
+          href="https://www.yaurisbeth.com/">Yaurisbeth</a>.</p>
+      <h3>Cómo usarlo</h3>
+      <p>Todo el código corre en tu computadora. Si quieres estar más segurx de que nadie puede leer las claves que
+        generas, carga la página y luego desconéctate de internet. Genera tu clave, cópiala y vuelve a conectarte.</p>
+      <p>Puedes generar frases haciendo clic en "Generar" y usando alguna de las plantillas disponibles. Algunas (como
+        "tituloDeLibro") generan frases cortas y no muy seguras, "longPassphrase" produce frases larguísimas. También
+        puedes generar tus propias plantillas agregando bloques de tipos de palabra en la parte inferior. Los bloques de
+        verbo y sustantivo pueden ser configurados. Por ejemplo, si quieres nombres panameños en tu frase fuerte, busca
+        el bloque <strong>sustantivo</strong>, haz clic en <strong>+</strong> para ver el menú y mueve el indicador de
+        subtipo <strong>propio</strong> más hacia la derecha.</p>
+      <p>Si creas una plantilla de frase que te gusta, debes copiar el código en la parte inferior y guardarlo. Cuando
+        regreses, lo pegas ahí de nuevo y así la podrás volver a usar.</p>
+      <p>Este sistema está basado en el <a
+          href="https://github.com/xaintly/readablePassphraseJS">readablePassphraseJS</a> de Steven Zeck, basado a su
+        vez en el <a href="https://github.com/ligos/readablepassphrasegenerator">Readable Passphrase Generator</a> de
+        Murray Grant. Puedes ver, copiar y modificar <a href="https://github.com/mir123/readablePassphraseJS-ES">mi
+          código</a> en Github. Escríbeme a mir.rodriguez@guineo.org.</p>
+
+    </div>
+    <a href="https://github.com/mir123/readablePassphraseJS-ES"><img src="github_icon.png" /></a>
+  </div>
+</body>
+
+<script type="text/javascript">
+
+  window.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      console.log("DOM loaded");
+
+      passPhraseBox = document.getElementById("passphrasebox");
+      passPhraseElement = document.getElementById("passphrase");
+      blocksContainer = document.getElementById("blocksContainer");
+      textoPlantilla = document.getElementById("textoPlantilla");
+      menuContainer = document.getElementById("menuContainer");
+      templateChoice = document.getElementById("templateChoice");
+
+      loadRPScripts();
+
+      // Handle template erros so we can show a message in the passphrase box
+      window.onerror = function (message, file, line) {
+        console.error(
+          "An error occurred: " + message + " in " + file + " on line " + line
+        );
+        passPhraseElement.innerHTML = "ERROR -- check template";
       };
 
-      // called by body.onload
-      function loadRPDictionary() {
-        passPhraseBox = document.getElementById("passphrasebox");
+    },
+    false
+  );
 
-        if (ui.RPdictionaryLoaded) return true;
-        if (ui.RPattemptingLoad) return false;
-        ui.RPattemptingLoad = true;
-        passPhraseBox.innerHTML = "Cargando diccionario...";
-        var dictScript = document.createElement("script");
-        dictScript.type = "text/javascript";
-        dictScript.src = "dict-readablepassphrase_mir_verbs.js";
-        document.body.appendChild(dictScript);
-        // when the script loads, it will look for and call a function called 'ReadablePassphrase_Callback()'
-        return false;
+  //passPhraseBox = {};
+  var passPhrase = {}
+
+  // stub UI config
+  var ui = {
+    RPdictionaryLoaded: false,
+    RPattemptingLoad: false,
+    //entropyUsed: 0,
+  };
+
+  // https://www.educative.io/answers/how-to-dynamically-load-a-js-file-in-javascript
+
+  const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
+    return new Promise((resolve, reject) => {
+      try {
+        const scriptEle = document.createElement("script");
+        scriptEle.type = type;
+        scriptEle.async = async;
+        scriptEle.src = FILE_URL;
+
+        scriptEle.addEventListener("load", (ev) => {
+          resolve({ status: true });
+        });
+
+        scriptEle.addEventListener("error", (ev) => {
+          reject({
+            status: false,
+            message: `Failed to load the script ＄{FILE_URL}`
+          });
+        });
+
+        document.body.appendChild(scriptEle);
+      } catch (error) {
+        reject(error);
       }
+    });
+  };
 
-      // called after the readable passphrase dictionary has loaded (it's about 250k un-minified)
-      function ReadablePassphrase_Callback() {
-        document.getElementById("morePhrasesButton").disabled = false;
+  function loadRPScripts() {
+    if (ui.RPdictionaryLoaded) return true;
+    if (ui.RPattemptingLoad) return false;
+    ui.RPattemptingLoad = true;
+    passPhraseElement.value = "Cargando diccionario...";
 
-        // DEMO: Replace the randomness function normally used by ReadablePassphrase with our own
-        // You would normally use this feature to replace the function with a better source of randomness, eg. mouse movements, random.org, etc..
-        // ReadablePassphrase.randomness = function(multiplier) {
-        //     ui.entropyUsed++; // our replacement function still uses dumpster randomness, but we count & display how much we've used
-        //     return Math.random() * (multiplier || 1);
-        // };
+    loadScript("readablepassphrase_ES.js")
+      .then((data) => {
+        console.log("First script loaded successfully", data);
+        loadScript("dict-readablepassphrase_ES.js").then((data) => {
+          console.log("Dictionary loaded successfully", data);
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-        getMorePhrases();
-      }
 
-      function getMorePhrases() {
-        var phrases = [];
-        var allPhrases = [];
+    //   var dictScript = document.createElement("script");
+    //   dictScript.type = "text/javascript";
+    //   dictScript.src = "dict-readablepassphrase_ES.js";
+    //   dictScript.setAttribute("async", false);
+    //   document.body.appendChild(dictScript);
+    // when the script loads, it will look for and call a function called 'ReadablePassphrase_Callback()'
+    return false;
+  }
 
-        passPhraseBox.innerHTML = "";
+</script>
 
-        // DEMO: get a list of available templates, then loop through them to create an example of each
-        // ReadablePassphrase.templates().forEach(function(templateName) {
-        //     var passPhrase = new ReadablePassphrase(templateName);
-        //     // console.log( passPhrase ); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
-        //     //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
-        //     phrases.push(templateName + " <p class='passPhrase'>" + passPhrase + "</p>");
-        //     allPhrases.push("-" + passPhrase)
-        //         //phrases.push(templateName + ": " + passPhrase);
-        // });
-        //var i;
-        var passPhrase;
-        //for (i = 0; i < 100; i++) {
-        passPhrase = new ReadablePassphrase("random");
-        //console.log(passPhrase); // The returned passphrase object has dictionary information attached to words, name of the template actually used, etc..
-        //phrases.push("<div class='templateName'>" + templateName + "</div>" + ": " + "<div class='passPhrase'>" + passPhrase + "</div>"); // However, you probably just want its toString() output.
-
-        passPhraseElement = document.createElement("textarea");
-        passPhraseElement.setAttribute("id", "passphrase");
-        passPhraseElement.className = "passPhrase";
-
-        entropyElement = document.createElement("div");
-        entropyElement.className = "entropia";
-        entropyElement.innerHTML =
-          "(entropía:&nbsp;" + Math.round(passPhrase.template.entropy()) + ")";
-
-        passPhraseBox.appendChild(passPhraseElement);
-        passPhraseBox.appendChild(entropyElement);
-
-        passPhraseElement.value = passPhrase;
-
-        passPhraseElement.style.height = "1px";
-        passPhraseElement.style.height =
-          25 + passPhraseElement.scrollHeight + "px";
-
-        // phrases.push(
-        //   " <p class='passPhrase'>" +
-        //     passPhrase +
-        //     "</p>" +
-        //     "<div class='entropia'> (entropía:&nbsp;" +
-        //     Math.round(passPhrase.template.entropy()) +
-        //     ")</div>"
-        // );
-        allPhrases.push("-" + passPhrase);
-        //phrases.push(templateName + ": " + passPhrase);
-
-        //}
-        // passPhraseBox.innerHTML = phrases.join("\n");
-
-        // const p = document.querySelectorAll("p");
-
-        // for (var i = 0, len = p.length; i < len; i++) {
-        //   var largo = p[i].innerHTML.length;
-        //   var random = Math.random() * 10;
-        //   var factor = random + 500 / largo + 10;
-        //   p[i].style.fontSize = factor + "px";
-        // }
-
-        var largo = passPhraseElement.value.length;
-        var random = Math.random() * 10;
-        var factor = random + 500 / largo + 10;
-        passPhraseElement.style.fontSize = factor + "px";
-
-        var pattern = GeoPattern.generate(allPhrases[0].toString());
-
-        passPhraseBox.style.backgroundImage = pattern.toDataUrl();
-      }
-
-      // Select and copy passPhraseBox to clipboard
-
-      function copyToClipboard() {
-        var copyText = document.getElementById("passphrase");
-        copyText.select();
-        // copyText.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        var buttonC = document.getElementById("copyButton");
-        buttonC.focus();
-      }
-
-      // ]]> // end CDATA
-    </script>
-    <style type="text/css">
-      body {
-        font-family: "Roboto Slab", serif;
-        background-color: #1f1f1f;
-      }
-
-      div {
-        margin-bottom: 1em;
-      }
-
-      h2 {
-        font-weight: 700;
-        color: rgb(224, 224, 224);
-      }
-
-      h2 img {
-        display: inline;
-        vertical-align: middle;
-        margin: 0 10px 0 0;
-      }
-
-      #passphrasebox {
-        border: solid 1px #000;
-        background-color: #739bd9;
-        padding: 0.2em;
-        /* white-space: pre; */
-        flex-wrap: wrap;
-        width: 95vw;
-        margin: 10px;
-      }
-
-      .passPhrase {
-        font-size: 14px;
-        font-family: "Roboto Slab", serif;
-        display: inline-block;
-        left: 100px;
-        margin: 0 10px 0 10px;
-        padding: 5px;
-        color: white;
-        font-weight: bold;
-        background: transparent;
-        border: none;
-        width: calc(95vw - 20px);
-        overflow: hidden;
-        resize: none;
-      }
-
-      .entropia {
-        margin: 0 0 10px 10px;
-        padding: 5px;
-        display: inline;
-      }
-
-      .templateName {
-        font-size: 10px;
-        display: inline;
-      }
-
-      #morePhrasesButton,
-      #copyButton {
-        font-family: "Roboto Slab", serif;
-        font-weight: 800;
-        font-size: 26px;
-      }
-
-      #entropy {
-        border: solid 1px #000;
-        padding-left: 0.2em;
-        padding-right: 0.2em;
-        margin-right: 0.5em;
-      }
-    </style>
-  </head>
-
-  <body onload="loadRPDictionary();">
-    <h2>
-      <img src="passphrase_logo_50.png" />Generador de frases-contraseña
-      legibles
-    </h2>
-    <div id="passphrase_container">
-      <div id="passphrasebox"></div>
-    </div>
-
-    <div>
-      <input
-        id="morePhrasesButton"
-        type="button"
-        onclick="getMorePhrases();"
-        value="Más"
-        disabled="disabled"
-      />
-      <input
-        id="copyButton"
-        type="button"
-        onclick="copyToClipboard();"
-        value="Copy"
-      />
-    </div>
-    <a href="https://github.com/mir123/readablePassphraseJS-ES"
-      ><img src="github_icon.png"
-    /></a>
-  </body>
 </html>
