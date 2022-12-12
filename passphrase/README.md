@@ -1,6 +1,6 @@
 # readablePassphraseJS-ES
 
-Una adaptación al español de readablePassphraseJS por Steven Zeck, el cual a su vez es una implementación en Javascript del readable passphrase generator de Murray Grant.
+Una adaptación al español de [readablePassphraseJS](https://github.com/xaintly/readablePassphraseJS) de Steven Zeck, el cual a su vez es una implementación en Javascript del [Readable Passphrase Generator](https://github.com/ligos/readablepassphrasegenerator) de Murray Grant.
 
 Este programa genera oraciones aleatorias en español que pueden funcionar mejor que palabras clave y ser más fáciles de recordar.
 
@@ -31,5 +31,3 @@ La clásica tira cómica [xkcd](https://xkcd.com/936) lo explica así:
 Mi objetivo es generar frases fuertes que sean legibles. Aunque el texto no tenga ningún sentido (si tu cerebro está bueno y sano) tendrá una legibilidad que lo haga más fácil de recordar. Esta frase puedes usarla como la contraseña maestra de tu gestor de contraseñas o directamente en aplicaciones y servicios. El sistema que ves aquí contiene más de 55,000 palabras que se pueden combinar de distintas formas, lo cual lo hace muy seguro. El número de **entropía** te da una indicación de qué tan fuerte es la frase como contraseña. Una frase más larga tendrá una entropía mayor. Un número de 60 o más se considera bastante impenetrable.
 
 Aquí utilizo la [Lista de frecuencia de palabras del español chileno](https://sadowsky.cl/lifcach.html) por Scott Sadowsky y Ricardo Martínez Gamboa, los verbos los conjugué con Python usando la biblioteca [verbecc](https://github.com/bretttolbert/verbecc) de Brett Tolbert. A esta lista le agregué los 1000 nombres panameños más comunes, tomados de una lista que publicó el Tribunal Electoral de Panamá y que es la misma que usé en mi generador de nombres panameños [Yaurisbeth](https://www.yaurisbeth.com/).
-
-Este sistema está basado en el [readablePassphraseJS](https://github.com/xaintly/readablePassphraseJS) de Steven Zeck, basado a su vez en el [Readable Passphrase Generator](https://github.com/ligos/readablepassphrasegenerator) de Murray Grant.
