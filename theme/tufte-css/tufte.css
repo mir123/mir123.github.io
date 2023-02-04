@@ -529,6 +529,11 @@ p>.comentario {
     table {
         width: 85%;
     }
+    pre.code,
+    div.highlight {
+        width: 90%;
+        *
+    }
     img {
         /* width: 100%; */
     }
