@@ -201,7 +201,7 @@ printed a bit larger than 4 meters across and people would be looking at
 it from up close, so at 300 dpi (I’d actually rather use 600 dpi) it is
 a big number. So I needed to find a workaround.</p>
 <h2>Solution: export as vectors and convert to a bitmap</h2>
-<p><label for="apachito" class="margin-toggle"></label><input type="checkbox" id="apachito" class="margin-toggle"/><span class="marginnote"><img alt="Apachito
+<p><label for="apachito" class="margin-toggle">&#8853;</label><input type="checkbox" id="apachito" class="margin-toggle"/><span class="marginnote"><img alt="Apachito
 corn" src="/images/huge-images_apachito.png"><br/> An icon representing
 <em>apachito</em> corn</br> (credit: Kitzia Sámano)</span>Instead of exporting
 as a PNG image, we could export our map as a PDF or SVG vector. But my
@@ -227,8 +227,8 @@ which turn out ok as they are both smaller than the 32767 limit:</p>
 <p>But then, was I going to start typing numbers one by one for all of my
 layers? No way! That’s what we have the command line for!</p>
 <h2>The Inkscape command line</h2>
-<p><label for="cli" class="margin-toggle"></label><input type="checkbox" id="apcliachito" class="margin-toggle"/><span class="marginnote"><strong>Try
-using the command line!</strong><br/><br/>If you are doing any kind of serious
+<p><label for="cli" class="margin-toggle">&#8853;</label><input type="checkbox" id="cli" class="margin-toggle"/><span class="marginnote"><img alt="a terminal" src="/images/huge-images_terminal.jpg"><br/>
+<strong>Try using the command line!</strong><br/><br/>If you are doing any kind of serious
 massive/complex image processing, converting, animation or composing, it
 is time you get off the mouse and explore your terminal, as it can make
 your life easier and liberate you from really boring tasks.<br/><br/>When we
@@ -237,8 +237,7 @@ application where you give commands to your computer by typing as
 opposed to clicking. In Windows, OS X and Linux this application is
 called the <em>terminal</em>, just search for it and open it. Really, spend a
 bit of time realizing you can actually use the terminal and nothing bad
-will happen.</span></p>
-<p>Turns out you can do things like converting an SVG vector to a PNG
+will happen.</span>Turns out you can do things like converting an SVG vector to a PNG
 bitmap using <a href="https://inkscape.org/doc/inkscape-man.html">Inkscape from the command
 line</a>. the format is:</p>
 <div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>--export-area<span class="o">=</span>x0:y0:x1:y1<span class="w"> </span>--export-dpi<span class="o">=</span>DPI<span class="w"> </span>--export-filename<span class="o">=</span>filename.png<span class="w"> </span>your_vector.svg
@@ -272,7 +271,11 @@ image width in Inkscape pixels is 16780.8.</p>
 <p>How come I don’t get the same error for the image height, which is
 larger than 32767 pixels? I don’t know and I don’t care!</p>
 <h2>Staying on the command line: stitching images together</h2>
-<p><label for="about-ImageMagick" class="margin-toggle"></label><input type="checkbox" id="about-ImageMagick" class="margin-toggle"/><span class="marginnote"><img alt="ImageMagick
+<p>I first tried to stitch these two
+halves of my layer using Gimp and Krita, but it was excruciatingly slow
+and painful. And since we are already here, we might as well stay on the
+command line and try to automate everything as much as possible for all
+my layers. Enter ImageMagick.<label for="about-ImageMagick" class="margin-toggle">&#8853;</label><input type="checkbox" id="about-ImageMagick" class="margin-toggle"/><span class="marginnote"><img alt="ImageMagick
 logo" src="/images/huge-images_ImageMagick_logo.png"><br/>
 <a href="https://ImageMagick.org/">ImageMagick</a> is a multiplatform (Linux,
 Windows, OS X and Android) tool for displaying, modifying, converting
@@ -288,11 +291,7 @@ ImageMagick is 7.x, but here I used
 <a href="https://legacy.ImageMagick.org/">version 6.9.11</a>, which has some
 significant differences. Check the
 <a href="https://legacy.ImageMagick.org/">legacy.ImageMagick.org</a> pages for the
-documentation of version 6.x.</span>I first tried to stitch these two
-halves of my layer using Gimp and Krita, but it was excruciatingly slow
-and painful. And since we are already here, we might as well stay on the
-command line and try to automate everything as much as possible for all
-my layers. Enter ImageMagick.</p>
+documentation of version 6.x.</span></p>
 <p>This wonderful command line tool is mostly known for its commands
 <code>convert</code> and <code>mogrify</code>, often seen in forums around the internet as the
 solution to converting or resizing images to and from many formats and

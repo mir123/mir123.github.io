@@ -530,6 +530,6 @@ p>.comentario {
         width: 85%;
     }
     img {
-        width: 100%;
+        /* width: 100%; */
     }
 }
