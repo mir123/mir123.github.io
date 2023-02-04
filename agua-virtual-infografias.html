@@ -280,16 +280,15 @@ es decir que se extraen más rápido de lo que se recargan las reservas de agua 
 <p><br/></p>
 <p>El código R para hacer el gráfico es súper corto:
 <br/></p>
-<div class="highlight"><pre><span></span><span class="c1"># Dibuja un gráfico de barras horizontales con el grosor determinado por una variable</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dibuja un gráfico de barras horizontales con el grosor determinado por una variable</span>
 
 <span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span>
 
 <span class="n">irr</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;riego_sost_insost.csv&quot;</span><span class="p">))</span>
 
-<span class="nf">ggplot</span><span class="p">(</span><span class="n">irr</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">valor</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">variable</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">ancho</span><span class="o">/</span><span class="m">400</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s">&quot;x&quot;</span><span class="p">))</span> <span class="o">+</span>  <span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span>
-</pre></div>
-
+<span class="nf">ggplot</span><span class="p">(</span><span class="n">irr</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valor</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">variable</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="n">ancho</span><span class="o">/</span><span class="m">400</span><span class="p">,</span><span class="w"> </span><span class="n">orientation</span><span class="o">=</span><span class="s">&quot;x&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">)</span>
+</code></pre></div>
 
 <p>y produce esto,</p>
 <p><img alt="Riego insostenible de R" src="/images/Rplot01.png">
@@ -316,7 +315,7 @@ que no funciona muy bien, aunque es visualmente interesante ver los flujos dentr
 <p>La biblioteca D3 está diseñada para producir gráficos interactivos en la web, lo cual es un producto totalmente diferente que un diagrama para una revista impresa. <a href="#" class="showModal" >Haz clic aquí</a> para ver una versión interactiva. En este gráfico puedes visualizar con un color cada región por separado al mover el puntero encima del nodo y las cantidades aparecen al poner el puntero sobre las coneziones. También puedes cambiar el órden de los nodos. </p>
 <p>A continuación el código R que produce este diagrama. Los datos están en dos archivos csv, <a href="/adjuntos/regiones_d3.csv">uno con la lista de regiones</a>
  y otro con <a href="/adjuntos/exportacion_importacion_d3.csv">los flujos entre cada región</a> (recuerda citar la fuente, Rosa, Lorenzo, et al. (2019) si usas estos datos):</p>
-<div class="highlight"><pre><span></span><span class="c1"># Dibuja un diagrama de Sankey de los movimientos de agua entre regiones del mundo</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dibuja un diagrama de Sankey de los movimientos de agua entre regiones del mundo</span>
 <span class="c1"># Con datos de Hoekstra et al.</span>
 
 <span class="nf">library</span><span class="p">(</span><span class="n">networkD3</span><span class="p">)</span>
@@ -324,52 +323,51 @@ que no funciona muy bien, aunque es visualmente interesante ver los flujos dentr
 <span class="nf">library</span><span class="p">(</span><span class="n">htmlwidgets</span><span class="p">)</span>
 
 <span class="n">regiones</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;/home/mir/Dropbox/proyectos/revista_u/agua/regiones_d3.csv&quot;</span><span class="p">,</span>
-                    <span class="n">col_types</span> <span class="o">=</span> <span class="nf">cols</span><span class="p">(</span>
-                    <span class="n">ID</span> <span class="o">=</span> <span class="nf">col_skip</span><span class="p">(),</span>
-                    <span class="n">region</span> <span class="o">=</span> <span class="nf">col_character</span><span class="p">(),</span>
-                    <span class="n">grupo</span> <span class="o">=</span> <span class="nf">col_character</span><span class="p">(),</span>
-                    <span class="n">total</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
-                    <span class="p">)</span>
+<span class="w">                    </span><span class="n">col_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">cols</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">col_skip</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">col_character</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">grupo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">col_character</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">total</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="nf">class</span><span class="p">(</span><span class="n">regiones</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
 
-<span class="n">bordes</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;/home/mir/Dropbox/proyectos/revista_u/agua/exportacion_importacion_d3.csv&quot;</span><span class="p">,</span>  
-                    <span class="n">col_types</span> <span class="o">=</span> <span class="nf">cols</span><span class="p">(</span>
-                    <span class="n">ID1</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span> 
-                    <span class="n">ID2</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span> 
-                    <span class="n">volumen</span><span class="o">=</span><span class="nf">col_double</span><span class="p">(),</span>
-                    <span class="n">color</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
-                 <span class="p">)</span>
+<span class="n">bordes</span><span class="o">&lt;-</span><span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;/home/mir/Dropbox/proyectos/revista_u/agua/exportacion_importacion_d3.csv&quot;</span><span class="p">,</span><span class="w">  </span>
+<span class="w">                    </span><span class="n">col_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">cols</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">ID1</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">ID2</span><span class="o">=</span><span class="nf">col_integer</span><span class="p">(),</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">volumen</span><span class="o">=</span><span class="nf">col_double</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">color</span><span class="o">=</span><span class="nf">col_character</span><span class="p">()</span>
+<span class="w">                 </span><span class="p">)</span>
 <span class="p">)</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">regiones</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;grupo&quot;</span><span class="p">,</span><span class="s">&quot;total&quot;</span><span class="p">)</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span> <span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;volumen&quot;</span><span class="p">,</span><span class="s">&quot;color&quot;</span><span class="p">)</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">regiones</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;grupo&quot;</span><span class="p">,</span><span class="s">&quot;total&quot;</span><span class="p">)</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;target&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;volumen&quot;</span><span class="p">,</span><span class="s">&quot;color&quot;</span><span class="p">)</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">bordes</span><span class="p">)</span><span class="o">&lt;-</span><span class="s">&quot;data.frame&quot;</span>
 
-<span class="n">red</span> <span class="o">&lt;-</span> <span class="nf">sankeyNetwork</span><span class="p">(</span>
-      <span class="n">Links</span> <span class="o">=</span> <span class="n">bordes</span><span class="p">,</span> 
-      <span class="n">Nodes</span> <span class="o">=</span> <span class="n">regiones</span><span class="p">,</span> 
-      <span class="n">Source</span> <span class="o">=</span> <span class="s">&#39;source&#39;</span><span class="p">,</span> 
-      <span class="n">Target</span> <span class="o">=</span> <span class="s">&#39;target&#39;</span><span class="p">,</span> 
-      <span class="n">Value</span> <span class="o">=</span> <span class="s">&#39;volumen&#39;</span><span class="p">,</span> 
-      <span class="n">NodeID</span> <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
-      <span class="n">NodeGroup</span> <span class="o">=</span> <span class="s">&#39;grupo&#39;</span><span class="p">,</span>
-      <span class="n">nodeWidth</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
-      <span class="n">nodePadding</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
-      <span class="n">LinkGroup</span> <span class="o">=</span> <span class="s">&#39;color&#39;</span><span class="p">,</span>
-      <span class="n">sinksRight</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
-      <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;km3&quot;</span><span class="p">,</span>
-      <span class="n">fontSize</span> <span class="o">=</span> <span class="s">&quot;10&quot;</span><span class="p">,</span>
-      <span class="n">fontFamily</span> <span class="o">=</span> <span class="s">&quot;sans&quot;</span><span class="p">,</span>
-      <span class="n">width</span> <span class="o">=</span> <span class="s">&quot;100vw&quot;</span><span class="p">,</span>
-      <span class="n">height</span> <span class="o">=</span> <span class="s">&quot;100vh&quot;</span><span class="p">,</span>
-      <span class="n">iterations</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+<span class="n">red</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sankeyNetwork</span><span class="p">(</span>
+<span class="w">      </span><span class="n">Links</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bordes</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="n">Nodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regiones</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="n">Source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;source&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="n">Target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;target&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="n">Value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;volumen&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="n">NodeID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;name&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">NodeGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;grupo&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">nodeWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">      </span><span class="n">nodePadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">      </span><span class="n">LinkGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;color&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">sinksRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">      </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;km3&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">fontSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">fontFamily</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sans&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;100vw&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;100vh&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span>
 
-<span class="nf">saveWidget</span><span class="p">(</span><span class="n">widget</span> <span class="o">=</span> <span class="n">red</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;sankey_agua.html&quot;</span><span class="p">,</span> 
-           <span class="n">selfcontained</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
-</pre></div>
-
+<span class="nf">saveWidget</span><span class="p">(</span><span class="n">widget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sankey_agua.html&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">           </span><span class="n">selfcontained</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+</code></pre></div>
 
 <p class="newsection"><span class="newthought">La huella hídrica</span> de los productos agrícolas e industriales nos da una medida rápida del agua necesaria para producirlos. Esto incluye el agua de riego, la de los procesos industriales y la necesaria para diluir los desechos de los procesos. Una vez más, usé datos de Hoekstra<label for="hoekstraref2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="hoekstraref2" class="margin-toggle"/><span class="sidenote">Mekonnen, M.M. & Hoekstra, A.Y. (2011) The green, blue and grey water footprint of crops and derived crop products, Hydrology and Earth System Sciences, 15(5): 1577-1600.</span>, pero también de Amigos de la Tierra<label for="foeref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="fueref" class="margin-toggle"/><span class="sidenote">Burley, Helen. “Mind your step: Land and water footprint of every day products”. Friends of the earth (2015).</span> y un artículo<label for="wuref" class="margin-toggle sidenote-number"></label><input type="checkbox" id="wuref" class="margin-toggle"/><span class="sidenote">Wu, May, and Hui Xu. Consumptive water use in the production of ethanol and petroleum gasoline—2018 update. No. ANL/ESD/09-1 Rev. 2. Argonne National Lab.(ANL), Argonne, IL (Estados Unidos), 2018.</span> sobre el uso de agua para la producción de gasolina.</p>
 
@@ -386,24 +384,20 @@ var hostname = "guineo.org";
 var linktext = username + "@" + hostname ;
 document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
 </script>
-
 <div class="nombre">
 <input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
 <div class="error" id="nameError">Debes poner tu nombre<br /></div>
 </div>
-
 <div class="contact_email">
 <input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
 <div class="error" id="emailError">Necesito tu dirección de email<br /></div>
 </div>
-
 <div class="contact_comment">
 <textarea name="body" id="comment" placeholder="COMENTARIO" aria-label="Mensaje" rows="5"></textarea><br/>
 <div class="error" id="commentError">Por favor escribe un comentario<br /></div>
 <input type="hidden" name="_format" value="plain" />
 <input type="hidden" name="_language" value="es" />
 </div>
-
 <p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">SIGUIENTE</button>
 </form> </p>
 <p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1410658487038791682">comentar vía Twitter</a></p>

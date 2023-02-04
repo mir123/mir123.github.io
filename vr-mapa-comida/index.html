@@ -19,7 +19,6 @@
     <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
     <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v3.3.0/dist/aframe-physics-system.min.js"></script>
 
-
     <style>
         body {
             /* disable long press in iOS? */
@@ -202,7 +201,7 @@
                 this.el.addEventListener("xbuttonup", function(e) {
                     this.emit("teleportend");
                 });
-            }
+            },
         });
     </script>
     <a-scene id="gallery-scene" background="color: #ACECEC" renderer="maxCanvasHeight: 9566; maxCanvasWidth: 16929; antialias:false;" physics="debug: false; gravity: 0; restitution: 0.9; " screen-controls>

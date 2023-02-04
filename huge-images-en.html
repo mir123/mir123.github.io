@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <title>The 32767 limit: composing gigapixel map images (I)</title>
+    <meta name="author" content="Mir Rodriguez Lombardo" />
+    <base href="">
+    <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+    <!--
+  Original link to favicon
+  <link rel="shortcut icon" type="text/css" href="/favicon.ico" />
+  -->
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="black" />  
+    <!-- Script para comentarios y feedback -->
+
+    <script src="/js/formchecks.js"></script>
+
+    <!-- OpenGraph Info -->
+  <meta property="og:title" content="The 32767 limit: composing gigapixel map images (I)" />
+  <meta property="og:type" content="article" />
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:title" content="The 32767 limit: composing gigapixel map images (I)" />
+  <meta property="og:image" content="{filename}/images/huge-images_large_images_1.png" />
+  <meta property="twitter:image" content="" />
+  <meta property="og:url" content="huge-images-en.html" />
+  <meta property="og:description" content="" />
+  <meta property="twitter:description" content="" />
+  <meta property="og:locale" content="utf8" />
+  <meta property="og:site_name" content="Mir Rodriguez Lombardo" />
+  <meta property="article:published_time" content="2023-02-04" />
+  <meta property="twitter:site:id" content="@mir_lentejas" />
+  <meta property="article:section" content="Cartografía" />
+ 
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u = "//matomomir.almanaqueazul.org/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d = document,
+                g = d.createElement('script'),
+                s = d.getElementsByTagName('script')[0];
+            g.async = true;
+            g.src = u + 'matomo.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+
+</head>
+
+<body>
+
+    <header>
+        <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
+        <nav class="navmenu" id="navmenu">
+            <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                       <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
+                <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
+                <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
+                <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
+                <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
+                <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
+                <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
+          </nav>
+    </header>
+
+ 
+<script type="text/javascript">
+function checkForm() {
+name = document.getElementById("name").value;
+email = document.getElementById("email").value;
+comment = document.getElementById("comment").value;
+
+if (name == "")
+{
+hideAllErrors();
+document.getElementById("nameError").style.display = "inline";
+document.getElementById("name").select();
+document.getElementById("name").focus();
+return false;
+}
+else if (email == "")
+{
+hideAllErrors();
+document.getElementById("emailError").style.display = "inline";
+document.getElementById("email").select();
+document.getElementById("email").focus();
+return false;
+}
+else if (comment == "")
+{
+hideAllErrors();
+document.getElementById("commentError").style.display = "inline";
+document.getElementById("comment").select();
+document.getElementById("comment").focus();
+return false;
+}
+if (!checkEmail(email))
+{
+alert('Email address is invalid');
+return false;
+}
+return true;
+}
+ 
+function hideAllErrors() {
+document.getElementById("nameError").style.display = "none";
+document.getElementById("emailError").style.display = "none";
+document.getElementById("commentError").style.display = "none";
+}
+ 
+function checkEmail(inputvalue) {
+var pattern = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+return pattern.test(inputvalue);
+}
+</script>
+
+<article>
+	<section>
+
+<header class="post-header">
+<h1> <a rel="bookmark"
+   title="The 32767 limit: composing gigapixel map images (I) «Mir Rodriguez Lombardo»"
+   href="huge-images-en.html">
+   The 32767 limit: composing gigapixel map images (I)
+</a>
+ <h3>
+<a href="/huge-images.html" hreflang="es">
+(versión en español aquí
+</a>)
+
+</h1>
+<p class="subtitle"><time datetime="2023-02-04T12:00:00-06:00">04 Feb 2023</time><br />
+<!--  -->
+</span></p>
+
+
+
+
+</header><p class="newsection">
+
+<span class="newthought">If you ever need to export huge images</span>
+from QGIS, as I recently had to to for a mural-sized map, you are up for
+a surprise. Anything larger than 32767 pixels in one dimension will give
+you trouble. Trying to solve this taught me lots of things, leading me
+through the path of image compositing using
+<a href="https://ImageMagick.org/">ImageMagick</a>, as well as command
+line usage of <a href="https://inkscape.org/">Inkscape</a>, both of
+which turned out to be very interesting, powerful and probably useful to
+lots of folks out there. So here’s the tutorial.
+
+</p>
+
+<p>This article covers the following applications: <strong>QGIS</strong> (a GIS
+application for mapping), <strong>Inkscape</strong> (vector editing), <strong>SVGO</strong> (for
+reducing the file size of vector images) and <strong>ImageMagick</strong> (command
+line image processing).</p>
+<blockquote>
+<p>can this stuff be done with ArcGIS, Illustrator and/or Photoshop? I
+have no idea, since I don’t own/subscribe to/pirate these things. My
+workflow for this project and the tutorial below consists solely of
+free and open source tools</p>
+</blockquote>
+<h2>Problem: your bitmap is too big for QGIS</h2>
+<p>The map I was making had to be printed at a size of 4.4 x 3.3 meters
+(about 14 x 11 feet) in 300 dpi resolution. I needed then to export it
+in PNG format from QGIS with a size of 52438 x 39213 pixels, which adds
+up to about 2G pixels (two billion pixels). I usually export each layer
+of a map separately and then compose them using
+<a href="https://krita.org/">Krita</a><label for="krita" class="margin-toggle sidenote-number"></label><input type="checkbox" id="krita" class="margin-toggle"/><span class="sidenote">Krita,
+unlike <a href="https://www.gimp.org/">GIMP</a>, has <a href="https://docs.krita.org/en/reference_manual/layers_and_masks/file_layers.html">file
+layers</a>
+which update automatically when I overwrite a layer’s file with a new
+version.</span>, which I find much faster and flexible than doing it in
+QGIS. So in this case I started by exporting the land use layer. It came
+out like this:</p>
+<p><img alt="An image cut off on export" src="/images/huge-images_large_images_1.png"></p>
+<p>It took forever to export and then, the image was cut off on the x axis
+at exactly 32767 pixels (it was probably also cut off horizontally). I
+was not running out of memory, so it was something else. This number did
+sound familiar, and it turns out 32767 is the largest number that can be
+written as 16-bit (binary) signed integer value in a computer’s memory.
+So it must be difficult to overcome (something should be recoded from 16
+to 32 bits, perhaps). Turns out <a href="https://github.com/qgis/QGIS/issues/19198">an
+issue</a> about this in the QGIS
+reposities has remained open since 2014 and <a href="https://github.com/qgis/QGIS/issues/49970">it doesn’t look
+like</a> it’s going anywhere.
+Who wants to export images that large? Well, me. My map needed to be
+printed a bit larger than 4 meters across and people would be looking at
+it from up close, so at 300 dpi (I’d actually rather use 600 dpi) it is
+a big number. So I needed to find a workaround.</p>
+<h2>Solution: export as vectors and convert to a bitmap</h2>
+<p><label for="apachito" class="margin-toggle"></label><input type="checkbox" id="apachito" class="margin-toggle"/><span class="marginnote"><img alt="Apachito
+corn" src="/images/huge-images_apachito.png"><br/> An icon representing
+<em>apachito</em> corn</br> (credit: Kitzia Sámano)</span>Instead of exporting
+as a PNG image, we could export our map as a PDF or SVG vector. But my
+map is really complex, with one of the corn (maize) layers having more
+than 22,000 symbols, such as the one here representing <em>apachito</em> corn,
+one of the many races in Mexico, with 230 individual corn kernels in
+each icon. This adds up to a very large image. QGIS crashes in the
+middle of trying to export the map as vectors.</p>
+<p>So the solution is to export each vector layer separately. It mostly
+works (see below), and we now have one SVG file for each layer. We can
+then open them in Inkscape, hit ctrl+shift+e and convert to PNG with 300
+dpi resolution so we get our large bitmap layer. Well… it turns out
+Inkscape hits exactly the same bitmap export size limit as QGIS, as can
+be seen in <a href="https://gitlab.com/inkscape/inkscape/-/issues/543">this
+issue</a> from 2019.</p>
+<h2>Solution: convert to TWO bitmaps</h2>
+<p>To try to work around the image size export limit in Inkscape, we could
+try to export it separately in two smaller halves and then figure out a
+way of gluing them together again. If you fiddle with the image extent
+figures in the <em>Export PNG image</em> panel, you can export in two halves
+which turn out ok as they are both smaller than the 32767 limit:</p>
+<p><img alt="The Inkscape export panel" src="/images/huge-images_large_images_export_inkscape.jpg"></p>
+<p>But then, was I going to start typing numbers one by one for all of my
+layers? No way! That’s what we have the command line for!</p>
+<h2>The Inkscape command line</h2>
+<p><label for="cli" class="margin-toggle"></label><input type="checkbox" id="apcliachito" class="margin-toggle"/><span class="marginnote"><strong>Try
+using the command line!</strong><br/><br/>If you are doing any kind of serious
+massive/complex image processing, converting, animation or composing, it
+is time you get off the mouse and explore your terminal, as it can make
+your life easier and liberate you from really boring tasks.<br/><br/>When we
+say “command line” or “terminal” or “cli” or “shell” we mean using an
+application where you give commands to your computer by typing as
+opposed to clicking. In Windows, OS X and Linux this application is
+called the <em>terminal</em>, just search for it and open it. Really, spend a
+bit of time realizing you can actually use the terminal and nothing bad
+will happen.</span></p>
+<p>Turns out you can do things like converting an SVG vector to a PNG
+bitmap using <a href="https://inkscape.org/doc/inkscape-man.html">Inkscape from the command
+line</a>. the format is:</p>
+<div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>--export-area<span class="o">=</span>x0:y0:x1:y1<span class="w"> </span>--export-dpi<span class="o">=</span>DPI<span class="w"> </span>--export-filename<span class="o">=</span>filename.png<span class="w"> </span>your_vector.svg
+</code></pre></div>
+
+<p>Let’s try with one of the shore and sea layers created in QGIS with
+<a href="https://www.gebco.net/">GEBCO</a> bathymetry data and exported as SVG
+(with some built in transparency), a 46 MB file. I open my terminal and
+run the first command to export the left side of my vector,</p>
+<div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>--export-area<span class="o">=</span><span class="m">0</span>:0:8390:12548<span class="w"> </span>--export-dpi<span class="o">=</span><span class="m">300</span><span class="w"> </span>--export-filename<span class="o">=</span>out_left.png<span class="w"> </span>mar_color.svg
+</code></pre></div>
+
+<p>which results in this PNG image (reduced in size and converted to jpg
+for the purposes of this website):</p>
+<p><img alt="left side of sea layer" src="/images/huge-images_mar_left_385.jpg"></p>
+<p>This operation uses about 10 GB of RAM and takes about 9 minutes on my
+computer. Let’s go with the right side:</p>
+<div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>--export-area<span class="o">=</span><span class="m">8391</span>:0:16781:12548<span class="w"> </span>--export-dpi<span class="o">=</span><span class="m">300</span><span class="w"> </span>--export-filename<span class="o">=</span>out_right.png<span class="w"> </span>mar_color.svg
+</code></pre></div>
+
+<p><img alt="right side of sea layer" src="/images/huge-images_mar_right_385.jpg"></p>
+<p>Now I have one exported 300 dpi image for each half of my vector. I got
+the numbers you see above by trial and error. But it actually works like
+this: the numbers are in pixels, which in Inkscape mean 1/96th of an
+inch. The formula is:</p>
+<div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>pixels<span class="w"> </span>image<span class="w"> </span><span class="nv">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>final<span class="w"> </span>image<span class="w"> </span>width<span class="w"> </span><span class="k">in</span><span class="w"> </span>pixels<span class="w"> </span>*<span class="w"> </span><span class="m">96</span><span class="w"> </span>/<span class="w"> </span>dpi
+</code></pre></div>
+
+<p>So when I do that for my desired image size of 52438 for 300 dpi, the
+image width in Inkscape pixels is 16780.8.</p>
+<p>How come I don’t get the same error for the image height, which is
+larger than 32767 pixels? I don’t know and I don’t care!</p>
+<h2>Staying on the command line: stitching images together</h2>
+<p><label for="about-ImageMagick" class="margin-toggle"></label><input type="checkbox" id="about-ImageMagick" class="margin-toggle"/><span class="marginnote"><img alt="ImageMagick
+logo" src="/images/huge-images_ImageMagick_logo.png"><br/>
+<a href="https://ImageMagick.org/">ImageMagick</a> is a multiplatform (Linux,
+Windows, OS X and Android) tool for displaying, modifying, converting
+and combining images from the command line, also known as the terminal.
+It is pretty old, having been created in 1987 so there are lots of
+guides from the community about doing most things, but not too many for
+what I explain in this tutorial (image composing). It is free and open
+source, so various other applications use it for basic image processing
+tasks. A fork from the original project, called
+<a href="http://www.graphicsmagick.org/">GraphicsMagick</a> was made in 2002, I
+haven’t used it but they claim it is faster. The latest version of
+ImageMagick is 7.x, but here I used
+<a href="https://legacy.ImageMagick.org/">version 6.9.11</a>, which has some
+significant differences. Check the
+<a href="https://legacy.ImageMagick.org/">legacy.ImageMagick.org</a> pages for the
+documentation of version 6.x.</span>I first tried to stitch these two
+halves of my layer using Gimp and Krita, but it was excruciatingly slow
+and painful. And since we are already here, we might as well stay on the
+command line and try to automate everything as much as possible for all
+my layers. Enter ImageMagick.</p>
+<p>This wonderful command line tool is mostly known for its commands
+<code>convert</code> and <code>mogrify</code>, often seen in forums around the internet as the
+solution to converting or resizing images to and from many formats and
+sizes either individually or in bulk. One of the uses of a command line
+tool as opposed to a GUI-based one that you interact to using the mouse,
+is that you can use it as part of a simple script or program to
+accomplish repetitive tasks. In the simplest automation case you can
+just copy and paste a command you are using as part of an image
+processing workflow.</p>
+<h3>Appending images with ImageMagick</h3>
+<p>The first task for ImageMagick is to join together the two PNG halves
+that we produced from our SVG. This is called “appending” in
+ImageMagick. The format is this:</p>
+<div class="highlight"><pre><span></span><code>convert<span class="w"> </span><span class="o">[</span>file<span class="w"> </span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>file<span class="w"> </span><span class="m">2</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>file<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w"> </span>...<span class="w"> </span><span class="o">[</span>+append<span class="w"> </span><span class="o">(</span>horizontally<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>-append<span class="w"> </span><span class="o">(</span>vertically<span class="o">)]</span><span class="w"> </span><span class="o">[</span>output<span class="w"> </span>file<span class="o">]</span>
+</code></pre></div>
+
+<p>In our case we want to stick images next to each other horizontally, so
+we list the files left to right and use +append. So it goes like this:</p>
+<div class="highlight"><pre><span></span><code>convert<span class="w"> </span>out_left.png<span class="w"> </span>out_right.png<span class="w"> </span>+append<span class="w"> </span>mar_color_300.png
+</code></pre></div>
+
+<p><img alt="full sea layer" src="/images/huge-images_fondo_gebco_770.jpg"></p>
+<p>Since we are using PNG, the whole process is lossless (i.e. no quality
+is lost anywhere in the process). Be careful if you use JPG with any
+amount of compression, as images may lose quality with each step.</p>
+<h2>Optimizing SVGs</h2>
+<p>When you are working with large and complex SVG files, you should
+consider optimizing your file. There are lots of ways in which SVGs
+produced by QGIS and Inkscape can be make smaller, which would
+presumably, reduce processing time when you are doing things with them.
+There is a utility called <a href="https://github.com/svg/svgo">SVGO</a> that does
+this. A popular and easy way to use it is via a web app,
+<a href="https://jakearchibald.github.io/svgomg/">SVOMG</a> where you can upload
+your file, select your optimization settings and download your new file.
+This works well for individual icons, where in my experience I got a
+30-50% reduction in size. This can probably make QGIS significantly
+faster if you have many instances of each icon in your map.</p>
+<p>In my case I wanted to reduce the size of my entire exported layers,
+some of which were very large. For example, the one with maize per
+municipality is 104 MB. For extra large files the web based version of
+SVGO won’t work, so you will need to install it locally, which means you
+need to install Node.js in your computer (check the SVGO github page for
+details). Here’s a detail of my layer:</p>
+<p><img alt="Detail of corn municipality layer" src="/images/huge-images_maiz_municipios_detail.jpg"></p>
+<p>There are 8 different SVG symbols that get used thousands of times in
+this layer. The SVG specification allows repeating symbols to be
+“cloned”, which means defining them once in the SVG file and then
+referring to the original every time the symbol is used. Instead, QGIS
+draws the symbols every time. So my layer is ripe for optimization. The
+SVGO command I used goes like this:</p>
+<div class="highlight"><pre><span></span><code>svgo<span class="w"> </span>cultivos_maiz_municipios.svg<span class="w"> </span>--config<span class="w"> </span>svgo.config.js<span class="w"> </span>-o<span class="w"> </span>cultivos_maiz_municipios_opt.svg
+</code></pre></div>
+
+<p>In this case, I used a configuration file that specifically asked to
+<code>reusePaths</code>, which by default is off. My <code>svgo.config.js</code> file was
+this:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;preset-default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">cleanupAttrs</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;reusePaths&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>After optimizing with SVGO my file went from 104 MB to 9.5 MB, a
+whopping 91% reduction in size! You may not get such a dramatic
+reduction in file size and you may not need to optimize your SVGs at
+all, but you may want to consider adding SVGO to the mix as part of your
+workflow.</p>
+<h2>Problem : your vector is still too complex for QGIS</h2>
+<p>I had an even more complex layer, the one with corn per communal plot.
+This is the one with the 22,000 symbols, each one being of 8 possible
+SVG markers (representing one of 8 races of corn) between 24 to 67 KB in
+size. QGIS was unable to export this vector file: it just silently
+crashes (not going anywhere near running out of memory), just like when
+trying to export the whole map. This single layer is hitting some limit
+in QGIS, but I haven’t even searched for a bug report about it, by this
+time I already knew what I was trying to do was outside the bounds of
+the work of the large majority of QGIS users so I just went straight for
+the workaround (I promise to report or add a comment to that bug soon).
+So, how to export extra complex vectors from QGIS?</p>
+<h2>Solution: use clipping in QGIS to make partial exports</h2>
+<p>The solution is to make partial exports of your composer canvas, small
+enough so that QGIS can hopefully handle them. There is a somewhat
+hidden option in the QGIS print composer to “clip” exports of your
+composer canvas. You first need to make several rectangles on your
+composer covering your entire canvas. Make sure to use snapping or check
+the position and size of each rectangle to ensure they cover absolutely
+the entire surface of your map.</p>
+<p><img alt="Clipping rectangles in QGIS composer" src="/images/huge-images_qgis_clip_shapes.jpg"></p>
+<p>Select your map and then go to the <em>Item Properties</em> tab. The <em>Clipping
+Settings</em> icon is tucked away at the top:</p>
+<p><img alt="The QGIS clipping icon" src="/images/huge-images_qgis_clip_icon.jpg"></p>
+<p>On the <em>Clipping settings</em> dialog, make sure the <em>Clip to item</em> checkbox
+is on and choose the name of one of your rectangles.</p>
+<p><img alt="QGIS composer clipping settings" src="/images/huge-images_qgis_clip_settings.jpg"></p>
+<p>When you export your map a full size SVG is exported but only the
+content under the selected shape is actually included.</p>
+<p><img alt="One of the exported images" src="/images/huge-images_cultivos_maiz_nucleos_5_1a_exported.jpg"></p>
+<p>I made a little zoom in so you can see more than a blur (remember this
+map is to be printed 4 meters wide). Repeat the above steps once for
+each of your clip shapes. I ended up with 5 files with a total size of
+821 MB (about the expected size given the amount of symbols and the size
+of the SVG markers). After sending them through SVGO (separately) I got
+a total size of 72 MB, again a reduction in size of 91%.</p>
+<p>Could this clipping solution have worked as a way to export the whole
+map albeit surely with many more than 5 pieces? Who knows, I just
+thought about it. Let me know if this works for you.</p>
+<p>We then rasterize these five vectors (<code>cultivos_maiz_1.svg</code>,
+<code>cultivos_maiz_2.svg</code> and so on) using the commands explained above: two
+calls to <code>inkscape</code> to convert one half of each image to bitmaps, then
+one call to <code>convert</code> to append the images. We can start simplyfying
+things a bit here, by using <code>&amp;&amp;</code> to send a bunch of separate commands in
+one go without having to sit and wait for each to complete. They will be
+executed in sequence:</p>
+<div class="highlight"><pre><span></span><code>inkscape<span class="w"> </span>--export-area<span class="o">=</span><span class="m">0</span>:0:8390:12548<span class="w"> </span>--export-dpi<span class="o">=</span><span class="m">300</span><span class="w"> </span>--export-filename<span class="o">=</span>out_left.png<span class="w"> </span>cultivos_maiz_1.svg<span class="w"> </span><span class="o">&amp;&amp;</span>
+inkscape<span class="w"> </span>--export-area<span class="o">=</span><span class="m">8391</span>:0:16781:12548<span class="w"> </span>--export-dpi<span class="o">=</span><span class="m">300</span><span class="w"> </span>--export-filename<span class="o">=</span>out_right.png<span class="w"> </span>cultivos_maiz_1.svg<span class="w"> </span><span class="o">&amp;&amp;</span>
+convert<span class="w"> </span>-monitor<span class="w"> </span>+append<span class="w"> </span>out_left.png<span class="w"> </span>out_right.png<span class="w"> </span>cultivos_maiz_1.png
+</code></pre></div>
+
+<p>We end up with 5 bitmaps, all full size, each with a section of the full
+layer.</p>
+<h2>Layering images with ImageMagick</h2>
+<p>So now I have a whole bunch of map layers in PNG format. I need to put
+them back together with varying levels and modes of transparency, all
+sorts of masks and things. I know already that I can’t do this in GIMP
+or Krita, just opening one of these 52438 x 39213 layers takes up a
+whole lot of time and memory, never mind 15 layers. And I have better
+things to do.</p>
+<p>In the ImageMagick world layering images is called
+<a href="https://legacy.imagemagick.org/Usage/layers/#composition">composition</a>.
+Technically, it involves putting exactly two images together, while
+setting position,
+transparency<label for="transparency" class="margin-toggle sidenote-number"></label><input type="checkbox" id="transparency" class="margin-toggle"/><span class="sidenote">Please
+note that the terms “transparency”, “opacity” and “alpha” may or may not
+be interchangeable, they may mean different things in ImageMagick and
+other applications and that could generally drive you nuts.</span>,
+size, and so on. We are working with lossless images (PNG), almost all
+of them at native resolution, which will not change (with the exception
+of the shaded relief layer, which is of much lower resolution since it’s
+derived from
+<a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-void">SRTM</a>
+data). This means that I should not have any quality issues as I compose
+my layers one by one, I just need to plan the process.</p>
+<p>The ImageMagick documentation is not the easiest to understand, the
+syntax is a bit complex and there are not a whole lot of examples online
+for what I needed to do. So I will just list here some of the commands I
+used with an explanation of what each section does. Hopefully some of
+these are what you need for your specific use case.</p>
+<h3>General points</h3>
+<ul>
+<li>All of this is about sequentially adding exactly two layers
+  together. So I made five groups of layers which I then put together
+  in the final step. In this way if I had to change something I only
+  did it for that group of layers and then repeated the final step.</li>
+<li>I chose to use the <code>convert</code> command with the <code>-composite</code> option as
+  opposed to the <code>composite</code> command. They work in different ways,
+  most importantly, layers are listed bottom to top when using
+  <code>convert</code>, and the opposite with <code>composite</code>. Version 7.x of
+  ImageMagick (this tutorial uses 6.x) changes the way of calling
+  commands, so it gets more complicated. Ok, so here we use <code>convert</code>.</li>
+<li>We add <code>-composite</code> to tell ImageMagick to layer the two preceding
+  images (bottom to top) and either output to a file or continue
+  layering with the following image.</li>
+<li>Do not confuse <code>-composite</code> with <code>-compose</code>. We use <code>-compose</code>
+  specifically to indicate options related to transparency.</li>
+<li>I start the list of options with <code>-monitor</code> so that we get a
+  progress % while the command is running. Since I was working with
+  large images and each command takes some time, it is always good to
+  know if things are moving.</li>
+<li>Sometimes I used parentheses to group things, but in the command
+  line they must be preceded by a backslash, so <code>\(</code> this is how it
+  looks <code>\)</code>.</li>
+<li>Backslashes <code>\</code> are also used to make a line break to improve
+  readability, but you can just remove them and write the command in
+  one long line.</li>
+<li>There are surely shorter ways of doing this, but I preferred not to
+  mix too many steps in one command, things got complicated really
+  fast.</li>
+<li>And finally, I don’t understand why some of the things I did worked.
+  Some of it was copied from things I found around in Stack Overflow
+  and other places and they ended up working or were the result of
+  crazy trial and error. It gets really baroque with ImageMagick. So
+  here we go.</li>
+</ul>
+<h3>Preparing background layers and playing with transparency</h3>
+<p>The first step was to put together the bottom layers: land use, sentinel
+satellite images, shaded relief, shore and sea. I started with just land
+use and shaded relief:</p>
+<div class="highlight"><pre><span></span><code>convert<span class="w"> </span>-monitor<span class="w"> </span><span class="se">\(</span><span class="w"> </span>land_use.png<span class="w"> </span>-channel<span class="w"> </span>a<span class="w"> </span>-evaluate<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">25</span>%<span class="w"> </span><span class="se">\)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="se">\(</span><span class="w"> </span><span class="se">\(</span><span class="w"> </span>-size<span class="w"> </span>52438x39213<span class="w"> </span>xc:white<span class="w"> </span><span class="se">\(</span><span class="w"> </span>-resize<span class="w"> </span>52438x39213<span class="w"> </span>shades_140.png<span class="w"> </span><span class="se">\)</span><span class="w"> </span>-composite<span class="w"> </span><span class="se">\)</span><span class="w"> </span>-channel<span class="w"> </span>a<span class="w"> </span>-evaluate<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">75</span>%<span class="w"> </span>+channel<span class="w"> </span><span class="se">\)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-compose<span class="w"> </span>multiply<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-composite<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="se">\(</span><span class="w"> </span>land_use.png<span class="w"> </span>-channel<span class="w"> </span>a<span class="w"> </span>-separate<span class="w"> </span>+channel<span class="w"> </span><span class="se">\)</span><span class="w"> </span>-alpha<span class="w"> </span>off<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-compose<span class="w"> </span>copy_opacity<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-composite<span class="w"> </span><span class="m">1</span>.png
+</code></pre></div>
+
+<p>Which means:</p>
+<ol>
+<li><code>convert</code>: The ImageMagick command</li>
+<li><code>-monitor</code>: Give me a precentage of progress as you do things</li>
+<li><code>land_use.png</code>: my bottom layer, an INEGI Mexican land use layer which I have colored so that it blends into the Sentinel image used for neighboring countries:
+    <img alt="Land use layer" src="/images/huge-images_uso_suelo_770_checkered.jpg"></li>
+<li><code>-channel a -evaluate set 25%</code>: Give that layer 25% transparency</li>
+<li><code>( ( -size 52438x39213 xc:white ( -resize 52438x39213 shaded_relief.png ) -composite )</code>: take the shaded relief layer,
+    <img alt="Shaded relief layer" src="/images/huge-images_shades_770_checkered.jpg">
+    resized to the size of my map and layer it on a white background (white
+    background goes first, order is bottom to top). So there is two layers:
+    a white background and the shaded relief, both the same size, added
+    together with the <code>-composite</code> at the end
+    <img alt="Shaded relief on whitebackground" src="{filename}/images/huge-images_shaded_Relief_white_background_770.jpg"></li>
+<li><code>-channel a -evaluate set 75% +channel )</code>: take the result of the
+    previous step and give it an transparency of 75%
+    <img alt="Shaded relief on white background" src="/images/huge-images_shaded_relief_white_background_770_with_75percent_checkered.jpg"></li>
+<li><code>-compose multiply -composite</code>: Layer those two images
+    (<code>land_use.png</code> and the one you just made with the white background
+    and the shaded relief at 75%) using the multiply <a href="https://en.wikipedia.org/wiki/Blend_modes">blend
+    mode</a>
+    <img alt="Land use and shaded relief multiply" src="/images/huge-images_land_use_shaded_770.jpg"></li>
+<li><code>\( land_use.png -channel a -separate +channel \) -alpha off -compose copy_opacity -composite 1.png</code>: Take the transparent part
+    (the alpha channel) of <code>land_use.png</code> and copy it to the previous
+    image (land use and shaded relief) and flatten it, thus getting a
+    final image (<code>1.png</code>) with the same transparent parts as the land
+    use layer. This is needed because the shaded relief does not have a
+    transparent sea and we need the sea to be fully transparent for the
+    next step.</li>
+</ol>
+<p><img alt="Final background image" src="/images/huge-images_imagemagick_1_770.jpg"></p>
+<p>Memory usage of this operation peaks at about 51 GB RAM, as ImageMagick
+does a bunch of processing in memory.</p>
+<h3>Adding Sentinel and sea images</h3>
+<p>We now take our Sentinel satellite image, which we use for natural color
+of the US and Guatemala, and has been color corrected using GIMP to
+match the land use layer used as Mexico background,</p>
+<p><img alt="Sentinel image" src="/images/huge-images_sentinel_770.jpg"></p>
+<p>(image credit: European Space Agency - ESA) and layer it with 20%
+transparency on a white background,</p>
+<p><img alt="20% Sentinel image" src="/images/huge-images_sentinel_20percent.jpg"></p>
+<p>then layer the result of our land use composition above,</p>
+<p><img alt="Sentinel plus land use plus shading" src="/images/huge-images_sentinel_1_770.jpg"></p>
+<p>We then use a coast mask layer created with QGIS,</p>
+<p><img alt="Coast mask layer" src="/images/huge-images_costa_mask_770.jpg"></p>
+<p>and compose it on top of our Sentinel/land use/shaded relief composition
+to get rid of the Sentinel sea image,</p>
+<p><img alt="Sentinel plus land use plus shading" src="/images/huge-images_sentinel_1_costa_mask_770.jpg"></p>
+<p>We finally get our sea layer,</p>
+<p><img alt="full sea layer" src="/images/huge-images_fondo_gebco_770.jpg"></p>
+<p>and set it on top of everything:</p>
+<p><img alt="Sentinel plus land use plus shading" src="/images/huge-images_2_770.jpg"></p>
+<p>This is the full command for that step:</p>
+<div class="highlight"><pre><span></span><code>convert<span class="w"> </span>-monitor<span class="w"> </span>-size<span class="w"> </span>52438x39213<span class="w"> </span>xc:white<span class="w"> </span><span class="se">\(</span><span class="w"> </span>sentinel.png<span class="w"> </span>-channel<span class="w"> </span>a<span class="w"> </span>-evaluate<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">20</span>%<span class="w"> </span><span class="se">\)</span><span class="w"> </span>-composite<span class="w"> </span><span class="m">1</span>.png<span class="w"> </span>-composite<span class="w"> </span>costa_mask.png<span class="w"> </span>-composite<span class="w"> </span>mar_color_300.png<span class="w"> </span>-composite<span class="w"> </span><span class="m">2</span>.png
+</code></pre></div>
+
+<p>I’ll let you deconstruct it into its parts. Each <code>-composite</code> says
+either:</p>
+<ul>
+<li>layer the previous two things on top of each other (second on top of
+  first) or</li>
+<li>layer the result of the previous step on top of the following thing
+  or</li>
+<li>save the result of the previous step in the following file</li>
+</ul>
+<p>The final operation to complete our background is quite simple: just add
+the coastline, state borders and rivers on top, in that order:</p>
+<div class="highlight"><pre><span></span><code>convert<span class="w"> </span>-monitor<span class="w"> </span><span class="m">2</span>.png<span class="w"> </span>coastline.png<span class="w"> </span>-composite<span class="w"> </span>states.png<span class="w"> </span>-composite<span class="w"> </span>rivers.png<span class="w"> </span>-composite<span class="w"> </span>01_BACKGROUND.png
+</code></pre></div>
+
+<p>We end this section with a filename for the first of our main
+components, <code>01_BACKGROUND.png</code>.</p>
+<p>This is the end of Part I of this tutorial. Part II will deal with
+automating everything using scripting, locating images that are smaller
+than your canvas and producing the final output.</p>
+	<section>
+</article>
+    <footer>
+        <header>
+
+
+            <nav class="navmenu" id="navmenu">
+
+                <li><a class="navitemlink" href="/archives.html">Notas</a></li>
+                          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
+                    <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
+                    <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
+                    <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
+                    <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
+                    <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
+                    <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
+              </nav>
+        </header>
+        <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> -->
+    </footer>
+</body>
+
+</html>

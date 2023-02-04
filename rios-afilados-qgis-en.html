@@ -186,19 +186,18 @@ return pattern.test(inputvalue);
  <img alt="" src="/images/rios_stroke_width.jpg">
 In the <em>Expression string builder</em> dialog that appears, copy the following code:</li>
 </ol>
-<div class="highlight"><pre><span></span><span class="w"> </span><span class="k">CASE</span><span class="w"> </span>
-<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
-<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
-<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mf">3.5</span><span class="w"></span>
-<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">5</span><span class="w"></span>
-<span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="k">CASE</span><span class="w"> </span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">2</span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">3</span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mf">3.5</span>
+<span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="ss">&quot;AA_ORDEN&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">5</span>
+<span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">10</span>
 <span class="w"> </span><span class="k">END</span><span class="w"> </span>
 <span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="nf">log10</span><span class="p">(</span><span class="nv">@geometry_part_num</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w">  </span><span class="nf">log10</span><span class="p">(</span><span class="nv">@geometry_part_count</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
 <span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="err">$</span><span class="n">length</span><span class="p">)</span><span class="w"> </span>
-<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
-</pre></div>
-
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
+</code></pre></div>
 
 <p><img alt="" src="/images/rios_expression_builder.jpg"></p>
 <p>Let's take a look at the code. Your stream rank column, the one I describe in point 3 above, is the one I've called <code>"AA_ORDEN"</code>. Replace this in the code here with the name of your rank column. The number that follows, ( <code>= 5</code>, <code>= 4</code> etc) is the classifier you used for your streams, from the smallest creek (5) to the largest rivers (0, the zero is not shown because it is selected by the <code>ELSE</code>). Put here whatever you used to rank your streams (for example, <code>= 'big river'</code> or <code>= 'tiny stream'</code>). </p>
@@ -215,24 +214,20 @@ var hostname = "guineo.org";
 var linktext = username + "@" + hostname ;
 document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
 </script>
-
 <div class="nombre">
 <input type="text" id="name" name="name" placeholder="NAME" aria-label="Name"><br/>
 <div class="error" id="nameError">You must include your name<br /></div>
 </div>
-
 <div class="contact_email">
 <input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
 <div class="error" id="emailError">I need your email address, it won't be published<br /></div>
 </div>
-
 <div class="contact_comment">
 <textarea name="body" id="comment" placeholder="COMMENT" aria-label="Message" rows="5"></textarea><br/>
 <div class="error" id="commentError">Please write a comment<br /></div>
 <input type="hidden" name="_format" value="plain" />
 <input type="hidden" name="_language" value="en" />
 </div>
-
 <p><button type="submit" style="margin-left: -1.5em;" value="SUBMIT">NEXT &gt;</button>
 </form> </p>
 <p class="newsection">You can also comment on <a href="https://twitter.com/mir_lentejas/status/1201950941026672641">Twitter</a> or <a href="https://www.reddit.com/r/QGIS/comments/e5ukog/my_tutorial_on_making_watershed_maps_with_qgis/">Reddit</a></p>

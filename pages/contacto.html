@@ -74,17 +74,14 @@ var hostname = "guineo.org";
 var linktext = username + "@" + hostname ;
 document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
 </script>
-
 <div class="nombre">
 <input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
 <div class="error" id="nameError">Debes poner tu nombre<br /></div>
 </div>
-
 <div class="contact_email">
 <input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
 <div class="error" id="emailError">Necesito tu dirección de email para poder contestarte<br /></div>
 </div>
-
 <div class="contact_comment">
 <textarea name="body" id="comment" placeholder="MENSAJE" aria-label="Mensaje" rows="5"></textarea><br/>
 <div class="error" id="commentError">Por favor escribe un mensaje<br /></div>
@@ -92,7 +89,6 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
 <input type="hidden" name="_format" value="plain" />
 <input type="hidden" name="_language" value="es" />
 </div>
-
 <p><button type="submit" value="ENVIAR">ENVIAR</button>
 </form> </p>
 <p>Vivo entre las ciudades de México y Panamá. También estoy en <a href="https://twitter.com/mir_lentejas">Twitter</a>, en <a href="https://www.instagram.com/mir.cero/">Instagram</a> y en <a href="https://www.linkedin.com/in/mir-rodriguez/">LinkedIn</a>. Aquí está mi <a href="https://www.facebook.com/mir.rodriguez">Facebook</a>, que últimamente uso sólo para mensajes.</p>

@@ -220,24 +220,20 @@ var hostname = "guineo.org";
 var linktext = username + "@" + hostname ;
 document.write("<form onsubmit='return checkForm();' action='http://formspree.io/" + username + "@" + hostname + "' method='POST'>");
 </script>
-
 <div class="nombre">
 <input type="text" id="name" name="name" placeholder="NOMBRE" aria-label="Nombre"><br/>
 <div class="error" id="nameError">Debes poner tu nombre<br /></div>
 </div>
-
 <div class="contact_email">
 <input type="email" id="email" name="_replyto" placeholder="EMAIL" aria-label="Email"><br/>
 <div class="error" id="emailError">Necesito tu dirección de email<br /></div>
 </div>
-
 <div class="contact_comment">
 <textarea name="body" id="comment" placeholder="COMENTARIO" aria-label="Mensaje" rows="5"></textarea><br/>
 <div class="error" id="commentError">Por favor escribe un comentario<br /></div>
 <input type="hidden" name="_format" value="plain" />
 <input type="hidden" name="_language" value="es" />
 </div>
-
 <p><button type="submit" style="margin-left: -1.5em;" value="ENVIAR">SIGUIENTE</button>
 </form> </p>
 <p class="newsection">También puedes <a href="https://twitter.com/mir_lentejas/status/1153386856962240512">comentar vía Twitter</a></p>

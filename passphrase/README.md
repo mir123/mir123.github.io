@@ -4,7 +4,7 @@ Una adaptación al español de [readablePassphraseJS](https://github.com/xaintly
 
 Este programa genera oraciones aleatorias en español que pueden funcionar mejor que palabras clave y ser más fáciles de recordar.
 
-Este software está en desarrollo pero ya se puede ver [aquí](http://mirrodriguezlombardo.com/passphrase/).
+Este software está en desarrollo pero ya se puede ver [aquí](https://mirrodriguezlombardo.com/passphrase/).
 
 # Las **frases fuertes**
 
