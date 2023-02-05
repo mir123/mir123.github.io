@@ -196,7 +196,7 @@ Si estás realizando algún tipo de procesamiento, conversión, animación o com
 <div class="highlight"><pre><span></span><code>convert<span class="w"> </span><span class="o">[</span>archivo<span class="w"> </span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>archivo<span class="w"> </span><span class="m">2</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>archivo<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w"> </span>...<span class="w"> </span><span class="o">[</span>+append<span class="w"> </span><span class="o">(</span>horizontalmente<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>-append<span class="w"> </span><span class="o">(</span>verticalmente<span class="o">)]</span><span class="w"> </span><span class="o">[</span>archivo<span class="w"> </span>de<span class="w"> </span>salida<span class="o">]</span>
 </code></pre></div>
 
-<p>En nuestro caso, queremos pegar imágenes una al lado de la otra horizontalmente, así que enumeramos los archivos de izquierda a derecha y usamos +append. Entonces el comando va así:</p>
+<p>En nuestro caso, queremos pegar imágenes una al lado de la otra horizontalmente, así que enumeramos los archivos de izquierda a derecha y usamos <code>+append</code>. Entonces el comando va así:</p>
 <div class="highlight"><pre><span></span><code>convert<span class="w"> </span>out_left.png<span class="w"> </span>out_right.png<span class="w"> </span>+append<span class="w"> </span>mar_color_300.png
 </code></pre></div>
 
