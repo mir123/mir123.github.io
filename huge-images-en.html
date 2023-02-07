@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <title>The 32767 limit: composing gigapixel map images (I)</title>
     <meta name="author" content="Mir Rodriguez Lombardo" />
-    <base href="">
+    <base href="" />
     <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
     <!--
   Original link to favicon
@@ -39,24 +39,23 @@
  
     <!-- Matomo -->
     <script>
-        var _paq = window._paq = window._paq || [];
+        var _paq = (window._paq = window._paq || []);
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
+        _paq.push(["trackPageView"]);
+        _paq.push(["enableLinkTracking"]);
         (function() {
             var u = "//matomomir.almanaqueazul.org/";
-            _paq.push(['setTrackerUrl', u + 'matomo.php']);
-            _paq.push(['setSiteId', '1']);
+            _paq.push(["setTrackerUrl", u + "matomo.php"]);
+            _paq.push(["setSiteId", "2"]);
             var d = document,
-                g = d.createElement('script'),
-                s = d.getElementsByTagName('script')[0];
+                g = d.createElement("script"),
+                s = d.getElementsByTagName("script")[0];
             g.async = true;
-            g.src = u + 'matomo.js';
+            g.src = u + "matomo.js";
             s.parentNode.insertBefore(g, s);
         })();
     </script>
     <!-- End Matomo Code -->
-
 </head>
 
 <body>
@@ -64,15 +63,38 @@
     <header>
         <h1 class="websitetitle"><a href="/">Mir Rodriguez Lombardo</a></h1>
         <nav class="navmenu" id="navmenu">
-            <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-                       <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida </a></li>
-                <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía </a></li>
-                <li><a class="navitemlink" href="/pages/web.html">Web </a></li>
-                <li><a class="navitemlink" href="/pages/traduccion.html">Traducción </a></li>
-                <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul </a></li>
-                <li><a class="navitemlink" href="/pages/el-mar.html">El mar </a></li>
-                <li><a class="navitemlink" href="/pages/contacto.html">Contacto </a></li>
-          </nav>
+            <li>
+                <a class="navitemlink" href="/archives.html">Notas</a>
+            </li>
+                       <li>
+                <a class="navitemlink" href="/pages/bio.html">Hoja de vida
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/cartografia.html">Cartografía
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/web.html">Web
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/traduccion.html">Traducción
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/el-mar.html">El mar
+          </a>
+            </li>
+                <li>
+                <a class="navitemlink" href="/pages/contacto.html">Contacto
+          </a>
+            </li>
+        </nav>
     </header>
 
  
@@ -160,7 +182,7 @@ line usage of <a href="https://inkscape.org/">Inkscape</a>, both of
 which turned out to be very interesting, powerful and probably useful to
 someone out there.</p>
 
-<p>Here I'm going to show how I put together this background layer for a very large map:</p>
+<p>Here I'm going to show how I put together this Mexico background layer for a very large map:</p>
 <p><img alt="Sentinel plus land use plus shading" src="/images/huge-images_2_770.jpg"></p>
 <p>This layer is a composite of a Sentinel satellite image with color correction, a land use layer from INEGI, a shaded relief based on a SRTM model and a bathymetry layer from GEBCO data.</p>
 <p>The article covers the following applications: <strong>QGIS</strong> (a GIS
@@ -601,23 +623,44 @@ document.write("<form onsubmit='return checkForm();' action='http://formspree.io
 	<section>
 </article>
     <footer>
-        <header>
+      <header>
 
-
-            <nav class="navmenu" id="navmenu">
-
-                <li><a class="navitemlink" href="/archives.html">Notas</a></li>
-                          <li><a class="navitemlink" href="/pages/bio.html">Hoja de vida</a></li>
-                    <li><a class="navitemlink" href="/pages/cartografia.html">Cartografía</a></li>
-                    <li><a class="navitemlink" href="/pages/web.html">Web</a></li>
-                    <li><a class="navitemlink" href="/pages/traduccion.html">Traducción</a></li>
-                    <li><a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a></li>
-                    <li><a class="navitemlink" href="/pages/el-mar.html">El mar</a></li>
-                    <li><a class="navitemlink" href="/pages/contacto.html">Contacto</a></li>
-              </nav>
-        </header>
-        <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> -->
-    </footer>
+        <nav class="navmenu" id="navmenu">
+          <li>
+            <a class="navitemlink" href="/archives.html">Notas</a>
+            </li>
+                      <li>
+                <a class="navitemlink" href="/pages/bio.html">Hoja de vida</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/cartografia.html">Cartografía</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/web.html">Web</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/traduccion.html">Traducción</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/almanaque.html">Almanaque Azul</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/el-mar.html">El mar</a
+            >
+          </li>
+                <li>
+                <a class="navitemlink" href="/pages/contacto.html">Contacto</a
+            >
+          </li>
+          </nav>
+      </header>
+      <!-- <p>Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p> -->
+                </footer>
 </body>
 
 </html>
