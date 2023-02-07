@@ -470,9 +470,9 @@ p>.comentario {
 
 @media (max-width: 760px) {
     body {
-        width: 84%;
-        padding-left: 8%;
-        padding-right: 8%;
+        width: 90%;
+        padding-left: 5%;
+        padding-right: 5%;
     }
     section>p,
     section>footer,
@@ -532,7 +532,9 @@ p>.comentario {
     pre.code,
     div.highlight {
         width: 90%;
-        *
+    }
+    h1 {
+        margin-top: 0rem;
     }
     img {
         /* width: 100%; */
