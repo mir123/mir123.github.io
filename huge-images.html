@@ -156,8 +156,8 @@ return pattern.test(inputvalue);
 
 </header><p class="newsection"> <span class="newthought">Si alguna vez tienes que exportar imágenes grandísimas</span> a partir de QGIS, como lo necesitaba recientemente para un mapa tamaño mural, te espera una sorpresa. Cualquier cosa más grande que 32767 píxeles en una dimensión te causará problemas. Tratar de resolver este problema me enseñó mucho, llevándome por el camino de la composición de imágenes utilizando <a href="https://ImageMagick.org/">ImageMagick</a>, así como el uso de la línea de comandos de <a href="https://inkscape.org /">Inkscape</a>, los cuales resultaron ser muy interesantes, poderosos y probablemente útiles para alguien. Así que aquí está el tutorial. </p>
 <p>Aquí mostraré como armar esta capa de fondo de México para un mapa muy grande:</p>
-<p><img alt="Sentinel con uso de suelo con sombreado" src="/images/huge-images_2_770.jpg"></p>
-<p>La capa es una combinación de una imagen de satélite Sentinel con color corregido, una capa de uso de suelo de INEGI, una de relieve sombreado basada en un modelo SRTM y una capa de batimetría con datos de GEBCO.</p>
+<p><img alt="Sentinel con uso de suelo con sombreado y estados" src="/images/01_FONDO_08_770.jpg"></p>
+<p>La capa es una combinación de una imagen de satélite Sentinel con color corregido, una capa de uso de suelo y de estados de México de INEGI, una de relieve sombreado basada en un modelo SRTM y una capa de batimetría con datos de GEBCO.</p>
 <p>Este artículo cubre las siguientes aplicaciones: <strong>QGIS</strong> (una aplicación GIS para mapeo), <strong>Inkscape</strong> (edición de vectores), <strong>SVGO</strong> (para reducir el tamaño de archivo de imágenes vectoriales) e <strong>ImageMagick</strong> (procesamiento de imagen de línea de comando).</p>
 <blockquote>
 <p>¿Se pueden hacer estas cosas con ArcGIS, Illustrator y/o Photoshop? No tengo idea, ya que no tengo/me subscribo/pirateo estas cosas. Mi flujo de trabajo para este proyecto y el tutorial a continuación consiste únicamente de herramientas libres y de código abierto.</p>
