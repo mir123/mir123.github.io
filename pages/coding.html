@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Mir Rodriguez Lombardo: Web</title>
+    <title>Mir Rodriguez Lombardo: Coding</title>
     <meta name="author" content="Mir Rodriguez Lombardo" />
     <base href="" />
     <link rel="stylesheet" type="text/css" href="/theme/tufte-css/tufte.css" />
@@ -72,29 +72,40 @@
 
  <article>
 	<section>
-	<h1>Tu voz pública en internet</h1>
-<p>Si tienes algo que decir, ya seas artista, escritor, activista o científico, exprésalo en un espacio libre y bajo tu control. Sin censura. Más allá de las redes sociales. Te puedo ayudar a realizar tus ideas, elaboradas o simples. Yo me encargo de los detalles técnicos.</p>
-<h2>Algunos trabajos recientes</h2>
-<h3><a href="https://majmajmaj.today/">Maj Britt Jensen</a> (2020)</h3>
-<p>Maj quería un “laboratorio” donde se hiciera público su proceso de escritura. Luego de varias conversaciones decidimos poner en la web una libreta de notas donde cualquiera pudiera espiar a Maj cuando está escribiendo. Usé un Etherpad modificado que permite que solo Maj escriba y que los demás observen sin poder intervenir. Lo combiné con mi creador de nombres inventados para bautizar a los visitantes en el salón de chat. Para el proyecto escrubí un <a href="https://www.npmjs.com/package/ep_solar">plugin para Etherpad</a> que lo hace cambiar a tema nocturno cuando es de noche en casa de Maj.</p>
-<ul>
-<li>Herramientas: <a href="https://etherpad.org/">Etherpad</a> (Javascript)</li>
-</ul>
-<h3><a href="http://vacacionesdetrabajo.org/wiki/Vacaciones_de_trabajo">Vacaciones de trabajo</a> (2020)</h3>
-<p>Este es un seminario dedicado a la producción de narrativa gráfica en México. La idea era producir un sitio colaborativo donde los participantes del seminario se involucraran con la edición. El encargo era usar Mediawiki, la plataforma detrás de Wikipedia, en parte por a su editor visual de artículos. Mediawiki puede ser un poco intimidante al principio y requiere un montón de configuración, pero tiene una comunidad muy activa con soluciones a muchos de los posibles problemas.</p>
-<p>Usé la plantilla Tweeki, que da bastante flexibilidad para alterar el diseño (la mayoría de las instalaciones de Mediawiki se ven iguales, pero aquí había parámetros específicos para el diseño). Para la versión digital del periódico mural Siempreshoy usé OpenSeadragon, una biblioteca muy completa para mostrar imágenes de alta resolución.</p>
-<ul>
-<li>Herramientas: <a href="https://www.mediawiki.org/wiki/MediaWiki">Mediawiki</a>, con el tema <a href="https://tweeki.kollabor.at/wiki/Welcome">Tweeki</a> y <a href="https://openseadragon.github.io/">OpenSeadragon</a></li>
-</ul>
+	<h1>Programación</h1>
+<p>A veces programo por placer, a veces para resolver problemas. Le entro más que nada al Python y al JavaScript (y a Node.js y Deno) y un poquito a R y a Julia para la cartografía. Aquí algunos de mis proyectos recientes.</p>
+<h3><a href="https://guineo.org/frasesfuertes">Frases fuertes</a> (2022)</h3>
+<p>Este es un generador de frases-contraseña (<em>passphrases</em> o frases fuertes) que son legibles en español. Ya casi no uso passwords normales, estos son más fáciles de recordar y de comunicar y son mucho más seguros.</p>
+<p>Enlace: <a href="https://guineo.org/frasesfuertes">https://guineo.org/frasesfuertes</a></p>
+<p>GitHub: <a href="https://github.com/mir123/readablePassphraseJS-ES">https://github.com/mir123/readablePassphraseJS-ES</a></p>
+<h3><a href="https://guineo.org/lunitas">Lunitas</a> (2022)</h3>
+<p>Esto nació en 2011 cuando quise regalar calendarios lunares para año nuevo. Recientemente le agregué un interfaz gráfico para hacer súper fácil preparar un calendario lunar para una semana, un año o lo que quieras. Aprendí un montón sobre cálculos astronómicos, CSS y JavaScript en el proceso.</p>
+<p>Enlace: <a href="https://guineo.org/lunitas">https://guineo.org/lunitas</a></p>
+<p>GitHub: <a href="https://github.com/mir123/lunitas">https://github.com/mir123/lunitas</a></p>
+<h3><a href="https://guineo.org/tablas-simples">Tablas simples</a> (2020)</h3>
+<p>Sirve para convertir partes de hojas de Excel o de tablas que encuentras en la web en texto simple, para mandarlo como mensajes de email, WhatsApp o Telegram<label for="WhatsAppMonospace" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WhatsAppMonospace" class="margin-toggle"/><span class="sidenote">Para que tus mensajes sean monoespaciados en WhatsApp o Telegram, ponlos dentro de acentos graves:<br/><code><code>```Mi texto monoespaciado```</code></code></span>, siempre que lo pongas en una fuente monoespaciada. Esto lo hice para poder mandar itinerarios de vuelo por email, más rápido y eficiente que usar PDF. Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>LOS<span class="w"> </span>PAÍSES<span class="w"> </span>MENOS<span class="w"> </span>FUMADORES<span class="w"> </span>DEL<span class="w"> </span>MUNDO
+
+<span class="p">|</span>País<span class="w">        </span><span class="p">|</span>%<span class="w"> </span>de<span class="w"> </span>adultos<span class="w"> </span>que<span class="w"> </span>fuman<span class="p">|</span>
+<span class="p">|</span><span class="o">============</span><span class="p">|</span><span class="o">======================</span><span class="p">|</span>
+<span class="p">|</span>Ghana<span class="w">       </span><span class="p">|</span><span class="m">3</span>.5<span class="w">                   </span><span class="p">|</span>
++------------+----------------------<span class="p">|</span>
+<span class="p">|</span>Nigeria<span class="w">     </span><span class="p">|</span><span class="m">3</span>.7<span class="w">                   </span><span class="p">|</span>
++------------+----------------------<span class="p">|</span>
+<span class="p">|</span>Panamá<span class="w">      </span><span class="p">|</span><span class="m">5</span><span class="w">                     </span><span class="p">|</span>
++------------+----------------------<span class="p">|</span>
+<span class="p">|</span>Etiopía<span class="w">     </span><span class="p">|</span><span class="m">5</span>.1<span class="w">                   </span><span class="p">|</span>
++------------+----------------------<span class="p">|</span>
+<span class="p">|</span>Turkmenistán<span class="p">|</span><span class="m">5</span>.5<span class="w">                   </span><span class="p">|</span>
++------------+----------------------+
+</code></pre></div>
+
+<p>Enlace: <a href="https://guineo.org/tablas-simples">https://guineo.org/tablas-simples</a></p>
+<p>GitHub: <a href="https://github.com/mir123/Tablas-simples">https://github.com/mir123/Tablas-simples</a></p>
 <h3><a href="https://www.yaurisbeth.com/">Yaurisbeth</a> (2020)</h3>
 <p>Un delirio nacido de los primeros meses del encierro, es un intento de reproducir la sabiduría caribeña para inventar nombres. Ingerí la lista completa de nombres registrados en Panamá, la deconstruí en sílabas y la volví a armar. Fue también una excusa para practicar mis habilidades en Node.js.</p>
-<h3><a href="https://multiplicar-se-unica.org/sonido/viene-de-afuera/001">Viene de afuera y existe adentro</a> (2021)</h3>
-<p>La artista Dominique Ratton me encargó hacer a sus hamacas hablar. Soy un gran fanático de las hamacas, las de Dominique son de las mejores. Estas estaban en la exposición colectiva <a href="https://teatenerife.es/exposicion/para-que-haya-fiesta-tiene-que-danzar-el-bosque/220">Para que haya fiesta tiene que danzar el bosque</a> y la idea era serigrafiar un código QR en ellas que llevara al público a una serie de sonidos. Para este proyecto usé el viejo y querido WordPress, creando una versión modificada de su playlist que se ajustara a las ideas de Dominique.</p>
-<ul>
-<li>Herramientas: WordPress</li>
-</ul>
-<h2>Haz tu sitio web</h2>
-<p class="newsection"><span class="newthought">Dame tus datos</span> y dime qué tienes en mente.</p>
+<p>Enlace: <a href="https://www.yaurisbeth.com/">https://www.yaurisbeth.com/ </a></p>
+<p class="newsection"><span class="newthought">¿Necesitas resolver un problema programando?</span> Escríbeme</p>
 
 <script language="JavaScript">
 var username = "mir.rodriguez";
@@ -114,7 +125,7 @@ document.write("<form onsubmit='return checkForm();' action='https://formspree.i
 <div class="error" id="emailError">Necesito tu dirección de email<br /></div>
 </div>
 <div class="contact_comment">
-<textarea name="body" id="comment" placeholder="EXPLÍCAME" aria-label="Mensaje" rows="5"></textarea><br/>
+<textarea name="body" id="comment" placeholder="CUÉNTAME" aria-label="Mensaje" rows="5"></textarea><br/>
 <div class="error" id="commentError">Por favor escríbeme algo<br /></div>
 <input type="hidden" name="_format" value="plain" />
 <input type="hidden" name="_language" value="es" />
